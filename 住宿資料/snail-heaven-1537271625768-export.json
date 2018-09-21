@@ -1,0 +1,12 @@
+{
+  "listings" : {
+    "item1" : {
+      "id" : 12321,
+      "listing_url" : "www.yahoo.com"
+    },
+    "item2" : {
+      "id" : 12312312,
+      "listing_url" : "www.yahoo.com"
+    }
+  }
+}

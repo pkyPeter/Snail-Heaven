@@ -1,0 +1,201 @@
+.index {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.index>.background {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-image: url("../imgs/background.jpg");
+	background-size: cover;
+	background-position: bottom;
+	filter: blur(3px);
+}
+
+.index>.formContainer {
+	position: absolute;
+	top: 3%;
+	width: 100%;
+	height: 94%;
+	text-align: center;
+}
+
+.index>.formContainer>.form {
+	height: 100%;
+	overflow: scroll;
+	width: 850px;
+	margin: 0 auto;
+	padding: 30px;
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 4px;
+	box-shadow: 1px 1px 3px grey;
+}
+.index>.formContainer>.form>.formItem {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.index>.formContainer>.form>.formItem>.snail {
+	width: 46px;
+	height: 46px;
+	margin-right: 20px;
+	background-position: center;
+	background-size: cover;
+	background-image: url("../imgs/snail.png");
+}
+.index>.formContainer>.form>.formItem>h2 {
+	font-size: 2.5em;
+	letter-spacing: 0.8px;
+}
+
+.index>.formContainer>.form>h2 {
+	font-weight: 100;
+	font-size: 1.9em;
+}
+
+.index>.formContainer>.form>input {
+	width: 80%;
+	margin-top: 10px;
+	padding: 13px 10px 13px 50px;
+    font-size: 1em;
+    color: black;
+    background-image: url("../imgs/search1.png");
+    background-repeat: no-repeat;
+    background-size: 32px;
+    background-position: 10px center;	
+    border-style: none;
+    border-radius: 4px;
+    border: 1px solid #B3B6B7;
+}
+
+.index>.formContainer>.form>input::placeholder {
+	color: #B3B6B7;
+}
+
+.index>.formContainer>.form>.districtContainer {
+	width: 80%;
+	height: 100%;
+	overflow-y: scroll;
+	margin-top: 30px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.index>.formContainer>.form>.districtContainer>.district {
+	width: 48%;
+	height: 120px;
+	margin-bottom: 15px;
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	cursor: pointer;
+}
+
+.index>.formContainer>.form>.districtContainer>.district>.background {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-image: url(../imgs/bedroom.jpg);
+	background-size: cover;
+	background-position: center 80%;
+	z-index:100;
+	filter: blur(2px);
+	cursor: pointer;
+}
+.index>.formContainer>.form>.districtContainer>.district>.background:hover {
+	filter: blur(0px);
+}
+
+.index>.formContainer>.form>.districtContainer>.district>h2 {
+	z-index: 150;
+	margin-bottom: 3px;
+	cursor: pointer;
+}
+.index>.formContainer>.form>.districtContainer>.district>h4 {
+	z-index: 150;
+	cursor: pointer;
+	font-weight: 400;
+}
+
+@media (min-width: 280px) and (max-width: 800px) {
+	.index>.formContainer>.form {
+		max-height: none;
+		height: auto;
+		border-radius: none;
+		box-shadow: none;
+
+	}
+	.index>.formContainer>.form>.formItem>.snail {
+		width: 70px;
+		height: 70px;
+		margin-right: 20px;
+		background-position: center;
+		background-size: cover;
+		background-image: url("../imgs/snail.png");
+	}
+	.index>.formContainer>.form>.formItem>h2 {
+		font-size: 4.8em;
+		letter-spacing: 0.8px;
+	}
+	.index>.formContainer>.form>h2 {
+		font-weight: 100;
+		font-size: 3.3em;
+	}
+	.index>.formContainer {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top:0%;
+		text-align: center;
+	}
+	.index>.formContainer>.form>.districtContainer{
+		height: auto;
+    	overflow-y: unset;
+	}
+
+	.index>.formContainer>.form>.districtContainer>.district {
+		width: 48%;
+		height: 100px;
+		margin-bottom: 20px;
+	}
+
+	.index>.formContainer>.form>.districtContainer>.district>.background {
+		display: none;
+	}
+
+	.index>.formContainer>.form>.districtContainer>.district>h2 {
+		font-size: 3em;
+		margin-bottom: 3px;
+	}
+	.index>.formContainer>.form>.districtContainer>.district>h4 {
+		font-size: 1.5em;
+		font-weight: 400;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
