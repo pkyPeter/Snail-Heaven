@@ -23,7 +23,7 @@
 
 .index>.formContainer>.form {
 	height: 100%;
-	overflow: scroll;
+	overflow: auto;
 	width: 850px;
 	margin: 0 auto;
 	padding: 30px;
@@ -82,7 +82,7 @@
 .index>.formContainer>.form>.districtContainer {
 	width: 80%;
 	height: 100%;
-	overflow-y: scroll;
+	overflow: auto;
 	margin-top: 30px;
 	display: flex;
 	flex-direction: row;
@@ -131,26 +131,27 @@
 @media (min-width: 280px) and (max-width: 800px) {
 	.index>.formContainer>.form {
 		max-height: none;
+		max-width: 100%;
 		height: auto;
 		border-radius: none;
 		box-shadow: none;
 
 	}
 	.index>.formContainer>.form>.formItem>.snail {
-		width: 70px;
-		height: 70px;
-		margin-right: 20px;
+		width: 46px;
+		height: 46px;
+		margin-right: 15px;
 		background-position: center;
 		background-size: cover;
 		background-image: url("../imgs/snail.png");
 	}
 	.index>.formContainer>.form>.formItem>h2 {
-		font-size: 4.8em;
-		letter-spacing: 0.8px;
+		font-size: 1.8em;
+		letter-spacing: 0.6px;
 	}
 	.index>.formContainer>.form>h2 {
 		font-weight: 100;
-		font-size: 3.3em;
+		font-size: 1.2em;
 	}
 	.index>.formContainer {
 		position: absolute;
@@ -175,11 +176,11 @@
 	}
 
 	.index>.formContainer>.form>.districtContainer>.district>h2 {
-		font-size: 3em;
+		font-size: 1.2em;
 		margin-bottom: 3px;
 	}
 	.index>.formContainer>.form>.districtContainer>.district>h4 {
-		font-size: 1.5em;
+		font-size: .5em;
 		font-weight: 400;
 	}
 
