@@ -1,0 +1,18 @@
+.apartments>section {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+.apartments>section>.left {
+	width: 50%;
+}
+
+.apartments>section>.right {
+	width: 50%;
+	height: 100%;
+	background-color: #F7F7F7;'
+	overflow-y: auto;
+}
+

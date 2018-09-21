@@ -13,7 +13,7 @@ import "./style/index.css"
 const RouterComponent = () => (
   <Router>	
   	<div>
-      <Route exact path="/" component={App} />
+      <Route exact path="/" component={Apartments} />
       <Route path="/apartments" component={Apartments} />
     </div>		
   </Router>
