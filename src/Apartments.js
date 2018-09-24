@@ -18,12 +18,13 @@ import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 import { faListUl} from '@fortawesome/free-solid-svg-icons';
 import { faThLarge } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 
 library.add(faRegularHeart, faBookmark, faBuilding, faSave, faListUl, faThLarge, faSquare, faThumbsDown
-,faEnvelope);
-console.log(fas);
+,faEnvelope, faBars, faMapMarkedAlt);
 
 class Apartments extends React.Component {
 	// componentDidMount() {
@@ -39,11 +40,12 @@ class Apartments extends React.Component {
 		<div className="apartments">
 			<header>
 				<div className="left">
+					<div className="burger"><FontAwesomeIcon className="icon" icon={['fas','bars']}/></div>
 					<div className="logo">
 						<div className="snail"></div>
 		  				<h2>SNAIL HEAVEN</h2>
 					</div>
-					<input type="text" placeholder="小蝸牛，想住哪？"/>
+					<input type="text" placeholder="小蝸牛想住哪？"/>
 				</div>
 				<div className="right">
 					<div className="searchFav">
@@ -70,7 +72,6 @@ class Apartments extends React.Component {
 						<div>縣市</div>
 						<div> > </div>
 						<div>行政區</div>
-
 					</div>
 					<div className="filterArea">
 						<div className="filterType">
@@ -124,7 +125,7 @@ class Apartments extends React.Component {
 						</div>
 					</div>
 					<div className="resultArea">
-						<div className="results">
+						<div className="results ">
 							<div className="img"></div>
 							<div className="description">
 								<div className="priceGesture absolute">
@@ -137,21 +138,15 @@ class Apartments extends React.Component {
 								</div>
 								<p>9 Floorplans</p>
 								<p>New York, Chicago</p>
-								<p class="updateTime">2天前</p>
+								<p className="updateTime">2天前</p>
 							</div>
 						</div>
-						<div className="results">
-							<div className="img"></div>
-							<div className="description"></div>
-						</div>
-						<div className="results">
-							<div className="img"></div>
-							<div></div>
-						</div>
-
 					</div>
 				</div>
+				<div className="mapMode"><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
+				<div className="listMode"></div>
 			</section>
+
 		</div>
 		)
 	}

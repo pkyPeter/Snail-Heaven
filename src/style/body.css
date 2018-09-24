@@ -11,11 +11,11 @@
 }
 
 .apartments>section>.left {
-	width: 50%;
+	width: 60%;
 }
 
 .apartments>section>.right {
-	width: 50%;
+	width: 40%;
 	height: 100%;
 	background-color: #F7F7F7;
 	padding: 20px 20px;
@@ -33,239 +33,382 @@
 
 }
 
-/*篩選條件區域*/
-.apartments>section>.right>.filterArea {
-	width: 100%;
-	margin-top: 12px;
-	background-color: white;
-	padding: 10px 20px;
+/*篩選條件區域共同條件*/
+	.apartments>section>.right>.filterArea {
+		width: 100%;
+		margin-top: 12px;
+		background-color: white;
+		padding: 10px 20px;
 
-}
+	}
 
-.apartments>section>.right>.filterArea>.filterType {
-	height: 55px;
-	border-bottom: 1px solid #BBBBBB;
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-}
-/*篩選條件共同條件*/
-.apartments>section>.right>.filterArea>.filterType>p {
-	width: 29%;
-}
-.apartments>section>.right>.filterArea>.filterType>.filterDetail {
-	width: 70%;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-}
+	.apartments>section>.right>.filterArea>.filterType {
+		height: 55px;
+		border-bottom: 1px solid #BBBBBB;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	.apartments>section>.right>.filterArea>.filterType>p {
+		width: 29%;
+	}
+
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail {
+		width: 70%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
 
 /*房間 數量 篩選條件*/
-.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomAmount {
-	width: 23.5%;
-	text-align: center;
-	border: 1px solid #BBBBBB;
-	border-radius: 3px;
-	padding: 2px 10px;
-	cursor: pointer;
-}
-.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomAmount:hover {
-	background-color: #626567;
-	border: 1px solid #626567;
-	color:white;
-	font-weight: 100;
-}
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomAmount {
+		width: 23.5%;
+		text-align: center;
+		border: 1px solid #BBBBBB;
+		border-radius: 3px;
+		padding: 2px 10px;
+		cursor: pointer;
+	}
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomAmount:hover {
+		background-color: #626567;
+		border: 1px solid #626567;
+		color:white;
+		font-weight: 100;
+	}
 
 /*房間 類型 篩選條件*/
-.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomType {
-	width: 32%;
-	text-align: center;
-	border: 1px solid #BBBBBB;
-	border-radius: 3px;
-	padding: 2px 10px;
-	cursor: pointer;
-}
-.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomType:hover {
-	background-color: #626567;
-	border: 1px solid #626567;
-	color:white;
-	font-weight: 100;
-}
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomType {
+		width: 32%;
+		text-align: center;
+		border: 1px solid #BBBBBB;
+		border-radius: 3px;
+		padding: 2px 10px;
+		cursor: pointer;
+	}
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomType:hover {
+		background-color: #626567;
+		border: 1px solid #626567;
+		color:white;
+		font-weight: 100;
+	}
 
 /*篩選條件 相關按鈕*/
-.apartments>section>.right>.filterArea>.buttons {
-	border-bottom: none;
-	display: flex;
-    justify-content: flex-end;
-}
+	.apartments>section>.right>.filterArea>.buttons {
+		border-bottom: none;
+		display: flex;
+	    justify-content: flex-end;
+	}
 
-.apartments>section>.right>.filterArea>.buttons>.button {
-	border: 1px solid #BBBBBB;
-	border-radius: 3px;
-	margin-right: 5px;
-	margin-left: 10px;
-	padding: 5px 10px;
-	cursor: pointer;
-}
+	.apartments>section>.right>.filterArea>.buttons>.button {
+		border: 1px solid #BBBBBB;
+		border-radius: 3px;
+		margin-right: 5px;
+		margin-left: 10px;
+		padding: 5px 10px;
+		cursor: pointer;
+	}
 
-.apartments>section>.right>.filterArea>.buttons>.button:hover {
-	background-color: #626567;
-	border: 1px solid #626567;
-	color:white;
-	font-weight: 100;
-}
+	.apartments>section>.right>.filterArea>.buttons>.button:hover {
+		background-color: #626567;
+		border: 1px solid #626567;
+		color:white;
+		font-weight: 100;
+	}
 
-.apartments>section>.right>.filterArea>.buttons>.button>.icon {
-	margin-right: 5px;
-}
+	.apartments>section>.right>.filterArea>.buttons>.button>.icon {
+		margin-right: 5px;
+	}
 
 /*展示區域 標題*/
-.apartments>section>.right>.resultTitle {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	margin-top: 10px;
-}
-.apartments>section>.right>.resultTitle>.showLogic {
-	width: 30%;
-	color: grey;
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-}
+	.apartments>section>.right>.resultTitle {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		margin-top: 10px;
+	}
+	.apartments>section>.right>.resultTitle>.showLogic {
+		width: 30%;
+		color: grey;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+	}
 
-.apartments>section>.right>.resultTitle>.showLogic>select {
-	width: 100%;
-}
+	.apartments>section>.right>.resultTitle>.showLogic>select {
+		width: 100%;
+	}
 
 
-.apartments>section>.right>.resultTitle>p {
-	width: 40%;
-	color: grey;
-	text-align: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+	.apartments>section>.right>.resultTitle>p {
+		width: 40%;
+		color: grey;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
-.apartments>section>.right>.resultTitle>.displayLogic {
-	width: 30%;
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-end;
-}
+	.apartments>section>.right>.resultTitle>.displayLogic {
+		width: 30%;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+	}
 
-.apartments>section>.right>.resultTitle>.displayLogic>.displayType {
-	margin-left: 5px;
-	border: 1px solid #BBBBBB;
-	border-radius: 3px;
-	padding: 5px 7px;
-	cursor: pointer;
-}
+	.apartments>section>.right>.resultTitle>.displayLogic>.displayType {
+		margin-left: 5px;
+		border: 1px solid #BBBBBB;
+		border-radius: 3px;
+		padding: 5px 7px;
+		cursor: pointer;
+	}
 
-.apartments>section>.right>.resultTitle>.displayLogic>.displayType:hover {
-	background-color: #626567;
-	border: 1px solid #626567;
-	color: white;
-}
+	.apartments>section>.right>.resultTitle>.displayLogic>.displayType:hover {
+		background-color: #626567;
+		border: 1px solid #626567;
+		color: white;
+	}
 
 /*result area*/
 
-/*一般block*/
-.apartments>section>.right>.resultArea {
-	margin-top: 10px;
+	/*一般block*/
+		.apartments>section>.right>.resultArea {
+			margin-top: 10px;
+		}
+
+
+
+		.apartments>section>.right>.resultArea>.results {
+			width: 100%;
+			margin-top: 20px;
+		}
+
+
+		.apartments>section>.right>.resultArea>.results>.img {
+			width: 100%;
+			padding-bottom: 50%;
+			background-image: url("../imgs/bedroom.jpg");
+			background-size: cover;
+			background-position: center;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description {
+			border: 1px solid #BBBBBB;
+		    padding: 7px 0px 12px 15px;
+			position: relative;
+			width: 100%;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>.priceGesture {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>.absolute {
+			position: absolute;
+			top: -55px;
+			left: 0px;
+			padding: 0px 0px 0px 15px;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.price {
+			font-size: 2.1em;
+			align-self: flex-start;
+			color: white;
+			font-weight: 100;
+			font-family: 'Noto Sans';
+			letter-spacing: 1.3px;
+			text-shadow: 1px 1px 10px black;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture {
+
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture>.icon {
+			color: white;
+			height: 30px;
+			width: 30px;
+			margin-right: 10px;
+		    filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.4));
+		    cursor: pointer;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture>.icon:hover {
+			color: #7E5109;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>p {
+			margin-top: 3px;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.description>.updateTime {
+			position: absolute;
+			top: 9px;
+			right: 20px;
+		    font-size: 12px;
+		    color: grey;
+		}
+
+	/* 『兩個一排』排列方式，分別要在.resultArea跟.result層分別加入.resultAreaFlex以及.resultsFlex*/
+		.apartments>section>.right>.resultAreaFlex {
+			margin-top: 10px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+		.apartments>section>.right>.resultArea>.resultsFlex {
+			width: 48%;
+			margin-top: 20px;
+		}
+	/* 『條列式』排列方式，這邊只需要把resultList設定在results那層，就會套用以下這些效果拉*/
+		.apartments>section>.right>.resultArea>.resultsList {
+			display: flex;
+			flex-direction: row;
+		}
+		.apartments>section>.right>.resultArea>.resultsList>.img {
+			width: 40%;
+			padding-bottom: 25%;
+		}
+		.apartments>section>.right>.resultArea>.resultsList>.description {
+			width: 60%;
+		}
+		.apartments>section>.right>.resultArea>.resultsList>.description>.absolute {
+			position: relative;
+			top: 0px;
+			left: 0px;
+			padding: 0px 0px 0px 0px;
+		}
+		.apartments>section>.right>.resultArea>.resultsList>.description>.priceGesture>.price {
+			font-size: 1.5em;
+			color: black;
+			letter-spacing: 1.3px;
+			text-shadow: none;
+		}
+		.apartments>section>.right>.resultArea>.resultsList>.description>.priceGesture>.gesture>.icon {
+			color: black;
+			height: 25px;
+			width: 25px;
+			margin-right: 10px;
+		    cursor: pointer;
+		    filter: unset;
+		}
+		.apartments>section>.right>.resultArea>.resultsList>.description>.updateTime {
+			display: none;
+		}
+
+		.apartments>section>.mapMode {
+			display: none;
+		}
+
+@media (max-width: 900px) {
+		.apartments>section>.left {
+			display: none;
+		}
+
+		.apartments>section>.right {
+			width: 100%;
+			height: 100%;
+			background-color: #F7F7F7;
+			padding: 20px 20px;
+			display: flex;
+			flex-direction: column;
+			padding: 0px;
+		}
+
+		.apartments>section>.right>.title {
+		    background-color: initial;
+		    padding: 0px 0px 0px 20px;
+		    order: 2;
+		}
+
+		.apartments>section>.right>.filterArea {
+		    background-color: initial;
+		    padding: 0px;
+		    order: 1;
+		}
+
+
+		.apartments>section>.right>.filterArea>.filterType {
+			display:none;
+		}
+
+		.apartments>section>.right>.filterArea>.buttons {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.apartments>section>.right>.filterArea>.buttons>.button {
+			width: 49%;
+		     margin-right: 0px; 
+		     margin-left: 0px; 
+		    text-align: center;
+;
+		}
+
+		.apartments>section>.right>.resultTitle {
+		    display: none;
+		}
+
+		.apartments>section>.right>.resultArea {
+			order: 3;
+		}
+
+		.apartments>section>.right>.resultArea>.results {
+			display: flex;
+			flex-direction: row;
+			margin-top: 2px;
+		}
+		.apartments>section>.right>.resultArea>.results>.img {
+			width: 40%;
+			padding-bottom: 25%;
+		}
+		.apartments>section>.right>.resultArea>.results>.description {
+			width: 60%;
+			border-right: unset;
+		}
+		.apartments>section>.right>.resultArea>.results>.description>.absolute {
+			position: unset;
+			top: 0px;
+			left: 0px;
+			padding: 0px 0px 0px 0px;
+		}
+		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.price {
+			font-size: 1.5em;
+			color: black;
+			letter-spacing: 1.3px;
+			text-shadow: none;
+		}
+		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture>.icon {
+			color: #B3B6B7;
+			height: 25px;
+			width: 25px;
+			margin-right: 5px;
+			filter: unset;
+		}
+		.apartments>section>.right>.resultArea>.results>.description>.updateTime {
+			display: none;
+		}
+		.apartments>section>.right>.resultArea>.results>.description>.updateTime {
+			display: none;
+		}
+
+		.apartments>section>.mapMode {
+			position: fixed;
+			bottom: 22px;
+		    right: 20px;
+			color: white;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			background-color: #B27538;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    box-shadow: 0.5px 0.5px 2px #424242;
+		}
 }
-
-.apartments>section>.right>.resultAreaFlex {
-	margin-top: 10px;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-}
-
-.apartments>section>.right>.resultArea>.results {
-	width: 100%;
-	margin-top: 20px;
-}
-.apartments>section>.right>.resultArea>.resultsFlex {
-	width: 48%;
-	margin-top: 20px;
-}
-
-.apartments>section>.right>.resultArea>.results>.img {
-	width: 100%;
-	padding-bottom: 50%;
-	background-image: url("../imgs/bedroom.jpg");
-	background-size: cover;
-	background-position: center;
-}
-
-.apartments>section>.right>.resultArea>.results>.description {
-	border: 1px solid #BBBBBB;
-    padding: 7px 0px 12px 15px;
-	position: relative;
-	width: 100%;
-}
-
-.apartments>section>.right>.resultArea>.results>.description>.priceGesture {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-}
-
-.apartments>section>.right>.resultArea>.results>.description>.absolute {
-	position: absolute;
-	top: -55px;
-	left: 0px;
-	padding: 0px 0px 0px 15px;
-}
-
-.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.price {
-	font-size: 2.1em;
-	align-self: flex-start;
-	color: white;
-	font-weight: 100;
-	font-family: 'Noto Sans';
-	letter-spacing: 1.3px;
-	text-shadow: 1px 1px 10px black;
-}
-
-.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture {
-
-}
-
-.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture>.icon {
-	color: white;
-	height: 30px;
-	width: 30px;
-	margin-right: 10px;
-    filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.4));
-    cursor: pointer;
-}
-
-.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture>.icon:hover {
-	color: red;
-}
-
-.apartments>section>.right>.resultArea>.results>.description>p {
-	margin-top: 3px;
-}
-
-.apartments>section>.right>.resultArea>.results>.description>.updateTime {
-	position: absolute;
-	top: 9px;
-	right: 20px;
-    font-size: 12px;
-    color: grey;
-}
-
-
-
-
-
-
-
-
-
