@@ -99,10 +99,20 @@
 .apartments>header>.right>.postHouse>p {
 	padding-right: 10px;
 	border-right: 1px solid #BBBBBB;
+	cursor: pointer;
 }
 
 .apartments>header>.right>.postHouse>.signButton {
 	padding-left: 10px;
+	cursor: pointer;
+}
+
+.apartments>header>.right>.postHouse>p:hover {
+	color: black;
+}
+
+.apartments>header>.right>.postHouse>.signButton:hover {
+	color: black;
 }
 
 
