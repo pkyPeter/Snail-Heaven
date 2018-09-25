@@ -125,7 +125,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		margin-top: 10px;
+		margin-top: 20px;
 	}
 	.apartments>section>.right>.resultTitle>.showLogic {
 		width: 30%;
@@ -370,6 +370,7 @@
 		.apartments>section>.right>.resultArea>.results>.description {
 			width: 60%;
 			border-right: unset;
+			background-color: white;
 		}
 		.apartments>section>.right>.resultArea>.results>.description>.absolute {
 			position: unset;

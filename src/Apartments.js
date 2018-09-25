@@ -7,6 +7,8 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "./style/common.css";
 import "./style/header.css";
 import "./style/body.css";
+
+//FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,9 +24,9 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-
 library.add(faRegularHeart, faBookmark, faBuilding, faSave, faListUl, faThLarge, faSquare, faThumbsDown
 ,faEnvelope, faBars, faMapMarkedAlt);
+
 
 class Apartments extends React.Component {
 	// componentDidMount() {
