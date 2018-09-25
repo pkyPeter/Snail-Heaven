@@ -3,32 +3,24 @@ import React from "react";
 import 'firebase/database';
 import {firebaseApp} from "./firebaseApp.js";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Header from "./Header.js";
+import List from "./listPage.js"
+import lib from "./lib.js";
 // import googleMap from "./GoogleMap.js";
 import "./style/common.css";
 import "./style/header.css";
 import "./style/body.css";
-
-//FontAwesome專用區域
-import { bedroom } from "./imgs/bedroom.jpg";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { faBookmark } from '@fortawesome/free-regular-svg-icons';
-import { faBuilding } from '@fortawesome/free-regular-svg-icons';
-import { faSave } from '@fortawesome/free-regular-svg-icons';
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
-import { faListUl} from '@fortawesome/free-solid-svg-icons';
-import { faThLarge } from '@fortawesome/free-solid-svg-icons';
-import { faSquare } from '@fortawesome/free-solid-svg-icons';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
-import { faThumbsDown } from '@fortawesome/free-regular-svg-icons';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-library.add(faRegularHeart, faBookmark, faBuilding, faSave, faListUl, faThLarge, faSquare, faThumbsDown
-,faEnvelope, faBars, faMapMarkedAlt);
+import "./style/likeList.css";
 
 
 class Apartments extends React.Component {
+	constructor() {
+	    super();	
+	    this.state = {
+	    	resultAreaDisplayType: ["resultArea","results"],
+	    	goLoveList: true
+	    };
+  	}
 	// componentDidMount() {
 	// 	googleMap.load.then(
 	// 		()=>{
@@ -40,117 +32,57 @@ class Apartments extends React.Component {
 	render() {
 		return(
 		<div className="apartments">
-			<header>
-				<div className="left">
-					<div className="burger"><FontAwesomeIcon className="icon" icon={['fas','bars']}/></div>
-					<div className="logo">
-						<div className="snail"></div>
-		  				<h2>SNAIL HEAVEN</h2>
-					</div>
-					<input type="text" placeholder="小蝸牛想住哪？"/>
-				</div>
-				<div className="right">
-					<div className="searchFav">
-						<FontAwesomeIcon className="icon" icon={["far","bookmark"]}/>
-						<p>儲存搜尋條件</p>
-					</div>
-					<div className="searchFav">
-						<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-						<p>我的最愛</p>
-					</div>
-					<div className="postHouse">
-						<FontAwesomeIcon className="icon" icon={['far','building']}/>
-						<p>提供租屋</p>
-						<div className="signButton">登入</div>
-					</div>
-				</div>
-			</header>
-			<section>
-				<div className="left">
-					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>	
-				</div>
-				<div className="right">
-					<div className="title">
-						<div>縣市</div>
-						<div> > </div>
-						<div>行政區</div>
-					</div>
-					<div className="filterArea">
-						<div className="filterType">
-							<p>租金</p>
-							<div className="filterDetail"></div>
-						</div>
-						<div className="filterType">
-							<p>房間數量</p>
-							<div className="filterDetail">
-								<div className="roomAmount">1</div>
-								<div className="roomAmount">2</div>
-								<div className="roomAmount">3</div>
-								<div className="roomAmount">4+</div>
-							</div>
-						</div>
-						<div className="filterType">
-							<p>房屋類型</p>
-							<div className="filterDetail">
-								<div className="roomType">分租套房</div>
-								<div className="roomType">獨立套房</div>
-								<div className="roomType">整層住家</div>
-							</div>
-						</div>
-						<div className="filterType hidden">
-							<p>行政區</p>
-							<div className="filterDetail"></div>
-						</div>
-						<div className="filterType hidden">
-							<p>有無房屋照片</p>
-							<div className="filterDetail"></div>
-						</div>
-						<div className="filterType buttons">
-							<div className="button"><FontAwesomeIcon className="icon" icon={['far','save']}/>儲存篩選組合</div>
-							<div className="button">更多條件</div>
-						</div>
-					</div>
-					<div className="resultTitle">
-						<div className="showLogic">
-							<select>
-								<option>相關性</option>
-								<option>最新物件</option>
-								<option>最低價優先</option>
-								<option>最高價優先</option>
-							</select>
-						</div>
-						<p>200筆結果</p>
-						<div className="displayLogic">
-							<div className="displayType"><FontAwesomeIcon icon={['fas','list-ul']}/></div>
-							<div className="displayType"><FontAwesomeIcon icon={['fas','th-large']}/></div>
-							<div className="displayType"><FontAwesomeIcon icon={['fas','square']}/></div>
-						</div>
-					</div>
-					<div className="resultArea">
-						<div className="results ">
-							<div className="img"></div>
-							<div className="description">
-								<div className="priceGesture absolute">
-									<div className="price">$1,385</div>
-									<div className="gesture">
-										<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-										<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-										<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
-									</div>
-								</div>
-								<p>9 Floorplans</p>
-								<p>New York, Chicago</p>
-								<p className="updateTime">2天前</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className="mapMode"><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
-				<div className="listMode"></div>
-			</section>
-
+			<Header goLoveListPage={this.goLoveList.bind(this)}/>
+			<List goLoveList={this.state.goLoveList}
+			resultAreaDisplayType={this.state.resultAreaDisplayType}
+			changeAreaSize={this.changeAreaSize.bind(this)} 
+			changeToList={this.changeToList.bind(this)}
+			changeToRowBlocks={this.changeToRowBlocks.bind(this)}
+			changeToBlocks={this.changeToBlocks.bind(this)}/>
 		</div>
 		)
+	}
+	changeAreaSize(e) {
+		let left = document.querySelector(".apartments>section>.left");
+		let right = document.querySelector(".apartments>section>.right");
+		let resizer = document.querySelector(".apartments>section>.right>.areaSizer ");
+		if ( e.type === "drag" && e.clientX != 0 && window.innerWidth - e.clientX >= 600) {
+				left.style.width = e.clientX;
+				right.style.width = window.innerWidth - e.clientX;
+				resizer.style.right = window.innerWidth - e.clientX;	
+		}
+		if ( e.type === "dragend") {
+			if (( window.innerWidth - e.clientX ) >= 600 ) {
+				left.style.width = e.clientX;
+				right.style.width = window.innerWidth - e.clientX;
+				resizer.style.right = window.innerWidth - e.clientX;
+			} else {
+				left.style.width = `calc(100% - 600px)`;
+				right.style.width = `600px`;
+				resizer.style.right = "600px";
+			}
+		} 
+	}
+	changeToList(e) {
+		//先移除RowBlocks的class，再把自己的放進去
+		lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
+		lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex"]);	
+		lib.func.toggleClass("toggle",".resultArea>.results", ["resultsList"]);	
+		this.setState({resultAreaDisplayType: ["resultArea","results resultsList"]});
+	}	
+	changeToRowBlocks(e) {
+		lib.func.toggleClass("remove",".resultArea>.results", ["resultsList"]);
+		lib.func.toggleClass("toggle",".resultArea", ["resultAreaFlex"]);
+		lib.func.toggleClass("toggle",".resultArea>.results", ["resultsFlex"]);
+		this.setState({resultAreaDisplayType: ["resultArea resultAreaFlex","results resultsFlex"]});	
+	}	
+	changeToBlocks(e) {
+		lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
+		lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex", "resultsList"]);	
+		this.setState({resultAreaDisplayType: ["resultArea","results"]});
+	}
+	goLoveList(e) {
+		this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
 	}
 }
 

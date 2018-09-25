@@ -1,0 +1,34 @@
+.right>.favTitle {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.right>.favTitle>.return {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	border: 1px solid #BBBBBB;
+	border-radius: 3px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+.right>.favTitle>.return:hover {
+	background-color: #626567;
+	border: 1px solid #626567;
+	color:white;
+	font-weight: 100;
+}
+
+.right>.favTitle>.return>.icon {
+	padding-right: 5px;
+}
+
+@media (max-width: 900px) {
+	.right>.favTitle {
+		margin: 20px 10px 0px;
+	}
+
+}
