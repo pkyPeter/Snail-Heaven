@@ -53,23 +53,29 @@ class Apartments extends React.Component {
 
   	}
 	componentDidMount() {
-	  	firebaseApp.fBaseDB.getListing(data => {
-	  		this.setState({completeList: data});
-			let location =[];
-			for(let i = 0; i < data.length; i++ ) {
-				let laAndLong = {lat:"", lng:""};
-				laAndLong.lat = parseFloat(data[i].latitude);
-				laAndLong.lng = parseFloat(data[i].longitude);
-				location.push(laAndLong);
-			}
-			this.setState({latLng: location});
+	  // 	firebaseApp.fBaseDB.getListing(data => {
+	  // 		this.setState({completeList: data});
+			// let location =[];
+			// for(let i = 0; i < data.length; i++ ) {
+			// 	let laAndLong = {lat:"", lng:""};
+			// 	laAndLong.lat = parseFloat(data[i].latitude);
+			// 	laAndLong.lng = parseFloat(data[i].longitude);
+			// 	location.push(laAndLong);
+			// }
+			// this.setState({latLng: location});
 			
 			// Promise.all([googleMap.load, googleMap.loadMarker]).then(
 			// ()=>{
 			// 	console.log(this.state.locations);
 			// 	googleMap.init.initMap(12,this.state.currentLocation[0],this.state.currentLocation[1],"googleMap", this.state.latLng);
 			// })
-		}) 
+		// })
+		console.log("before getQueryString");
+		if ( lib.func.getQueryString("loveList") === true ) {
+			this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
+			this.setState({toggleSimpleDetail: false})
+			console.log('line 77 getQueryString')		
+		}
 	}
 	render() {
 		return(
@@ -88,6 +94,7 @@ class Apartments extends React.Component {
 			changeToBlocks={this.changeToBlocks.bind(this)} 
 			toggleSimpleDetail={this.state.toggleSimpleDetail}
 			goSimpleDetail={this.goSimpleDetail.bind(this)}
+			goPropertyPage={this.goPropertyPage.bind(this)}
 			/>
 		</div>
 		)
@@ -138,6 +145,9 @@ class Apartments extends React.Component {
 	goSimpleDetail(e) {
 		this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
 		this.setState({goLoveList: false})		
+	}
+	goPropertyPage(e) {
+		this.props.history.push("/property");
 	}
 }
 

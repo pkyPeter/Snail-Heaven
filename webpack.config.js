@@ -6,7 +6,10 @@ module.exports = {
   entry: './src/app.js',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist'
+    contentBase: './dist',
+    inline: true,
+    historyApiFallback: true,
+    port: 8008
   }, //這邊就是要用webpack-dev-server配置的話，就要加入告訴server要去哪裡找文件
   plugins: [
     new HtmlWebpackPlugin({

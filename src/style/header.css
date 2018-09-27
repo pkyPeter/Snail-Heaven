@@ -1,4 +1,4 @@
-.apartments>header {
+header {
 	width: 100%;
 	height: 60px;
 	display: flex;
@@ -8,7 +8,7 @@
 	box-shadow: 0.5px 0.5px 5px #D0D3D4;
 }
 
-.apartments>header>.left {
+header>.left {
 	width: 52%;
 	display: flex;
 	flex-direction: row;
@@ -16,7 +16,7 @@
 	align-items: center;
 }
 
-.apartments>header>.right {
+header>.right {
 	width: 45%;
 	display: flex;
 	flex-direction: row;
@@ -26,17 +26,17 @@
 
 
 /* 左側項目，包含logo 搜尋bar*/
-.apartments>header>.left>.burger {
+header>.left>.burger {
 	display: none;
 }
-.apartments>header>.left>.logo {
+header>.left>.logo {
 	padding-left: 20px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	cursor: pointer;
 }
-.apartments>header>.left>.logo>.snail {
+header>.left>.logo>.snail {
 	width: 40px;
 	height: 40px;
 	margin-right: 10px;
@@ -45,12 +45,12 @@
 	background-image: url("../imgs/snail.png");
 }
 
-.apartments>header>.left>.logo>h2 {
+header>.left>.logo>h2 {
 	font-size: 1.7em;
 	letter-spacing: 0.8px;
 }
 
-.apartments>header>.left>input {
+header>.left>input {
 	width: 40%;
 	padding: 10px 3px 10px 30px;
 	margin-left: 20px;
@@ -64,14 +64,14 @@
     border-radius: 2px;
     border: 1px solid #B3B6B7;
 }
-.apartments>header>.left>input::placeholder {
+header>.left>input::placeholder {
 	color: #B3B6B7;
 }
 
 
 /* 右側項目，包含「儲存條件」「我的最愛」「提供租屋」「登入」*/
 
-.apartments>header>.right>.searchFav {
+header>.right>.searchFav {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -81,7 +81,7 @@
     margin-right: 20px;
     cursor: pointer;
 }
-.apartments>header>.right>.searchFav:hover {
+header>.right>.searchFav:hover {
 	background-color: #626567;
 	border: 1px solid #626567;
 	color:white;
@@ -89,51 +89,51 @@
 }
 
 
-.apartments>header>.right>.searchFav>.icon {
+header>.right>.searchFav>.icon {
 	margin-right: 6px;
 	width: 1em;
 }
 
-.apartments>header>.right>.postHouse {
+header>.right>.postHouse {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	margin-right: 10px;
 }
-.apartments>header>.right>.postHouse>p {
+header>.right>.postHouse>p {
 	padding-right: 10px;
 	border-right: 1px solid #BBBBBB;
 	cursor: pointer;
 }
 
-.apartments>header>.right>.postHouse>.signButton {
+header>.right>.postHouse>.signButton {
 	padding-left: 10px;
 	cursor: pointer;
 }
 
-.apartments>header>.right>.postHouse>p:hover {
+header>.right>.postHouse>p:hover {
 	color: black;
 }
 
-.apartments>header>.right>.postHouse>.signButton:hover {
+header>.right>.postHouse>.signButton:hover {
 	color: black;
 }
 
 
-.apartments>header>.right>.postHouse>.icon {
+header>.right>.postHouse>.icon {
 	margin-right: 6px;
 	width: 1em;
 }
 
 @media (max-width: 900px) {
-	.apartments>header>.left {
+	header>.left {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 	}
-	.apartments>header>.right {
+	header>.right {
 		display: none;
 		/*display: flex;*/
 		position: fixed;
@@ -150,7 +150,7 @@
 	    z-index: 200;
 	}
 
-	.apartments>header>.right>.searchFav {
+	header>.right>.searchFav {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -161,54 +161,54 @@
 	    cursor: pointer;
 	}
 
-	.apartments>header>.right>.searchFav>.icon {
+	header>.right>.searchFav>.icon {
 		margin-right: 10px;
 	}
 
-	.apartments>header>.right>.postHouse>p {
+	header>.right>.postHouse>p {
 		border: unset;
 	}
 	
-	.apartments>header>.right>.postHouse>.icon {
+	header>.right>.postHouse>.icon {
 		margin-right: 10px;
 	}
 
-	.apartments>header>.right>.postHouse>.signButton {
+	header>.right>.postHouse>.signButton {
 		position: absolute;
 		bottom: 25px;
 	}
 
-	.apartments>header>.left>.burger {
+	header>.left>.burger {
 		display: block;
 		margin-left: 20px;
 		z-index: 150;
 	}
 
-	.apartments>header>.left>.burger>.icon {
+	header>.left>.burger>.icon {
 		height: 20px;
 		width: 20px;
 		color: #B3B6B7;
 	}
 
-	.apartments>header>.left>.logo {
+	header>.left>.logo {
 		position : absolute;
 		width: 100%;
 		z-index: 1;
 		justify-content: center;
 	}
 
-	.apartments>header>.left>.logo>h2 {
+	header>.left>.logo>h2 {
 		display: none;
 	}
 
-	.apartments>header>.left>input {
+	header>.left>input {
 		width: 30px;
 		margin-right: 20px;
 	    font-size: 0.5em;
 	    z-index: 150;
 	    border: none;
 	}
-	.apartments>header>.left>input:focus {
+	header>.left>input:focus {
 		width: 100%;
 		border: 1px solid #B3B6B7;
 	}

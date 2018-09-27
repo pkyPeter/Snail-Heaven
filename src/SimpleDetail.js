@@ -97,7 +97,7 @@ const SimpleDetail = props => {
 			</div>
 			<div className="streetViewMap">
 			</div>
-			<div className="moreInfo">更多詳細資訊</div>			
+			<div className="moreInfo" onClick={props.goPropertyPage}>更多詳細資訊</div>			
 		</div>
 	)
 }

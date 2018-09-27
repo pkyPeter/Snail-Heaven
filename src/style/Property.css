@@ -1,0 +1,403 @@
+.properties {
+	height: 100%;
+}
+.property {
+	height: calc(100% - 60px);
+	width: 80%;
+	min-width: 1000px;
+	margin: 0 auto;
+}
+
+/*最上方按鈕區域*/
+	.property>.propTitle {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		padding: 20px 20px;
+		flex-shrink: 0;
+	}
+
+	.property>.propTitle>.sdRight {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		flex-shrink: 0;
+	}
+
+	.property>.propTitle>.button, .property>.propTitle>.sdRight>.button {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		border: 1px solid #BBBBBB;
+		border-radius: 3px;
+		padding: 5px 10px;
+		margin-right: 5px;
+		cursor: pointer;
+	}
+
+	.property>.propTitle>.button:hover, .property>.propTitle>.sdRight>.button:hover {
+		background-color: #626567;
+		border: 1px solid #626567;
+		color:white;
+		font-weight: 100;
+	}
+
+	.property>.propTitle>.button>.icon, .property>.propTitle>.sdRight>.button>.icon {
+		height: 1em;
+		width: 1em;
+		padding-right: 5px;
+	    cursor: pointer;
+	}
+
+/*mainContent 主內容區域*/
+  /*劃分內容*/
+	.property>.propContent {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.property>.propContent>.left {
+		width: calc(100% - 360px);
+		padding-left: 20px;
+	}
+	.property>.propContent>.right {
+		width: 360px;
+		padding: 0px 20px;
+	}
+
+  /*⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩ Left ⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩*/
+  	/*資產名稱*/
+  	.property>.propContent>.left>.name {
+  		font-size: 1.5em;
+  	}
+  	/*地址*/
+  	.property>.propContent>.left>.address {
+  		font-size: 1em;
+  		margin: 5px 0px;
+  	}
+  	/*立即聯繫*/
+  	.property>.propContent>.left>.checkAvailable {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width:30%;
+		min-width: 120px; 
+		height: 50px;
+		margin: 15px 0px;
+		background-color: #00A99D;
+		color: white;
+		border-radius: 3px;
+		font-weight: 100;
+		font-size: 1.1em;
+		cursor: pointer;
+	}
+	.property>.propContent>.left>.checkAvailable:hover {
+		background-color: #40948E;
+	}
+  	/*圖像資訊區域*/
+  	.property>.propContent>.left>.propGraphicInfo {
+  		width: 100%;
+  	}
+
+  	.property>.propContent>.left>.propGraphicInfo>.tabs {
+  		width: 100%;
+  		display: flex;
+  		flex-direction: row;
+  		justify-content: flex-start;
+  	}
+
+  	.property>.propContent>.left>.propGraphicInfo>.tabs>.tab {
+    	padding: 5px 25px;
+    	border-radius: 3px 3px 0px 0px;
+  	}
+  	 .property>.propContent>.left>.propGraphicInfo>.tabs>.tab:hover {
+    	border: 1px solid #BBBBBB !important;
+    	border-radius: 3px 3px 0px 0px;
+    	border-bottom: none !important;
+  	}
+  	.property>.propContent>.left>.propGraphicInfo>.tabs>.active {
+		background-color: #F7D56B;
+		border-radius: 3px 3px 0px 0px !important;
+  	}
+ 	.property>.propContent>.left>.propGraphicInfo>.graphics {
+  		width: 100%;
+  		height: 480px;
+  	}
+  	.property>.propContent>.left>.propGraphicInfo>.graphics>.photoGallery {
+  		height: 100%;
+  	}
+  	.property>.propContent>.left>.propGraphicInfo>.graphics>.photoGallery>.gallery {
+  		position:relative;
+  		height: 80%;
+  	}
+  	.property>.propContent>.left>.propGraphicInfo>.graphics>.photoGallery>.gallery>.photos {
+  		position: relative;
+  		height: 100%;
+  		width: 100%;
+  	}
+
+  	.property>.propContent>.left>.propGraphicInfo>.graphics>.photoGallery>.gallery>.photos>.photo {
+  		position: absolute;
+  		right: 0;
+  		top: 0;
+  		width: 100%;
+  		height: 100%;
+  		background-image: url("../imgs/bedroom.jpg");
+		background-size: cover;
+		background-position: bottom;
+  	}
+  	.photoGallery>.gallery>.leftSelector {
+		position:absolute;
+		height: 100%;
+		top: 0%;
+		left: 0%;
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.photoGallery>.gallery>.rightSelector {
+		position:absolute;
+		height: 100%;
+		top: 0%;
+		right: 0%;
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+	.photoGallery>.gallery>.leftSelector:hover,
+	.photoGallery>.gallery>.rightSelector:hover {
+		background-color: rgba(89, 100, 112, 0.1);
+	}
+
+	.photoGallery>.gallery>.leftSelector>.icon {
+		width: 2.5em;
+		height: 2.5em;
+		filter: drop-shadow(1.8px 1.8px 0px rgba(0, 0, 0, 0.6));
+	}
+	.photoGallery>.gallery>.rightSelector>.icon {
+		width: 2.5em;
+		height: 2.5em;
+		filter: drop-shadow(1.8px 1.8px 0px rgba(0, 0, 0, 0.6));
+	}
+	.photoGallery>.photoSelector {
+		width: 100%;
+		height: 20%;
+		padding: 10px 0px;
+		display: flex;
+		flex-direction: row;
+		overflow-x: scroll;
+	}
+
+	::-webkit-scrollbar {
+	    width: 0px;
+	    background: none;
+	}
+
+	.photoGallery>.photoSelector>.selector {
+		width: 20%;
+		height: 100%;
+		margin-right: 5px;
+		background-image: url("../imgs/bedroom.jpg");
+		background-size: cover;
+		background-position: bottom;
+		flex-shrink: 0;
+	}
+	.photoGallery>.photoSelector>.focus {
+    	border: 1px solid #F7D56B;
+    	box-shadow: 0px 0px 1px #F7D56B;
+    }
+
+  	/*描述*/
+  	.property>.propContent>.left>.description {
+
+  	}
+  	/*房屋設備*/
+  	.property>.propContent>.left>.Amenities {
+
+  	}
+  	.property>.propContent>.left>.Amenities {
+		width: 100%;
+		margin-top: 20px;
+	}
+	.property>.propContent>.left>.Amenities>.title {
+		font-size: 1.1em;
+		margin-bottom: 10px;
+		border-bottom: 1px rgba(0, 0, 0, 0.1) solid;
+    	padding-bottom: 3px;
+	}
+	.property>.propContent>.left>.Amenities>.content { 
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		font-weight: 200;
+    	font-family: Microsoft JhengHe;
+	}
+	.property>.propContent>.left>.Amenities>.content>.amenity {
+/*		display: flex;
+		flex-direction: row;
+		align-items: center;*/
+		border: 1px solid #BBBBBB;
+		border-radius: 3px;
+		padding: 5px 10px;
+		margin-right: 10px;
+		margin-bottom: 7px;
+		background-color: #F6F6F6;
+    	color: black;
+	}
+
+
+  /*⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩ Right ⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩*/
+
+  	.property>.propContent>.right>.profile {
+  		width: 100%;
+  		display: flex;
+  		justify-content: center;
+  		align-items: center;
+  	}
+
+  	.property>.propContent>.right>.profile>.avatar {
+  		width: 130px;
+  		height: 130px;
+  		border-radius: 50%;
+  		background-image: url("../imgs/avatar.png");
+  		background-size: cover;
+  		background-position: center;
+  		text-align: center;
+  		margin-right: 20px;
+  	}
+
+  	.property>.propContent>.right>.profile>.description>.title {
+  		font-size: 0.7em;
+  	}
+
+  	 .property>.propContent>.right>.profile>.description>.name {
+  		font-size: 1.2em;
+  		font-weight: 100;
+  	}
+
+ 	/*立即聯繫*/
+  	.property>.propContent>.right>.checkAvailable {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width:90%;
+		min-width: 120px; 
+		height: 50px;
+		background-color: #00A99D;
+		color: white;
+		border-radius: 3px;
+		font-weight: 100;
+		font-size: 1.1em;
+		cursor: pointer;
+	}
+	.property>.propContent>.right>.checkAvailable:hover {
+		background-color: #40948E;
+	}
+
+	.property>.propContent>.right>.flag {
+		width: 90%;
+		font-size: .8em;
+		text-align: center;
+		margin: 20px auto 0px auto;
+		color: #BBBBBB;
+	}
+
+	.property>.footer {
+		width: 100%;
+		height: 60px;
+	}
+
+
+
+@media (max-width: 900px) {
+	.property {
+		height: calc(100% - 60px);
+		width: 100%;
+		min-width: unset;
+		margin: 0 auto;
+	}
+	/*最上方按鈕區域*/
+	.property>.propTitle {
+		padding: 15px 5px 20px 10px;
+	}
+	.property>.propTitle>.sdRight>.button>div {
+		display: none;
+	}
+	.property>.propTitle>.button>.icon,.property>.propTitle>.sdRight>.button>.icon {
+		padding-right: 0px;
+	}
+	/*mainContent 主內容區域*/
+ 	 /*劃分內容*/
+
+	.property>.propContent>.left {
+		width: 100%;
+		padding-left: 0px;
+	}
+	.property>.propContent>.right {
+		width: 100%;
+		margin-top: 30px;
+		padding: 0px;
+	}
+
+	.property>.propContent>.left>.propGraphicInfo>.tabs>.tab {
+		width: 5px 25px;
+		width: 33%;
+		text-align: center;
+		vertical-align: middle;
+		padding: 10px;
+	}
+ 	.property>.propContent>.left>.propGraphicInfo>.graphics {
+  		width: 100%;
+  		height: 300px;
+  	}
+  	.property>.propContent>.left>.propGraphicInfo>.graphics>.photoGallery>.gallery {
+  		position:relative;
+  		height: 70%;
+  	}
+	.photoGallery>.photoSelector {
+		padding: 10px 5px;
+		height: 30%;
+	}
+
+
+	.property>.propContent>.left>.description {
+		padding: 0px 10px;
+  	}
+  	.property>.propContent>.left>.Amenities {
+		padding: 0px 10px;
+  	}
+	/*⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩ Left ⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩*/
+  	/*資產名稱*/
+  	.property>.propContent>.left>.name {
+  		padding: 0px 10px;
+  	}
+  	/*地址*/
+  	.property>.propContent>.left>.address {
+  		padding: 0px 10px;
+  	}
+
+	.property>.propContent>.left>.address {
+    	margin: 10px 0px;
+	}
+  	.property>.propContent>.left>.checkAvailable {
+  		width: calc( 100% - 10px );
+  		margin: 0 auto 20px auto;
+  	}
+  	.property>.propContent>.right>.checkAvailable {
+  		width: calc( 100% - 10px );
+
+  	}
+
+}

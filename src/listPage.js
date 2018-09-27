@@ -191,7 +191,7 @@ class List extends React.Component {
 					<LoveList resultAreaDisplayType={this.props.resultAreaDisplayType} goLoveListPage={this.props.goLoveListPage} />
 				)}
 				{	!this.props.goLoveList && this.props.toggleSimpleDetail && (
-					<SimpleDetail goSimpleDetail={this.props.goSimpleDetail}/>
+					<SimpleDetail goSimpleDetail={this.props.goSimpleDetail} goPropertyPage={this.props.goPropertyPage}/>
 				)}
 				<div className="mapMode"><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
 				<div className="listMode"></div>

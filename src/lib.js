@@ -29,6 +29,17 @@ lib.func.toggleClass = ( action , target, classes) => {
 	}
 }
 
+lib.func.getQueryString = ( target ) => {
+	console.log('lib getQueryString')
+	let queryString = window.location.search;
+	let targetQuery = target;
+	if (queryString.search(targetQuery) !== -1) {
+		return true
+	} else {
+		return false
+	}
+}
+
 
 
 
