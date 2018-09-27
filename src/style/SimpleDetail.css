@@ -1,0 +1,313 @@
+.right>.sdTitle {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	flex-shrink: 0;
+}
+
+/*最上方按鈕區域*/
+.right>.sdTitle>.sdRight {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.right>.sdTitle>.button, .right>.sdTitle>.sdRight>.button {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	border: 1px solid #BBBBBB;
+	border-radius: 3px;
+	padding: 5px 10px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.right>.sdTitle>.button:hover, .right>.sdTitle>.sdRight>.button:hover {
+	background-color: #626567;
+	border: 1px solid #626567;
+	color:white;
+	font-weight: 100;
+}
+
+.right>.sdTitle>.button>.icon, .right>.sdTitle>.sdRight>.button>.icon {
+	height: 1em;
+	width: 1em;
+	padding-right: 5px;
+    cursor: pointer;
+}
+
+
+/*photoGallery 照片藝廊區域*/
+	.right>.photoGallery {
+	    margin-top: 20px;
+	    width: 100%;
+	    display: flex;
+	    flex-shrink: 0;
+		flex-direction: column;
+	}
+
+	.right>.photoGallery>.gallery {
+		width: 100%;
+		position: relative;
+	}
+	.right>.photoGallery>.gallery>.photos {
+		width: 100%;
+	}
+
+	.right>.photoGallery>.gallery>.photos>.photo {
+		width: 100%;
+		padding-bottom: 60%;
+		background-image: url("../imgs/bedroom.jpg");
+		background-size: cover;
+		background-position: bottom;
+	}
+	/*左右鍵*/
+	.right>.photoGallery>.gallery>.leftSelector {
+		position:absolute;
+		height: 100%;
+		top: 0%;
+		left: 0%;
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.right>.photoGallery>.gallery>.rightSelector {
+		position:absolute;
+		height: 100%;
+		top: 0%;
+		right: 0%;
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+	.right>.photoGallery>.gallery>.leftSelector:hover,
+	.right>.photoGallery>.gallery>.rightSelector:hover {
+		background-color: rgba(89, 100, 112, 0.1);
+	}
+
+	.right>.photoGallery>.gallery>.leftSelector>.icon {
+
+		width: 2.5em;
+		height: 2.5em;
+		filter: drop-shadow(1.8px 1.8px 0px rgba(0, 0, 0, 0.6));
+
+	}
+	.right>.photoGallery>.gallery>.rightSelector>.icon {
+		width: 2.5em;
+		height: 2.5em;
+		filter: drop-shadow(1.8px 1.8px 0px rgba(0, 0, 0, 0.6));
+	}
+	/*點點鍵*/
+	.right>.photoGallery>.dotSelector {
+		width: 100%;
+		height: 30px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+	.right>.photoGallery>.dotSelector>.dot {
+		padding: 2px;
+		background-color: #fff;
+		margin-right: 12px;
+		border: 1px black solid;
+		border-radius: 50%;
+
+	}
+	.right>.photoGallery>.dotSelector>.focus {
+		background-color: black;
+
+	}
+
+/*priceAddress價錢與地址專區*/
+	.right>.priceAddress{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		flex-shrink: 0;
+		padding: 0px 3px;
+	}
+	.right>.priceAddress>.price {
+		font-size: 3em;
+		font-weight: 100;
+		font-family: Microsoft JhengHe;
+	}
+	.right>.priceAddress>span {
+		width: 1px;
+		height: 50px;
+		background-color: rgba(89, 100, 112, 0.5);
+		margin: 0px 20px 0px 20px;
+	}
+	.right>.priceAddress>.address>.cityDist {
+		margin-bottom: 5px;
+		font-size: 1.2em;
+	}
+	.right>.priceAddress>.address>.street {
+		font-size: .5em;
+	}
+
+/*checkAvailable 立即詢問按鈕*/
+	.right>.checkAvailable {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width:50%;
+		height: 50px;
+		background-color: #00A99D;
+		color: white;
+		margin: 20px auto 0px auto;
+		border-radius: 3px;
+		font-weight: 100;
+		font-size: 1.1em;
+		cursor: pointer;
+	}
+	.right>.checkAvailable:hover {
+		background-color: #40948E;
+	}
+
+/*更新時間*/
+	.right>.time {
+		margin-top: 20px;
+		width: 100%;
+		display: flex;
+	}
+	.right>.time>.title {
+		font-size: 0.5em;
+		color: #9C9C9C;
+		margin-right: 10px;
+	}
+	.right>.time>.content {
+		font-size: .5em;
+		font-weight: 200;
+    	font-family: Microsoft JhengHe;
+    	color: #9C9C9C;
+	}
+
+
+/*房屋概述*/
+	.right>.description {
+		margin-top: 20px;
+		width: 100%;
+	}
+	.right>.description>.title {
+		font-size: 1.1em;
+		margin-bottom: 10px;
+		border-bottom: 1px rgba(0, 0, 0, 0.1) solid;
+    	padding-bottom: 3px;
+	}
+	.right>.description>.content {
+		font-weight: 200;
+    	font-family: Microsoft JhengHe;
+	}
+
+/*房屋設備區域*/
+	.right>.Amenities {
+		width: 100%;
+		margin-top: 20px;
+	}
+	.right>.Amenities>.title {
+		font-size: 1.1em;
+		margin-bottom: 10px;
+		border-bottom: 1px rgba(0, 0, 0, 0.1) solid;
+    	padding-bottom: 3px;
+	}
+	.right>.Amenities>.content { 
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		font-weight: 200;
+    	font-family: Microsoft JhengHe;
+	}
+	.right>.Amenities>.content>.amenity {
+/*		display: flex;
+		flex-direction: row;
+		align-items: center;*/
+		border: 1px solid #BBBBBB;
+		border-radius: 3px;
+		padding: 5px 10px;
+		margin-right: 10px;
+		margin-bottom: 7px;
+	}
+
+/*更多詳細資訊 按鈕*/
+	.right>.moreInfo {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		width: 25%;
+		min-width: 130px;
+		height: 50px;
+		color: #00A99D;
+		margin: 20px auto 0px auto;
+		border: 1px solid #00A99D;
+		border-radius: 3px;
+		font-weight: 100;
+		font-size: 1.1em;
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+	.right>.moreInfo:hover {
+		background-color: #DFF4F3;
+	}
+
+@media (max-width: 900px) {
+	.right>.sdTitle {
+		margin: 20px 0px 0px 0px;
+	}
+	.right>.sdTitle>.return {
+		padding-left: 5px;
+	}
+	.right>.sdTitle>.button>div, .right>.sdTitle>.sdRight>.button>div {
+		display: none;
+	}
+	.right>.sdTitle>.button>.icon, .right>.sdTitle>.sdRight>.button>.icon {
+		padding-right: 0px;
+	}
+	.right>.priceAddress{
+		padding: 0 10px;
+	}
+	.right>.description {
+		padding: 0px 10px;
+	}
+	.right>.time {
+		padding: 0px 10px;
+	}
+	.right>.Amenities {
+		padding: 0 10px;
+	}
+
+}
+
+@media (max-width: 320px) {
+	.right>.priceAddress{
+		padding: 0px 10px;
+	}
+	.right>.priceAddress>.price {
+		font-size: 2em;
+		font-weight: 100;
+		font-family: Microsoft JhengHe;
+	}
+	.right>.priceAddress>span {;
+		margin: 0px 15px 0px 15px;
+	}
+	.right>.priceAddress>.address>.cityDist {
+		font-size: 1em;
+	}
+	.right>.priceAddress>.address>.street {
+		font-size: .5em;
+	}
+}

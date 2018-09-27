@@ -1,7 +1,14 @@
 
 const lib = {
-	func: {}
+	func: {},
 }
+
+lib.func.get = (selector) => {
+	return document.querySelector(selector);
+};
+lib.func.getAll = (selector) => {
+	return document.querySelectorAll(selector);
+};
 
 lib.func.toggleClass = ( action , target, classes) => {
 	//classes: please put in array
@@ -21,5 +28,8 @@ lib.func.toggleClass = ( action , target, classes) => {
 		}
 	}
 }
+
+
+
 
 export default lib;

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import lib from "./lib.js";
 import LoveList from "./LoveList.js"
+import SimpleDetail from "./SimpleDetail.js";
 //FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
 //FontAwesome主程式
@@ -27,7 +28,7 @@ class List extends React.Component {
 				<div className="left">
 					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>	
 				</div>
-				{	!this.props.goLoveList ? (
+				{	!this.props.goLoveList && !this.props.toggleSimpleDetail && (
 					<div className="right">
 						<div className="areaSizer" draggable="true" onDrag={this.props.changeAreaSize} onDragEnd={this.props.changeAreaSize}></div>
 						<div className="title">
@@ -67,7 +68,7 @@ class List extends React.Component {
 							</div>
 							<div className="filterType buttons">
 								<div className="button"><FontAwesomeIcon className="icon" icon={['far','save']}/>儲存篩選組合</div>
-								<div className="button">更多條件</div>
+								<div className="button" onClick={this.showMoreFilter.bind(this)}>更多條件</div>
 							</div>
 						</div>
 						<div className="resultTitle">
@@ -87,7 +88,23 @@ class List extends React.Component {
 							</div>
 						</div>
 						<div className="resultArea">
-							<div className="results">
+							<div className="results" onClick={this.props.goSimpleDetail}>
+								<div className="img"></div>
+								<div className="description">
+									<div className="priceGesture absolute">
+										<div className="price">$1,385</div>
+										<div className="gesture" onClick={this.stopPropagation.bind(this)}>
+											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
+											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
+											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+										</div>
+									</div>
+									<p>9 Floorplans</p>
+									<p>New York, Chicago</p>
+									<p className="updateTime">2天前</p>
+								</div>
+							</div>
+							<div className="results" onClick={this.props.goSimpleDetail}>
 								<div className="img"></div>
 								<div className="description">
 									<div className="priceGesture absolute">
@@ -103,7 +120,55 @@ class List extends React.Component {
 									<p className="updateTime">2天前</p>
 								</div>
 							</div>
-							<div className="results">
+							<div className="results" onClick={this.props.goSimpleDetail}>
+								<div className="img"></div>
+								<div className="description">
+									<div className="priceGesture absolute">
+										<div className="price">$1,385</div>
+										<div className="gesture">
+											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
+											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
+											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+										</div>
+									</div>
+									<p>9 Floorplans</p>
+									<p>New York, Chicago</p>
+									<p className="updateTime">2天前</p>
+								</div>
+							</div>
+							<div className="results" onClick={this.props.goSimpleDetail}>
+								<div className="img"></div>
+								<div className="description">
+									<div className="priceGesture absolute">
+										<div className="price">$1,385</div>
+										<div className="gesture">
+											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
+											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
+											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+										</div>
+									</div>
+									<p>9 Floorplans</p>
+									<p>New York, Chicago</p>
+									<p className="updateTime">2天前</p>
+								</div>
+							</div>
+							<div className="results" onClick={this.props.goSimpleDetail}>
+								<div className="img"></div>
+								<div className="description">
+									<div className="priceGesture absolute">
+										<div className="price">$1,385</div>
+										<div className="gesture">
+											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
+											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
+											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+										</div>
+									</div>
+									<p>9 Floorplans</p>
+									<p>New York, Chicago</p>
+									<p className="updateTime">2天前</p>
+								</div>
+							</div>
+							<div className="results" onClick={this.props.goSimpleDetail}>
 								<div className="img"></div>
 								<div className="description">
 									<div className="priceGesture absolute">
@@ -121,14 +186,33 @@ class List extends React.Component {
 							</div>
 						</div>
 					</div>
-				) : (
-					<LoveList resultAreaDisplayType={this.props.resultAreaDisplayType}/>
+				)} 
+				{	this.props.goLoveList && !this.props.toggleSimpleDetail && (
+					<LoveList resultAreaDisplayType={this.props.resultAreaDisplayType} goLoveListPage={this.props.goLoveListPage} />
+				)}
+				{	!this.props.goLoveList && this.props.toggleSimpleDetail && (
+					<SimpleDetail goSimpleDetail={this.props.goSimpleDetail}/>
 				)}
 				<div className="mapMode"><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
 				<div className="listMode"></div>
 			</section>
 		)
-	}	
+	}
+	stopPropagation(e) {
+		e.stopPropagation();
+    	e.nativeEvent.stopImmediatePropagation();
+	}
+	showMoreFilter(e) {
+		let filterTypes = lib.func.getAll(".filterType");
+		filterTypes[3].classList.toggle("hidden");
+		filterTypes[4].classList.toggle("hidden");
+		let filterbutton = lib.func.getAll(".buttons>.button");		
+		filterbutton[0].classList.toggle("hidden");
+		filterbutton[1].textContent === "更多條件"
+			? filterbutton[1].textContent = "確認條件"
+			: filterbutton[1].textContent = "更多條件";
+		
+	}
 }
 
 

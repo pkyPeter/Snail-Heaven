@@ -18,11 +18,11 @@ const LoveList = props => {
 		<div className="right">
 			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize}></div>
 			<div className="favTitle">
-				<div className="return">							
+				<div className="return" onClick={props.goLoveListPage}>							
 					<FontAwesomeIcon className="icon" icon={['fas','search']}/>
 					<div>回到搜尋結果</div>
 				</div>
-				<div className="title">共５個喜愛標的</div>
+				<div className="title">共1個喜愛標的</div>
 			</div>
 			<div className={props.resultAreaDisplayType[0]}>
 				<div className={props.resultAreaDisplayType[1]}>

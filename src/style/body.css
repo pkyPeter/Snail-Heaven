@@ -60,7 +60,6 @@
 		justify-content: flex-start;
 		align-items: center;
 	}
-
 	.apartments>section>.right>.filterArea>.filterType>p {
 		width: 29%;
 	}
@@ -337,7 +336,7 @@
 
 		.apartments>section>.right>.title {
 		    background-color: initial;
-		    padding: 0px 0px 0px 20px;
+		    padding: 0px 0px 20px 20px;
 		    order: 2;
 		}
 
@@ -426,4 +425,8 @@
 		    align-items: center;
 		    box-shadow: 0.5px 0.5px 2px #424242;
 		}
+}
+
+.hidden {
+	display:none !important; 
 }

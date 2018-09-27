@@ -6,13 +6,16 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 //FontAwesome引用圖片
-import { faBookmark } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as faSolidBookmark } from '@fortawesome/free-solid-svg-icons';
 import { faBuilding } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-library.add(faRegularHeart, faBookmark, faBuilding, faBars);
+library.add(faRegularHeart, faBuilding, faBars, faSolidHeart, faRegularBookmark,faSolidBookmark);
 
 const Header = props => {
+	console.log(props.goLoveList)
 	return (
 	<header>
 		<div className="left">
@@ -31,7 +34,10 @@ const Header = props => {
 				<p>儲存搜尋條件</p>
 			</div>
 			<div className="searchFav" onClick={props.goLoveListPage}>
-				<FontAwesomeIcon className="icon" icon={['far','heart']}/>
+				{ props.goLoveList === true 
+				    ?<FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }}/>
+				 	:<FontAwesomeIcon className="icon" icon={['far','heart']}/>
+				 }
 				<p>我的最愛</p>
 			</div>
 			<div className="postHouse">

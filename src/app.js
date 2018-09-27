@@ -5,6 +5,7 @@ import { firebaseApp } from "./firebaseApp.js";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import Apartments from "./Apartments.js";
+import Property from "./Property.js";
 import "./style/common.css"
 import "./style/index.css"
 
@@ -13,8 +14,9 @@ import "./style/index.css"
 const RouterComponent = () => (
   <Router>	
   	<div>
-      <Route exact path="/" component={Apartments} />
+      <Route exact path="/" component={Property} />
       <Route path="/apartments" component={Apartments} />
+      <Route path="/property" component={Property} />
     </div>		
   </Router>
 );
