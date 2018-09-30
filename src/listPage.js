@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 //FontAwesome引用圖片
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 import { faListUl} from '@fortawesome/free-solid-svg-icons';
 import { faThLarge } from '@fortawesome/free-solid-svg-icons';
@@ -18,10 +19,10 @@ import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-library.add(faRegularHeart, faSave, faListUl, faThLarge, faSquare, faThumbsDown
+library.add(faRegularHeart, faSolidHeart, faSave, faListUl, faThLarge, faSquare, faThumbsDown
 ,faEnvelope, faMapMarkedAlt);
 
-class List extends React.Component {	
+class List extends React.Component {
 	render () {
 		return (
 			<section>
@@ -87,111 +88,55 @@ class List extends React.Component {
 								<div className="displayType" onClick={this.props.changeToBlocks}><FontAwesomeIcon icon={['fas','square']}/></div>
 							</div>
 						</div>
-						<div className="resultArea">
-							<div className="results" onClick={this.props.goSimpleDetail}>
-								<div className="img"></div>
-								<div className="description">
-									<div className="priceGesture absolute">
-										<div className="price">$1,385</div>
-										<div className="gesture" onClick={this.stopPropagation.bind(this)}>
-											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+						<div className={this.props.resultAreaDisplayType[0]}>
+							{
+								this.props.completeList.map((realEstate, index)=>{
+									let monthly_price = realEstate.monthly_price.split(".")[0];
+									let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
+									let daily_price_pureN = daily_price.toLocaleString("en");
+
+									return (
+										<div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { this.props.goSimpleDetail(e, index, realEstate) } }>
+											<div className="img" style={{backgroundImage: `url(${realEstate.picture_url_commentOut})`}}></div>
+											<div className="description">
+												<div className="priceGesture absolute">
+													<div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
+													<div className="gesture" onClick={this.stopPropagation.bind(this)}>
+														{ this.props.loveListStatus != undefined && this.props.loveListStatus[index].love === true ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ this.props.removeFromLoveList(e, index, realEstate) }}/>
+														  : <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ this.props.putIntoLoveList(e, index, realEstate) }}/>}
+														<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
+														<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+													</div>
+												</div>
+												<p>{realEstate.bedrooms}rooms {realEstate.room_type}</p>
+												<p>{realEstate.neighbourhood_cleansed}</p>
+												<p className="updateTime">{realEstate.calendar_updated}</p>
+											</div>
 										</div>
-									</div>
-									<p>9 Floorplans</p>
-									<p>New York, Chicago</p>
-									<p className="updateTime">2天前</p>
-								</div>
-							</div>
-							<div className="results" onClick={this.props.goSimpleDetail}>
-								<div className="img"></div>
-								<div className="description">
-									<div className="priceGesture absolute">
-										<div className="price">$1,385</div>
-										<div className="gesture">
-											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
-										</div>
-									</div>
-									<p>9 Floorplans</p>
-									<p>New York, Chicago</p>
-									<p className="updateTime">2天前</p>
-								</div>
-							</div>
-							<div className="results" onClick={this.props.goSimpleDetail}>
-								<div className="img"></div>
-								<div className="description">
-									<div className="priceGesture absolute">
-										<div className="price">$1,385</div>
-										<div className="gesture">
-											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
-										</div>
-									</div>
-									<p>9 Floorplans</p>
-									<p>New York, Chicago</p>
-									<p className="updateTime">2天前</p>
-								</div>
-							</div>
-							<div className="results" onClick={this.props.goSimpleDetail}>
-								<div className="img"></div>
-								<div className="description">
-									<div className="priceGesture absolute">
-										<div className="price">$1,385</div>
-										<div className="gesture">
-											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
-										</div>
-									</div>
-									<p>9 Floorplans</p>
-									<p>New York, Chicago</p>
-									<p className="updateTime">2天前</p>
-								</div>
-							</div>
-							<div className="results" onClick={this.props.goSimpleDetail}>
-								<div className="img"></div>
-								<div className="description">
-									<div className="priceGesture absolute">
-										<div className="price">$1,385</div>
-										<div className="gesture">
-											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
-										</div>
-									</div>
-									<p>9 Floorplans</p>
-									<p>New York, Chicago</p>
-									<p className="updateTime">2天前</p>
-								</div>
-							</div>
-							<div className="results" onClick={this.props.goSimpleDetail}>
-								<div className="img"></div>
-								<div className="description">
-									<div className="priceGesture absolute">
-										<div className="price">$1,385</div>
-										<div className="gesture">
-											<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
-										</div>
-									</div>
-									<p>9 Floorplans</p>
-									<p>New York, Chicago</p>
-									<p className="updateTime">2天前</p>
-								</div>
-							</div>
+									)
+								})
+							}
 						</div>
 					</div>
 				)} 
 				{	this.props.goLoveList && !this.props.toggleSimpleDetail && (
-					<LoveList resultAreaDisplayType={this.props.resultAreaDisplayType} goLoveListPage={this.props.goLoveListPage} />
+					<LoveList resultAreaDisplayType={this.props.resultAreaDisplayType} 
+					goLoveListPage={this.props.goLoveListPage} 
+					goSimpleDetail={this.props.goSimpleDetail} 
+					stopPropagation={this.stopPropagation.bind(this)}
+					loveListDetail={this.props.loveListDetail}
+					loveListStatus={this.props.loveListStatus}
+					removeFromLoveList={this.props.removeFromLoveList}
+					putIntoLoveList={this.props.putIntoLoveList}
+					/>
 				)}
 				{	!this.props.goLoveList && this.props.toggleSimpleDetail && (
-					<SimpleDetail goSimpleDetail={this.props.goSimpleDetail} goPropertyPage={this.props.goPropertyPage}/>
+					<SimpleDetail goSimpleDetail={this.props.goSimpleDetail} 
+					goPropertyPage={this.props.goPropertyPage}
+					currentSimpleDetail={this.props.currentSimpleDetail}
+					loveListStatus={this.props.loveListStatus}
+					putIntoLoveList={this.props.putIntoLoveList}
+					/>
 				)}
 				<div className="mapMode"><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
 				<div className="listMode"></div>
@@ -203,16 +148,31 @@ class List extends React.Component {
     	e.nativeEvent.stopImmediatePropagation();
 	}
 	showMoreFilter(e) {
-		let filterTypes = lib.func.getAll(".filterType");
-		filterTypes[3].classList.toggle("hidden");
-		filterTypes[4].classList.toggle("hidden");
-		let filterbutton = lib.func.getAll(".buttons>.button");		
-		filterbutton[0].classList.toggle("hidden");
-		filterbutton[1].textContent === "更多條件"
-			? filterbutton[1].textContent = "確認條件"
-			: filterbutton[1].textContent = "更多條件";
-		
+		let filterTypes = lib.func.getAll(".filterType"); 
+		let filterbutton = lib.func.getAll(".buttons>.button");	
+		console.log(filterTypes[0].style.display);
+		if ( document.body.clientWidth > 900 ) {
+			filterTypes[3].classList.toggle("hidden");
+			filterTypes[4].classList.toggle("hidden");	
+			filterbutton[0].classList.toggle("hidden");
+			filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "確認條件" : filterbutton[1].textContent = "更多條件";
+		} else {
+			filterTypes[3].classList.remove("hidden");
+			filterTypes[4].classList.remove("hidden");
+			for ( let i = 0 ; i< filterTypes.length-1 ; i++ ) {
+				if ( filterTypes[i].style.display ==="" || filterTypes[i].style.display ==="none" ){
+					filterTypes[i].style.display = "flex";
+					filterbutton[0].classList.toggle("hidden");
+					filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "確認條件" : filterbutton[1].textContent = "更多條件";
+				} else { 
+					filterTypes[i].style.display = "none"; 
+					filterbutton[0].classList.toggle("hidden");
+					filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "確認條件" : filterbutton[1].textContent = "更多條件";			
+				}
+			}
+		}
 	}
+
 }
 
 

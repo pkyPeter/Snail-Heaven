@@ -29,7 +29,7 @@ lib.func.toggleClass = ( action , target, classes) => {
 	}
 }
 
-lib.func.getQueryString = ( target ) => {
+lib.func.getQueryStringAndSearch = ( target ) => {
 	console.log('lib getQueryString')
 	let queryString = window.location.search;
 	let targetQuery = target;
@@ -40,7 +40,20 @@ lib.func.getQueryString = ( target ) => {
 	}
 }
 
+lib.func.getLocalStorageJSON = ( storageName ) => {
+	let current = localStorage.getItem(storageName);
+	let JSONparsed = JSON.parse(current);
+	return JSONparsed
+}
 
+lib.func.fetchData = ( route ) => {
+	return fetch(route).then( res => {
+		console.log("step1",res);
+		return res.json();
+	} ).then ( data => {
+		console.log(data);
+	}).catch( result => {console.log('something went wrong')})
+}
 
 
 export default lib;

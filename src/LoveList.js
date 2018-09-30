@@ -10,37 +10,49 @@ import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 import { faThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-library.add(faRegularHeart, faThumbsDown, faEnvelope, faSearch);
+import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
+library.add(faRegularHeart, faThumbsDown, faEnvelope, faSearch, faCaretLeft);
 
 const LoveList = props => {
 	console.log(props.resultAreaDisplayType);
+	console.log(props.loveListDetail);
 	return  (
 		<div className="right">
 			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize}></div>
 			<div className="favTitle">
 				<div className="return" onClick={props.goLoveListPage}>							
-					<FontAwesomeIcon className="icon" icon={['fas','search']}/>
+					<FontAwesomeIcon className="icon" icon={['fas','long-arrow-alt-left']}/>
 					<div>回到搜尋結果</div>
 				</div>
-				<div className="title">共1個喜愛標的</div>
+				<div className="title">共{props.loveListDetail.length}個喜愛標的</div>
 			</div>
 			<div className={props.resultAreaDisplayType[0]}>
-				<div className={props.resultAreaDisplayType[1]}>
-					<div className="img"></div>
-					<div className="description">
-					<div className="priceGesture absolute">
-						<div className="price">$1,385</div>
-						<div className="gesture">
-							<FontAwesomeIcon className="icon" icon={['far','heart']}/>
-							<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-							<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
-						</div>
-					</div>
-					<p>9 Floorplans</p>
-					<p>New York, Chicago</p>
-					<p className="updateTime">2天前</p>
-					</div>
-				</div>
+				{
+					props.loveListDetail.map((realEstate, index)=>{		
+						let monthly_price = realEstate.monthly_price.split(".")[0];
+						let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
+						let daily_price_pureN = daily_price.toLocaleString("en");
+						return(
+								<div className={props.resultAreaDisplayType[1]} onClick={props.goSimpleDetail} key={index}>
+									<div className="img" style={{backgroundImage: `url(${realEstate.picture_url_commentOut})`}}></div>
+									<div className="description">
+									<div className="priceGesture absolute" onClick={props.stopPropagation}>
+										<div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
+										<div className="gesture">
+											{ props.loveListStatus != undefined && props.loveListStatus[realEstate.index].love === true ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ props.removeFromLoveList(e, realEstate.index, realEstate) }}/>
+												: <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ props.putIntoLoveList(e, realEstate.index, realEstate) }}/>}
+											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
+											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+										</div>
+									</div>
+									<p>{realEstate.bedrooms}rooms {realEstate.room_type}</p>
+									<p>{realEstate.neighbourhood_cleansed}</p>
+									<p className="updateTime">2天前</p>
+									</div>
+								</div>		
+						)
+					})
+				}
 			</div>
 		</div>
 	)	

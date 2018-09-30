@@ -12,32 +12,7 @@ import "./style/header.css";
 import "./style/body.css";
 import "./style/LoveList.css";
 import "./style/SimpleDetail.css";
-
-// let locations = [
-//     {lat: 25.042579729719883 , lng: 121.55364735398231},
-//     {lat: 25.029252860369635 , lng: 121.55560906545534},
-//     {lat: 25.052912765882606 , lng: 121.54645063582818},
-//     {lat: 25.051586771863008 , lng: 121.54747290451549},
-//     {lat: 25.05067399631369 , lng: 121.54568336995456},
-//     {lat: 25.044876561982644 , lng: 121.5130474960245},
-//     {lat: 25.027937732634378 , lng: 121.54780713477564},
-//     {lat: 25.027937732634378 , lng: 121.54780713477564},
-//     {lat: 25.03106259633463 , lng: 121.5540802611592},
-//     {lat: 25.024818016316544 , lng: 121.55411769055303},
-//     {lat: 25.003841076128182 , lng: 121.55572581952055},
-//     {lat: 25.043351730261502 , lng: 121.55006859988497},
-//     {lat: 25.08006947898509 , lng: 121.55908068285575},
-//     {lat: 25.050247842284772 , lng: 121.5808111707392},
-//     {lat: 25.079206716939805 , lng: 121.5512801776511},
-//     {lat: 25.02704269670446 , lng: 121.54329968427548},
-//     {lat: 25.023209334719848 , lng: 121.52340424570937},
-//     {lat: 25.022946777889135 , lng: 121.52256108127577},
-//     {lat: 25.042336562506133 , lng: 121.55190931941526},
-//     {lat: 25.02866387796419 , lng: 121.5433041668365},
-//     {lat: 25.048142776761107 , lng: 121.54579245095837},
-//     {lat: 25.042557600284653 , lng: 121.5446053449906}
-//   ]
-
+import data from "./result_export.json";
 
 class Apartments extends React.Component {
 	constructor() {
@@ -45,14 +20,18 @@ class Apartments extends React.Component {
 	    this.state = {
 	    	resultAreaDisplayType: ["resultArea","results"],
 	    	goLoveList: false,
-	    	completeList: [],
+	    	loveListStatus: createLoveListStatus(data),
+	    	loveListDetail: lib.func.getLocalStorageJSON("loveList"),
+	    	completeList: data,
 	    	currentLocation: [25.0484402,121.5278391],
 	    	latLng: [],
-	    	toggleSimpleDetail: false
+	    	toggleSimpleDetail: false,
+	    	currentSimpleDetail: {}
 	    };
 
   	}
 	componentDidMount() {
+		// this.setState({completeList : data, loveList:createLoveListStatus(data)});
 	  // 	firebaseApp.fBaseDB.getListing(data => {
 	  // 		this.setState({completeList: data});
 			// let location =[];
@@ -63,7 +42,7 @@ class Apartments extends React.Component {
 			// 	location.push(laAndLong);
 			// }
 			// this.setState({latLng: location});
-			
+			// console.log(this.state.completeList)
 			// Promise.all([googleMap.load, googleMap.loadMarker]).then(
 			// ()=>{
 			// 	console.log(this.state.locations);
@@ -71,7 +50,7 @@ class Apartments extends React.Component {
 			// })
 		// })
 		console.log("before getQueryString");
-		if ( lib.func.getQueryString("loveList") === true ) {
+		if ( lib.func.getQueryStringAndSearch("loveList") === true ) {
 			this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
 			this.setState({toggleSimpleDetail: false})
 			console.log('line 77 getQueryString')		
@@ -94,7 +73,13 @@ class Apartments extends React.Component {
 			changeToBlocks={this.changeToBlocks.bind(this)} 
 			toggleSimpleDetail={this.state.toggleSimpleDetail}
 			goSimpleDetail={this.goSimpleDetail.bind(this)}
+			currentSimpleDetail={this.state.currentSimpleDetail}
 			goPropertyPage={this.goPropertyPage.bind(this)}
+			completeList={this.state.completeList}
+			loveListStatus={this.state.loveListStatus}
+			loveListDetail={this.state.loveListDetail}
+			putIntoLoveList={this.putIntoLoveList.bind(this)}
+			removeFromLoveList={this.removeFromLoveList.bind(this)}
 			/>
 		</div>
 		)
@@ -142,13 +127,74 @@ class Apartments extends React.Component {
 		this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
 		this.setState({toggleSimpleDetail: false})		
 	}
-	goSimpleDetail(e) {
+	goSimpleDetail(e, index, realEstate) {
 		this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
-		this.setState({goLoveList: false})		
+		this.setState({goLoveList: false})	
+		if( index || realEstate) {
+			realEstate.index = index;
+			this.setState({currentSimpleDetail: realEstate})
+		}
 	}
 	goPropertyPage(e) {
 		this.props.history.push("/property");
 	}
+	putIntoLoveList(e, index, realEstate) {
+		console.log(index);
+		let currentLoveList = this.state.loveListStatus;
+		currentLoveList[index].love = true;
+		this.setState({ loveListStatus: currentLoveList});
+
+		let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
+		if( JSONforRenew === null ) {
+			JSONforRenew = [];
+		} 
+		realEstate.index = index;
+		JSONforRenew.push(realEstate);
+		localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
+		this.setState({loveListDetail: JSONforRenew});
+	}
+	removeFromLoveList(e, index, realEstate) {
+		console.log(index);
+		let currentLoveList = this.state.loveListStatus;
+		currentLoveList[index].love = false;
+		this.setState({ loveListStatus: currentLoveList});
+
+		let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
+
+		for ( let i = 0 ; i < JSONforRenew.length ; i++ ) {
+			if ( JSONforRenew[i].id === realEstate.id ) {
+				JSONforRenew.splice(i,1);
+			}
+		}
+		localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
+		this.setState({loveListDetail: JSONforRenew})		
+	}
+}
+
+function createLoveListStatus(ObjectArray) {
+	let loveListStatus = [];
+
+	let JSONforRenew = lib.func.getLocalStorageJSON("loveList")!= null ? lib.func.getLocalStorageJSON("loveList") : [];
+
+	// let JSONforRenew = current != null ? JSON.parse(current) : [];
+	for ( let j = 0 ; j < ObjectArray.length ; j ++ ) {
+		if ( JSONforRenew !== null || JSONforRenew.length > 0) {
+			let inList = false;
+			for ( let i = 0 ; i< JSONforRenew.length; i++) {
+				
+				if ( JSONforRenew[i].id === ObjectArray[j].id ) {
+					inList = true;
+					break;
+				} else {
+					inList = false;
+				}
+			}
+			loveListStatus.push({love: inList})
+		} else {
+			loveListStatus.push({love: false});
+		}
+	}
+	return loveListStatus;
 }
 
 export default Apartments;
