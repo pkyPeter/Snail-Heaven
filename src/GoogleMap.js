@@ -19,12 +19,15 @@ function loadScript(src) {
 
 const googleMap = {
 	load: loadScript(script),
-  loadMarker: loadScript(script2),
+  loadMarkerCluster: loadScript(script2),
+  map:"",
 	init: {},
   markers:[]
 };
 
+
 googleMap.init.initMap = (zoom,lat,lng,targetID,locations, secLocations) => {
+  //這個時候map就等於google.maps.Map，而且他還夾帶了很多Methods
   let map = new google.maps.Map(document.getElementById(targetID), {
 		zoom: zoom,
 		center: {
@@ -35,6 +38,8 @@ googleMap.init.initMap = (zoom,lat,lng,targetID,locations, secLocations) => {
     streetViewControl: false,
     fullscreenControl: false
 	});
+  googleMap.map = map;
+  console.log(google.maps);
   
   let markers = locations.map(function(location, i) {
     return new google.maps.Marker({
@@ -57,14 +62,48 @@ googleMap.init.initMap = (zoom,lat,lng,targetID,locations, secLocations) => {
     }
   }
 
+
     // Add a marker clusterer to manage the markers.
   let markerCluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});  
-  let testListener = google.maps.event.addDomListener(map, 'click', function() {
+
+  let clickListener = google.maps.event.addDomListener(map, 'click', function() {
     console.log(map.getBounds());
   });
+
+  let results = document.querySelectorAll(".resultArea>.results");
+  for ( let i = 0 ; i < results.length ; i ++ ) {
+      console.log(i);
+      google.maps.event.addDomListener(results[i], 'click', (e) => {
+      console.log(e.target);
+      console.log(map.getBounds());
+    });
+  }
+  let roomAmount = document.querySelectorAll(".roomAmount");
+  for ( let i = 0 ; i < roomAmount.length ; i ++ ) {
+      console.log(i);
+      google.maps.event.addDomListener(roomAmount[i], 'click', (e) => {
+      console.log(e.target);
+      console.log(map.getBounds());
+    });
+  }
+
+  // let clickResultListener = google.maps.event.addDomListener(map, 'click', function() {
+  //   console.log(map.getBounds());
+  // });
+
+
+  let dragListener = google.maps.event.addDomListener(map, 'dragend', function() {
+    console.log(map.getBounds());
+  });
+
   let markerChangeColorListener = markers.map(function(marker, i) {
     google.maps.event.addListener(marker, 'click', () => {
       marker.setIcon(circle('rgb(240, 243, 244)'));
+    });
+  })
+  let dbClickListener = markers.map(function(marker, i) {
+    google.maps.event.addListener(marker, 'dblclick', () => {
+      marker.setMap(null);
     });
   })
 

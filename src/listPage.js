@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import lib from "./lib.js";
-import LoveList from "./LoveList.js"
+import LoveList from "./LoveList.js";
+import ListRight from "./ListRight.js";
 import SimpleDetail from "./SimpleDetail.js";
 //FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
@@ -23,17 +24,24 @@ library.add(faRegularHeart, faSolidHeart, faSave, faListUl, faThLarge, faSquare,
 ,faEnvelope, faMapMarkedAlt);
 
 class List extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			toggleSimpleDetail: false,
+			currentSimpleDetail: {}
+		}
+	}
 	render () {
 		return (
 			<section>
 				<div className="left">
 					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>	
 				</div>
-				{	!this.props.goLoveList && !this.props.toggleSimpleDetail && (
+				{	!this.props.goLoveList && !this.state.toggleSimpleDetail && (
 					<div className="right">
 						<div className="areaSizer" draggable="true" onDrag={this.props.changeAreaSize} onDragEnd={this.props.changeAreaSize}></div>
 						<div className="title">
-							<div>縣市</div>
+							<div>台北市</div>
 							<div> > </div>
 							<div>行政區</div>
 						</div>
@@ -81,7 +89,7 @@ class List extends React.Component {
 									<option>最高價優先</option>
 								</select>
 							</div>
-							<p>200筆結果</p>
+							<p>{this.props.completeList.length}筆結果</p>
 							<div className="displayLogic">
 								<div className="displayType" onClick={this.props.changeToList}><FontAwesomeIcon icon={['fas','list-ul']}/></div>
 								<div className="displayType" onClick={this.props.changeToRowBlocks}><FontAwesomeIcon icon={['fas','th-large']}/></div>
@@ -94,48 +102,66 @@ class List extends React.Component {
 									let monthly_price = realEstate.monthly_price.split(".")[0];
 									let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
 									let daily_price_pureN = daily_price.toLocaleString("en");
-
-									return (
-										<div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { this.props.goSimpleDetail(e, index, realEstate) } }>
-											<div className="img" style={{backgroundImage: `url(${realEstate.picture_url_commentOut})`}}></div>
-											<div className="description">
-												<div className="priceGesture absolute">
-													<div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
-													<div className="gesture" onClick={this.stopPropagation.bind(this)}>
-														{ this.props.loveListStatus != undefined && this.props.loveListStatus[index].love === true ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ this.props.removeFromLoveList(e, index, realEstate) }}/>
-														  : <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ this.props.putIntoLoveList(e, index, realEstate) }}/>}
-														<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
-														<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
+									let loveListStatusIndex = this.getloveListStatusIndex(realEstate.id, this.props.loveListStatus);
+									let hidden = false;
+									if ( this.props.hiddenList != null ) {
+										for (let i = 0 ; i< this.props.hiddenList.length; i++) {
+											if ( realEstate.id === this.props.hiddenList[i]) {
+												hidden = true;
+											}
+										}
+									}
+									if (hidden === false) {
+										return (
+											<div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { this.goSimpleDetail(e, realEstate.id, realEstate) } }>
+												<div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
+												<div className="description">
+													<div className="priceGesture absolute">
+														<div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
+														<div className="gesture" onClick={this.stopPropagation.bind(this)}>
+															{ 
+																this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ this.props.removeFromLoveList(e, realEstate.id, realEstate) }}/>
+															  : <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate) }}/>
+															}
+															<FontAwesomeIcon className="icon" icon={['far','envelope']} onClick={this.props.openEmailForm}/>
+															<FontAwesomeIcon className="icon" icon={['far','thumbs-down']} onClick={(e)=>{this.props.hideList(e, realEstate.id, realEstate)}} />
+														</div>
 													</div>
+													<p>{realEstate.bedrooms} rooms {realEstate.room_type}</p>
+													<p>{realEstate.neighbourhood_cleansed}</p>
+													<p className="updateTime">{realEstate.calendar_updated}</p>
 												</div>
-												<p>{realEstate.bedrooms}rooms {realEstate.room_type}</p>
-												<p>{realEstate.neighbourhood_cleansed}</p>
-												<p className="updateTime">{realEstate.calendar_updated}</p>
 											</div>
-										</div>
-									)
+										)
+									}
+									
 								})
 							}
 						</div>
 					</div>
 				)} 
-				{	this.props.goLoveList && !this.props.toggleSimpleDetail && (
+				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (
 					<LoveList resultAreaDisplayType={this.props.resultAreaDisplayType} 
 					goLoveListPage={this.props.goLoveListPage} 
-					goSimpleDetail={this.props.goSimpleDetail} 
+					goSimpleDetail={this.goSimpleDetail.bind(this)} 
 					stopPropagation={this.stopPropagation.bind(this)}
 					loveListDetail={this.props.loveListDetail}
 					loveListStatus={this.props.loveListStatus}
+					getloveListStatusIndex={this.getloveListStatusIndex}
 					removeFromLoveList={this.props.removeFromLoveList}
 					putIntoLoveList={this.props.putIntoLoveList}
 					/>
 				)}
-				{	!this.props.goLoveList && this.props.toggleSimpleDetail && (
-					<SimpleDetail goSimpleDetail={this.props.goSimpleDetail} 
+				{	!this.props.goLoveList && this.state.toggleSimpleDetail && (
+					<SimpleDetail goSimpleDetail={this.goSimpleDetail.bind(this)} 
 					goPropertyPage={this.props.goPropertyPage}
-					currentSimpleDetail={this.props.currentSimpleDetail}
+					currentSimpleDetail={this.state.currentSimpleDetail}
 					loveListStatus={this.props.loveListStatus}
+					getloveListStatusIndex={this.getloveListStatusIndex}
 					putIntoLoveList={this.props.putIntoLoveList}
+					removeFromLoveList={this.props.removeFromLoveList}
+					hideList={this.props.hideList}
+					openEmailFrom={this.props.openEmailForm}
 					/>
 				)}
 				<div className="mapMode"><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
@@ -167,14 +193,31 @@ class List extends React.Component {
 				} else { 
 					filterTypes[i].style.display = "none"; 
 					filterbutton[0].classList.toggle("hidden");
-					filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "確認條件" : filterbutton[1].textContent = "更多條件";			
+					filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "確認條件" : filterbutton[1].textContent = "更多條件";		
 				}
 			}
 		}
 	}
 
-}
+	getloveListStatusIndex( targetID, source ) {
+		let targetIDPositionIndex;
+		for ( let i = 0 ; i < source.length ; i++ ){
+			if ( targetID === source[i].id ) {
+				targetIDPositionIndex = i;
+				return targetIDPositionIndex;
+			}
+		}
+	}
 
+	goSimpleDetail(e, id, realEstate) {
+		this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
+		this.setState({goLoveList: false})	
+		if( id || realEstate) {
+			this.setState({currentSimpleDetail: realEstate})
+		}
+	}
+
+}
 
 
 export default List;

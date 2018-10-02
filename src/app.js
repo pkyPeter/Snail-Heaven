@@ -14,7 +14,7 @@ import "./style/index.css"
 const RouterComponent = () => (
   <Router>	
   	<div>
-      <Route exact path="/" component={Apartments} />
+      <Route exact path="/" component={App} />
       <Route path="/apartments" component={Apartments} />
       <Route path="/property" component={Property} />
     </div>		
@@ -48,11 +48,46 @@ class App extends React.Component {
           			<h2 className="formItem">租房超簡單，大腦零負擔</h2>
           			<input type="text" placeholder="小蝸牛，想找哪裡的房子呢？" onChange={this.searchHandler.bind(this)} onKeyDown={this.submitSearch.bind(this)}/>
           			<div className="districtContainer">
-        			<div className="district">
-        				<div className="background"></div>
-        				<h2>信義區</h2>
-        				<h4>35間夢想租屋</h4>
-        			</div>
+            			<div className="district">
+            				<div className="background"></div>
+            				<h2>信義區</h2>
+            				<h4>35間夢想租屋</h4>
+            			</div>
+                  <div className="district">
+                    <div className="background"></div>
+                    <h2>信義區</h2>
+                    <h4>35間夢想租屋</h4>
+                  </div>
+                  <div className="district">
+                    <div className="background"></div>
+                    <h2>信義區</h2>
+                    <h4>35間夢想租屋</h4>
+                  </div>
+                  <div className="district">
+                    <div className="background"></div>
+                    <h2>信義區</h2>
+                    <h4>35間夢想租屋</h4>
+                  </div>
+                  <div className="district">
+                    <div className="background"></div>
+                    <h2>信義區</h2>
+                    <h4>35間夢想租屋</h4>
+                  </div>
+                  <div className="district">
+                    <div className="background"></div>
+                    <h2>信義區</h2>
+                    <h4>35間夢想租屋</h4>
+                  </div>
+                  <div className="district">
+                    <div className="background"></div>
+                    <h2>信義區</h2>
+                    <h4>35間夢想租屋</h4>
+                  </div>
+                  <div className="district">
+                    <div className="background"></div>
+                    <h2>信義區</h2>
+                    <h4>35間夢想租屋</h4>
+                  </div>
           			</div>
           			<div className="formItem"><Link to="/apartments">Apartments Page</Link></div>
           		</div>

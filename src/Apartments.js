@@ -4,9 +4,10 @@ import 'firebase/database';
 import {firebaseApp} from "./firebaseApp.js";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Header from "./Header.js";
-import List from "./listPage.js"
+import List from "./listPage.js";
+import Email from "./Email.js";
 import lib from "./lib.js";
-import googleMap from "./GoogleMap.js";
+// import googleMap from "./GoogleMap.js";
 import "./style/common.css";
 import "./style/header.css";
 import "./style/body.css";
@@ -26,28 +27,29 @@ class Apartments extends React.Component {
 	    	currentLocation: [25.0484402,121.5278391],
 	    	latLng: [],
 	    	toggleSimpleDetail: false,
-	    	currentSimpleDetail: {}
+	    	currentSimpleDetail: {},
+	    	hiddenList: lib.func.getLocalStorageJSON("hiddenList"),
+	    	toggleEmail: false
 	    };
 
   	}
 	componentDidMount() {
-		// this.setState({completeList : data, loveList:createLoveListStatus(data)});
-	  // 	firebaseApp.fBaseDB.getListing(data => {
-	  // 		this.setState({completeList: data});
-			// let location =[];
-			// for(let i = 0; i < data.length; i++ ) {
-			// 	let laAndLong = {lat:"", lng:""};
-			// 	laAndLong.lat = parseFloat(data[i].latitude);
-			// 	laAndLong.lng = parseFloat(data[i].longitude);
-			// 	location.push(laAndLong);
-			// }
-			// this.setState({latLng: location});
-			// console.log(this.state.completeList)
-			// Promise.all([googleMap.load, googleMap.loadMarker]).then(
-			// ()=>{
-			// 	console.log(this.state.locations);
-			// 	googleMap.init.initMap(12,this.state.currentLocation[0],this.state.currentLocation[1],"googleMap", this.state.latLng);
-			// })
+	 //  	firebaseApp.fBaseDB.getListing(data => {
+	 //  		this.setState({completeList: data});
+		// 	let location =[];
+		// 	for(let i = 0; i < data.length; i++ ) {
+		// 		let laAndLong = {lat:"", lng:""};
+		// 		laAndLong.lat = parseFloat(data[i].latitude);
+		// 		laAndLong.lng = parseFloat(data[i].longitude);
+		// 		location.push(laAndLong);
+		// 	}
+		// 	this.setState({latLng: location});
+		// 	console.log(this.state.completeList)
+		// 	Promise.all([googleMap.load, googleMap.loadMarkerCluster]).then(
+		// 	()=>{
+		// 		googleMap.init.initMap(12,this.state.currentLocation[0],this.state.currentLocation[1],"googleMap", this.state.latLng);
+
+		// 	})
 		// })
 		console.log("before getQueryString");
 		if ( lib.func.getQueryStringAndSearch("loveList") === true ) {
@@ -56,14 +58,26 @@ class Apartments extends React.Component {
 			console.log('line 77 getQueryString')		
 		}
 	}
+
+	// componentDidUpdate() {
+	// 	let roomAmount = document.querySelectorAll(".roomAmount");
+	// 	for ( let i = 0 ; i < roomAmount.length ; i ++ ) {
+	// 	      console.log(i);
+	// 	      google.maps.event.addDomListener(roomAmount[i], 'click', (e) => {
+	// 	      console.log(e.target);
+	// 	      console.log(googleMap.map.getBounds());
+	//     	});
+ //  		}
+	// }
 	render() {
 		return(
 		<div className="apartments">
 			<Header goLoveList={this.state.goLoveList} 
 			goLoveListPage={this.goLoveList.bind(this)}
-			toggleSimpleDetail={this.state.goSimpleDetail}
 			 />
-			
+			<Email toggleEmail={this.state.toggleEmail}
+			openEmailForm={this.openEmailForm.bind(this)}
+			/>
 			<List goLoveList={this.state.goLoveList}
 			goLoveListPage={this.goLoveList.bind(this)}
 			resultAreaDisplayType={this.state.resultAreaDisplayType}
@@ -80,6 +94,9 @@ class Apartments extends React.Component {
 			loveListDetail={this.state.loveListDetail}
 			putIntoLoveList={this.putIntoLoveList.bind(this)}
 			removeFromLoveList={this.removeFromLoveList.bind(this)}
+			hideList={this.hideList.bind(this)}
+			hiddenList={this.state.hiddenList}
+			openEmailForm={this.openEmailForm.bind(this)}
 			/>
 		</div>
 		)
@@ -127,36 +144,50 @@ class Apartments extends React.Component {
 		this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
 		this.setState({toggleSimpleDetail: false})		
 	}
-	goSimpleDetail(e, index, realEstate) {
+	goSimpleDetail(e, id, realEstate) {
 		this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
 		this.setState({goLoveList: false})	
-		if( index || realEstate) {
-			realEstate.index = index;
+		if( id || realEstate) {
 			this.setState({currentSimpleDetail: realEstate})
 		}
 	}
-	goPropertyPage(e) {
-		this.props.history.push("/property");
+	goPropertyPage(e, id) {
+		this.props.history.push(`/property?id=${id}`);
 	}
-	putIntoLoveList(e, index, realEstate) {
-		console.log(index);
+	openEmailForm(e) {
+		console.log('open form');
+		this.setState((currentState,currentProps)=>({
+			toggleEmail: !currentState.toggleEmail
+		}))
+	}
+	putIntoLoveList(e, id, realEstate) {
+		console.log(id);
 		let currentLoveList = this.state.loveListStatus;
-		currentLoveList[index].love = true;
+		// currentLoveList[index].love = true;
+		for (let i = 0 ; i < currentLoveList.length ; i++ ) {
+			if (currentLoveList[i].id === id) {
+				currentLoveList[i].inList = true;
+			}
+		}
 		this.setState({ loveListStatus: currentLoveList});
 
 		let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
 		if( JSONforRenew === null ) {
 			JSONforRenew = [];
 		} 
-		realEstate.index = index;
 		JSONforRenew.push(realEstate);
 		localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
 		this.setState({loveListDetail: JSONforRenew});
 	}
-	removeFromLoveList(e, index, realEstate) {
-		console.log(index);
+	removeFromLoveList(e, id, realEstate) {
+		console.log(id);
 		let currentLoveList = this.state.loveListStatus;
-		currentLoveList[index].love = false;
+		// currentLoveList[index].love = false;
+		for (let i = 0 ; i < currentLoveList.length ; i++ ) {
+			if (currentLoveList[i].id === id) {
+				currentLoveList[i].inList = false;
+			}
+		}
 		this.setState({ loveListStatus: currentLoveList});
 
 		let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
@@ -169,6 +200,27 @@ class Apartments extends React.Component {
 		localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
 		this.setState({loveListDetail: JSONforRenew})		
 	}
+	hideList(e, id, realEstate) {
+		let confirmHidden = confirm("您確定要隱藏這筆物件嗎？");
+		if (confirmHidden === true) {
+			let currentHidden = this.state.hiddenList;
+			if (currentHidden === null) {
+				currentHidden = [];
+			}
+			console.log(id);
+			console.log(currentHidden);
+			currentHidden.push(id);
+			this.setState({ hiddenList: currentHidden });
+
+			let JSONforRenew = lib.func.getLocalStorageJSON("hiddenList");
+			if( JSONforRenew === null ) {
+				JSONforRenew = [];
+			} 
+			JSONforRenew.push(id);
+			localStorage.setItem("hiddenList", JSON.stringify(JSONforRenew));
+			this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));	
+		}
+	}
 }
 
 function createLoveListStatus(ObjectArray) {
@@ -179,19 +231,19 @@ function createLoveListStatus(ObjectArray) {
 	// let JSONforRenew = current != null ? JSON.parse(current) : [];
 	for ( let j = 0 ; j < ObjectArray.length ; j ++ ) {
 		if ( JSONforRenew !== null || JSONforRenew.length > 0) {
-			let inList = false;
+			let item = {id: ObjectArray[j].id, inList:false};
 			for ( let i = 0 ; i< JSONforRenew.length; i++) {
-				
 				if ( JSONforRenew[i].id === ObjectArray[j].id ) {
-					inList = true;
+					item.inList = true;
 					break;
 				} else {
-					inList = false;
+					item.inList = false;
 				}
 			}
-			loveListStatus.push({love: inList})
+			loveListStatus.push(item)
 		} else {
-			loveListStatus.push({love: false});
+			let item = {id: ObjectArray[j].id, inList:false};
+			loveListStatus.push(item);
 		}
 	}
 	return loveListStatus;

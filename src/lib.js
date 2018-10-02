@@ -10,6 +10,11 @@ lib.func.getAll = (selector) => {
 	return document.querySelectorAll(selector);
 };
 
+lib.func.getStyle = ( element, attribute )=>{
+	let style = getComputedStyle( element ).getPropertyValue( attribute );
+	return style;
+}
+
 lib.func.toggleClass = ( action , target, classes) => {
 	//classes: please put in array
 	if ( action === "toggle" ) {

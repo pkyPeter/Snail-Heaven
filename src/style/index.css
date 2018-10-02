@@ -10,7 +10,6 @@
 	background-image: url("../imgs/background.jpg");
 	background-size: cover;
 	background-position: bottom;
-	filter: blur(3px);
 }
 
 .index>.formContainer {
@@ -135,7 +134,7 @@
 		height: auto;
 		border-radius: none;
 		box-shadow: none;
-
+    	padding: 40px 0px;
 	}
 	.index>.formContainer>.form>.formItem>.snail {
 		width: 46px;
@@ -160,13 +159,18 @@
 		top:0%;
 		text-align: center;
 	}
+
+	.index>.formContainer>.form>input {
+		width: 85%;
+	}
 	.index>.formContainer>.form>.districtContainer{
 		height: auto;
     	overflow-y: unset;
+    	width: 85%;
 	}
 
 	.index>.formContainer>.form>.districtContainer>.district {
-		width: 48%;
+		width: 30%;
 		height: 100px;
 		margin-bottom: 20px;
 	}

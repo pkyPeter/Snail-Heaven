@@ -11,10 +11,12 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
-import { faThumbsDown } from '@fortawesome/free-regular-svg-icons';
+import { faThumbsDown as faRegularThumbsDown } from '@fortawesome/free-regular-svg-icons';
+import { faThumbsDown as faSolidThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
-library.add(faLongArrowAltLeft,faShareAlt,faRegularHeart,faThumbsDown,faCaretRight
+library.add(faLongArrowAltLeft,faShareAlt,faRegularHeart,faRegularThumbsDown,
+faSolidThumbsDown,faCaretRight
 ,faCaretLeft);
 //Fontawesome設備區
 import { faHotTub } from '@fortawesome/free-solid-svg-icons';
@@ -31,6 +33,7 @@ const SimpleDetail = props => {
 	let amenities = sortOutAmenities(props.currentSimpleDetail.amenities,[/Internet/ig, /Hot water/ig, /Air conditioning/ig, /Refrigerator/ig,/Laptop friendly workspace/ig,  /washer/ig, /Pets allowed/ig]);
 	let otherAmenities = sortOutAmenities(props.currentSimpleDetail.amenities,[/Kitchen/ig,/Paid parking off premises/ig, /Free street parking/ig, /Elevator/ig, /Gym/ig]);
 	let TV = sortOutAmenities(props.currentSimpleDetail.amenities, [/TV/ig]).length === 2 ? ["TV", "Cable TV"] : ["TV"];//因為電視無法拆解
+	let loveListStatusIndex = props.getloveListStatusIndex(props.currentSimpleDetail.id, props.loveListStatus);
 	return (
 		<div className="right">
 			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize}></div>
@@ -43,13 +46,25 @@ const SimpleDetail = props => {
 					<div className="button">							
 						<FontAwesomeIcon className="icon" icon={['fas','share-alt']}/>
 						<div>分享</div>
-					</div>
-					<div className="button">							
-						{ props.loveListStatus != undefined && props.loveListStatus[props.currentSimpleDetail.index].love === true ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ props.removeFromLoveList(e, currentSimpleDetail.index, realEstate) }}/>
-						: <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ props.putIntoLoveList(e, currentSimpleDetail.index, realEstate) }}/>}
-						<div>收藏</div>
-					</div>
-					<div className="button">							
+					</div>						
+					{ 
+						props.loveListStatus != undefined && props.loveListStatus[loveListStatusIndex].inList === true 
+						? (
+						<div className="button" onClick={(e)=>{ props.removeFromLoveList(e, props.currentSimpleDetail.id, props.currentSimpleDetail) }}>
+							<FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} />
+							<div>收藏</div>
+						</div>
+						)
+						: (
+						<div className="button" onClick={(e)=>{ props.putIntoLoveList(e, props.currentSimpleDetail.id, props.currentSimpleDetail) }}>
+							<FontAwesomeIcon className="icon" icon={['far','heart']}/>
+							<div>收藏</div>
+						</div>
+						)
+					}
+					<div className="button" onClick={(e)=>{
+						console.log('hidden');
+						props.hideList(e, props.currentSimpleDetail.id, props.currentSimpleDetail)}}>							
 						<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
 						<div>不想再見</div>
 					</div>
@@ -59,24 +74,21 @@ const SimpleDetail = props => {
 			<div className="photoGallery">
 				<div className="gallery">
 					<div className="photos">
-						<div className="photo" style={{backgroundImage: `url(${props.currentSimpleDetail.picture_url})`}}></div>
+						<div className="photo" style={{backgroundImage: `url(${props.currentSimpleDetail.picture_url})`} }></div>
+						<div className="photo" style={{backgroundImage: `url("https://a0.muscache.com/im/pictures/8824698/31a49dd7_original.jpg?aki_policy=large")`}}></div>
+						<div className="photo" style={{backgroundImage: `url("https://a0.muscache.com/im/pictures/10794157/4b52b591_original.jpg?aki_policy=large")`}}></div>
 					</div>
-					<div className="leftSelector">
-						<FontAwesomeIcon className="icon" icon={['fas','caret-left']}/>
+					<div className="leftSelector" onClick={(e)=>{changePhoto(e, "leftSelector");}}>
+						<FontAwesomeIcon className="icon" icon={['fas','caret-left']} onClick={(e)=>{changePhoto(e, "leftSelector");}}/>
 					</div>
-					<div className="rightSelector">
-						<FontAwesomeIcon className="icon" icon={['fas','caret-right']}/>
+					<div className="rightSelector" onClick={(e)=>{changePhoto(e , "rightSelector");}}>
+						<FontAwesomeIcon className="icon" icon={['fas','caret-right']} onClick={(e)=>{changePhoto(e , "rightSelector");}}/>
 					</div>
 				</div>
 				<div className="dotSelector">
-					<button className="dot focus"></button>
-					<button className="dot"></button>
-					<button className="dot"></button>
-					<button className="dot"></button>
-					<button className="dot"></button>
-					<button className="dot"></button>
-					<button className="dot"></button>
-					<button className="dot"></button>
+					<button className="dot focus" data-order="0" onClick={(e)=>{changePhoto(e, "dot");}}></button>
+					<button className="dot" data-order="1" onClick={(e)=>{changePhoto(e, "dot");}}></button>
+					<button className="dot" data-order="2" onClick={(e)=>{changePhoto(e, "dot");}}></button>
 				</div>
 			</div>
 			<div className="priceAddress">
@@ -87,7 +99,7 @@ const SimpleDetail = props => {
 					<div className="street">新光路二段三十三號</div>
 				</div>
 			</div>
-			<div className="checkAvailable">立即詢問</div>
+			<div className="checkAvailable" onClick={props.openEmailFrom}>立即詢問</div>
 			<div className="description">
 				<div className="title">房屋概述</div>
 				<div className="content">{props.currentSimpleDetail.summary}</div>
@@ -144,9 +156,11 @@ const SimpleDetail = props => {
 			</div>
 			<div className="streetViewMap">
 			</div>
-			<div className="moreInfo" onClick={props.goPropertyPage}>更多詳細資訊</div>			
+			<div className="moreInfo" onClick={ (e)=>{props.goPropertyPage(e, props.currentSimpleDetail.id)} }>更多詳細資訊</div>
 		</div>
 	)
+
+
 }
 
 function sortOutAmenities ( data, ruleArray) {
@@ -159,5 +173,47 @@ function sortOutAmenities ( data, ruleArray) {
 	}
 	return amenities;
 }
+
+function changePhoto(e, target) {
+	let photoArray = lib.func.getAll(".photos>.photo");
+	let dotArray = lib.func.getAll(".dotSelector>.dot");
+	let dotFocus = lib.func.get(".dotSelector>.focus");
+	// 這邊做的是
+	if ( target === "dot" ) {
+		let dotFocusOrder = parseInt(dotFocus.dataset.order);
+		let eTargetOrder = parseInt(e.target.dataset.order);
+		for ( let j = eTargetOrder ; j< dotArray.length; j++) {
+			photoArray[j].style.left = "100%";
+		}
+		for ( let j = eTargetOrder ; j> -1; j--) {
+			photoArray[j].style.left = "-100%";
+		}
+		photoArray[eTargetOrder].style.left = "0";
+		e.target.classList.toggle("focus");
+		dotFocus.classList.toggle("focus");
+	} else {
+		for (let i = 0 ; i < photoArray.length; i++) {
+			let left = parseInt( lib.func.getStyle(photoArray[i],"left") );
+			if ( target === "leftSelector" ) {
+				if ( left === 0 && i > 0 ) {
+					photoArray[i].style.left = "100%";
+					photoArray[i-1].style.left = "0%";
+					dotArray[i].classList.toggle("focus");
+					dotArray[i-1].classList.toggle("focus");
+				}
+			}
+			if ( target === "rightSelector" ) {
+				if ( left === 0 && i < photoArray.length-1 ) {
+					photoArray[i].style.left = "-100%";
+					photoArray[i+1].style.left = "0%";
+					dotArray[i].classList.toggle("focus");
+					dotArray[i+1].classList.toggle("focus");
+				}
+			}
+		}
+	}
+}
+
+
 
 export default SimpleDetail;

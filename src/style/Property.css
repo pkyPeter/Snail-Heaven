@@ -1,11 +1,15 @@
 .properties {
 	height: 100%;
+	display: flex;
+    justify-content: center;
 }
 .property {
 	height: calc(100% - 60px);
-	width: 80%;
-	min-width: 1000px;
-	margin: 0 auto;
+    position: absolute;
+    top: 60px;
+    width: 80%;
+    min-width: 1000px;
+    margin: 0 auto;
 }
 
 /*最上方按鈕區域*/
@@ -68,9 +72,14 @@
 	}
 
   /*⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩ Left ⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩*/
+  	 /*產品價格*/
+  	.property>.propContent>.left>.price {
+  		font-size: 2.5em;
+  	}
   	/*資產名稱*/
   	.property>.propContent>.left>.name {
-  		font-size: 1.5em;
+  		font-size: 1em;
+  		margin-top: 5px;
   	}
   	/*地址*/
   	.property>.propContent>.left>.address {
@@ -87,7 +96,7 @@
 		width:30%;
 		min-width: 120px; 
 		height: 50px;
-		margin: 15px 0px;
+		margin: 15px 0px 35px 0px;
 		background-color: #00A99D;
 		color: white;
 		border-radius: 3px;
@@ -344,6 +353,9 @@
 	.property>.propContent>.left {
 		width: 100%;
 		padding-left: 0px;
+	}
+	.property>.propContent>.left>.price {
+		padding-left: 10px;
 	}
 	.property>.propContent>.right {
 		width: 100%;
