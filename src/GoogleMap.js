@@ -1,6 +1,6 @@
 import React from "react";
 
-const script = "https://maps.googleapis.com/maps/api/js?region=TW&language=zh-TW&key=AIzaSyDxFq8QlAbDRIiQvSGD_a2C1Vwru0Q69rE&libraries=places,drawing"
+const script = "https://maps.googleapis.com/maps/api/js?region=TW&language=zh-TW&key=AIzaSyDxFq8QlAbDRIiQvSGD_a2C1Vwru0Q69rE&libraries=places,drawing,geometry"
 const script2 = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
 
 function loadScript(src) {
@@ -17,97 +17,85 @@ function loadScript(src) {
   });
 }
 
+
 const googleMap = {
 	load: loadScript(script),
   loadMarkerCluster: loadScript(script2),
-  map:"",
+  map: null,
 	init: {},
-  markers:[]
+  markers:[],
+  evt: {}
 };
 
-
-googleMap.init.initMap = (zoom,lat,lng,targetID,locations, secLocations) => {
-  //這個時候map就等於google.maps.Map，而且他還夾帶了很多Methods
-  let map = new google.maps.Map(document.getElementById(targetID), {
-		zoom: zoom,
-		center: {
-			lat: lat,
-			lng: lng
-		},
+//創造新地圖
+googleMap.init.initMapNew = ( zoom, lat, lng, targetID ) => {
+    let map = new google.maps.Map(document.getElementById(targetID), {
+    zoom: zoom,
+    center: {
+      lat: lat,
+      lng: lng
+    },
     mapTypeControl: false,
     streetViewControl: false,
     fullscreenControl: false
-	});
-  googleMap.map = map;
-  console.log(google.maps);
-  
-  let markers = locations.map(function(location, i) {
-    return new google.maps.Marker({
-        position: location,
-        icon: circle('red'),        
-        draggable: false,
-        animation: google.maps.Animation.DROP,
-    });
-
   });
+    googleMap.map = map;
+    return map;
+}
+//創造地圖的promise
+googleMap.init.initMapPromise = ( zoom, lat, lng, targetID) => { 
+  return new Promise((resolve,reject)=>{
+    let map = googleMap.init.initMapNew( zoom, lat, lng, targetID );
+    if ( map.zoom != undefined ) {
+      resolve(map);
+    } else {
+      reject("error");
+    }
+  })
+}
+//放置marker在地圖上面
+googleMap.makeMarkers = (locations) => {
+ let markers = locations.map((location, i)=>{
+  return new google.maps.Marker({
+            position: location,
+            icon: googleMap.produceMarkerStyle("red",5),        
+            draggable: false,
+            animation: google.maps.Animation.DROP,
+  });
+ }) 
+ googleMap.markers = markers;
+ return markers;
+}
+//製造群聚效果
+googleMap.enableCluster = (map, markers) => {
+   return new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+}
 
-  function circle(fillColor) {
-    return {
+//marker style的參考
+googleMap.produceMarkerStyle = (fillColor, scale) => {
+  return {
       path: google.maps.SymbolPath.CIRCLE,
       fillColor: fillColor,
       fillOpacity: 1,
-      scale: 5,
+      scale: scale,
       strokeColor: 'black',
       strokeWeight: .5
     }
-  }
-
-
-    // Add a marker clusterer to manage the markers.
-  let markerCluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});  
-
-  let clickListener = google.maps.event.addDomListener(map, 'click', function() {
-    console.log(map.getBounds());
-  });
-
-  let results = document.querySelectorAll(".resultArea>.results");
-  for ( let i = 0 ; i < results.length ; i ++ ) {
-      console.log(i);
-      google.maps.event.addDomListener(results[i], 'click', (e) => {
-      console.log(e.target);
-      console.log(map.getBounds());
-    });
-  }
-  let roomAmount = document.querySelectorAll(".roomAmount");
-  for ( let i = 0 ; i < roomAmount.length ; i ++ ) {
-      console.log(i);
-      google.maps.event.addDomListener(roomAmount[i], 'click', (e) => {
-      console.log(e.target);
-      console.log(map.getBounds());
-    });
-  }
-
-  // let clickResultListener = google.maps.event.addDomListener(map, 'click', function() {
-  //   console.log(map.getBounds());
-  // });
-
-
-  let dragListener = google.maps.event.addDomListener(map, 'dragend', function() {
-    console.log(map.getBounds());
-  });
-
-  let markerChangeColorListener = markers.map(function(marker, i) {
-    google.maps.event.addListener(marker, 'click', () => {
-      marker.setIcon(circle('rgb(240, 243, 244)'));
-    });
-  })
-  let dbClickListener = markers.map(function(marker, i) {
-    google.maps.event.addListener(marker, 'dblclick', () => {
-      marker.setMap(null);
-    });
-  })
-
 }
+//取得地點的geocode
+googleMap.geocode = ( address, callback ) => {
+  let geocoder = new google.maps.Geocoder();
+  geocoder.geocode({address: address}, (results, status)=>{
+    if (status == 'OK') {
+      if (callback) {
+        callback(results);  
+      } 
+    } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+    }
+  })
+}
+
 
 
 export default googleMap;

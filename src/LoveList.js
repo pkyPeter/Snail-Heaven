@@ -34,7 +34,7 @@ const LoveList = props => {
 						let daily_price_pureN = daily_price.toLocaleString("en");
 						let loveListStatusIndex = props.getloveListStatusIndex(realEstate.id, props.loveListStatus);
 						return(
-								<div className={props.resultAreaDisplayType[1]} onClick={props.goSimpleDetail} key={index}>
+								<div className={props.resultAreaDisplayType[1]} onClick={(e)=>{props.goSimpleDetail(realEstate.id,realEstate)}} key={index}>
 									<div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
 									<div className="description">
 									<div className="priceGesture absolute" onClick={props.stopPropagation}>

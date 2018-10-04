@@ -25,3 +25,14 @@ firebaseApp.fBaseDB.getListing = callback => {
 		}
 	})
 }
+
+firebaseApp.sortLatLng = ( data ) => {
+	let location = [];
+	for(let i = 0; i < data.length; i++ ) {
+		let laAndLong = {lat:"", lng:""};
+		laAndLong.lat = parseFloat(data[i].latitude);
+		laAndLong.lng = parseFloat(data[i].longitude);
+		location.push(laAndLong);
+	}
+	return location;
+}
