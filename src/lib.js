@@ -48,6 +48,7 @@ lib.func.getQueryStringAndSearch = ( target ) => {
 lib.func.getLocalStorageJSON = ( storageName ) => {
 	let current = localStorage.getItem(storageName);
 	let JSONparsed = JSON.parse(current);
+	console.log(JSONparsed);
 	return JSONparsed
 }
 

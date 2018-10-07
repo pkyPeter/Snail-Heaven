@@ -1,0 +1,78 @@
+.priceChart {
+  height: 65%;
+  width: 100%;
+  position:relative;
+  align-self: flex-start;
+
+}
+
+.priceChart>.bars {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+}
+.priceChart>.bars>.cashBar {
+  width: 0.4%;
+  height: 90%;
+  margin-left: 0.1%;
+  background: #00A99D;
+}
+
+.priceChart>.control {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.priceChart>.control>.circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #3A9690;
+  width: 16px;
+  height: 16px;
+  background-color: #00A99D;   background-color: white;
+  bottom: -6.5px;
+  cursor: grab;
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+}
+.priceChart>.control>.circle:active {
+  cursor: grabbing;
+}
+
+.priceChart>.control>.left {
+  left: 0%;
+}
+.priceChart>.control>.bottomLine {
+    height: 3px;
+    width: 100%;
+    background-color: #00A99D;
+    position: absolute;
+    bottom: 0;
+    z-index: 10;
+}
+.priceChart>.control>.grey {
+    z-index:9;
+    background-color: #DEE2E3;
+}
+.priceChart>.control>.right {
+  right: 0%;
+}
+
+.priceChart>.control>.right>.money, 
+.priceChart>.control>.left>.money {
+  position: absolute;
+  text-align:center;
+  bottom: -25px;
+  color: #3A9690;
+  font-family: Microsoft JHengHei;
+  width: 110px;
+}
+.priceChart>.control>.right>.money {
+  right: 0;
+  text-align: right;
+}

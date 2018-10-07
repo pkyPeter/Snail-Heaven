@@ -16,6 +16,9 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 library.add(faRegularHeart, faBuilding, faBars, faSolidHeart, faRegularBookmark,faSolidBookmark,faTimes);
 
 class Header extends React.Component {
+	constructor(props) {
+		super(props);
+	}
 	render () {
 		return (
 			<header>
@@ -23,7 +26,7 @@ class Header extends React.Component {
 					<div className="burger" onClick={this.toggleRight.bind(this)}>
 						<FontAwesomeIcon className="icon" icon={['fas','bars']}/>
 					</div>
-					<div className="logo">
+					<div className="logo" onClick={this.goIndex.bind(this)}>
 						<div className="snail"></div>
 						<h2>SNAIL HEAVEN</h2>
 					</div>
@@ -79,6 +82,9 @@ class Header extends React.Component {
 				postHouse.style.display = "flex";
 			}, 300)
 		}
+	}
+	goIndex(e) {
+		this.props.history.push(`/property?id=${id}`);
 	}
 }
 

@@ -14,8 +14,7 @@ import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 library.add(faRegularHeart, faThumbsDown, faEnvelope, faSearch, faCaretLeft);
 
 const LoveList = props => {
-	console.log(props.resultAreaDisplayType);
-	console.log(props.loveListDetail);
+	console.log(props.loveListDetail)
 	return  (
 		<div className="right">
 			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize}></div>
@@ -33,6 +32,8 @@ const LoveList = props => {
 						let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
 						let daily_price_pureN = daily_price.toLocaleString("en");
 						let loveListStatusIndex = props.getloveListStatusIndex(realEstate.id, props.loveListStatus);
+						console.log(index ,loveListStatusIndex);
+						console.log(index ,props.loveListStatus)
 						return(
 								<div className={props.resultAreaDisplayType[1]} onClick={(e)=>{props.goSimpleDetail(realEstate.id,realEstate)}} key={index}>
 									<div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>

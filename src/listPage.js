@@ -21,21 +21,19 @@ class List extends React.Component {
 			resultAreaDisplayType: ["resultArea","results"],
 			toggleSimpleDetail: false,
 			currentSimpleDetail: {},
-			loveListDetail: lib.func.getLocalStorageJSON("loveList"),
 			hiddenList: lib.func.getLocalStorageJSON("hiddenList"),
 			selectedIndex: -1
 		}
 		this.changeAreaSize = this.changeAreaSize.bind(this);
 		this.goSimpleDetail = this.goSimpleDetail.bind(this);
-		this.removeFromLoveList = this.removeFromLoveList.bind(this);
-		this.putIntoLoveList = this.putIntoLoveList.bind(this);
 		this.hideList = this.hideList.bind(this);
 	}
 	componentDidUpdate() {
+		// console.log(this.props.loveListStatus);
 		//20181003 : selectedIndex 預設值是－１，點擊後會儲存 marker 在 markers 中所在的位置，這個位置跟 completeList 的物件相對位置是一樣的
 		if ( this.props.selectedIndex !== this.state.selectedIndex ) {
 			this.setState({selectedIndex: this.props.selectedIndex});
-			if ( this.props.selectedIndex !== -1) {
+			if ( this.props.selectedIndex !== -1 && this.state.toggleSimpleDetail === false) {
 				this.goSimpleDetail("", this.props.completeList[this.props.selectedIndex]);
 				// this.state({currentSimpleDetail: this.props.completeList[this.props.selectedIndex]});
 			} 
@@ -43,6 +41,9 @@ class List extends React.Component {
 				this.goSimpleDetail("",{})
 			}
 		}
+		google.maps.event.addDomListener( lib.func.get(".filterType>p"), "click", (e)=>{
+					console.log("test")
+		})
 	}
 	render () {
 		return (
@@ -55,15 +56,15 @@ class List extends React.Component {
 					resultAreaDisplayType={this.state.resultAreaDisplayType}
 					completeList={this.props.completeList}
 					loveListStatus={this.props.loveListStatus}
-					getloveListStatusIndex={this.getloveListStatusIndex}
+					getloveListStatusIndex={this.props.getloveListStatusIndex}
 					hiddenList={this.state.hiddenList}
 					goSimpleDetail={this.goSimpleDetail}
-					removeFromLoveList={this.removeFromLoveList}
-					putIntoLoveList={this.putIntoLoveList}
+					removeFromLoveList={this.props.removeFromLoveList}
+					putIntoLoveList={this.props.putIntoLoveList}
 					openEmailFrom={this.props.openEmailFrom}
 					hideList={this.hideList}
 					addSelectedIndex={this.props.addSelectedIndex}
-					removeSelectedIndex={this.removeSelectedIndex}
+					removeSelectedIndex={this.props.removeSelectedIndex}
 					/>
 				)} 
 				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (
@@ -71,11 +72,11 @@ class List extends React.Component {
 					goLoveListPage={this.props.goLoveListPage} 
 					goSimpleDetail={this.goSimpleDetail} 
 					stopPropagation={this.stopPropagation.bind(this)}
-					loveListDetail={this.state.loveListDetail}
+					loveListDetail={this.props.loveListDetail}
 					loveListStatus={this.props.loveListStatus}
-					getloveListStatusIndex={this.getloveListStatusIndex}
-					removeFromLoveList={this.removeFromLoveList}
-					putIntoLoveList={this.putIntoLoveList}
+					getloveListStatusIndex={this.props.getloveListStatusIndex}
+					removeFromLoveList={this.props.removeFromLoveList}
+					putIntoLoveList={this.props.putIntoLoveList}
 					/>
 				)}
 				{	this.state.toggleSimpleDetail != false && (
@@ -83,9 +84,9 @@ class List extends React.Component {
 					goPropertyPage={this.props.goPropertyPage}
 					currentSimpleDetail={this.state.currentSimpleDetail}
 					loveListStatus={this.props.loveListStatus}
-					getloveListStatusIndex={this.getloveListStatusIndex}
-					putIntoLoveList={this.putIntoLoveList}
-					removeFromLoveList={this.removeFromLoveList}
+					getloveListStatusIndex={this.props.getloveListStatusIndex}
+					putIntoLoveList={this.props.putIntoLoveList}
+					removeFromLoveList={this.props.removeFromLoveList}
 					hideList={this.hideList}
 					openEmailFrom={this.props.openEmailForm}
 					removeSelectedIndex={this.props.removeSelectedIndex}
@@ -123,18 +124,6 @@ class List extends React.Component {
 		} 
 	}
 
-
-
-	getloveListStatusIndex( targetID, source ) {
-		let targetIDPositionIndex;
-		for ( let i = 0 ; i < source.length ; i++ ){
-			if ( targetID === source[i].id ) {
-				targetIDPositionIndex = i;
-				return targetIDPositionIndex;
-			}
-		}
-	}
-
 	goSimpleDetail( id, realEstate ) {
 		// console.log(this.state.toggleSimpleDetail);
 		// console.log(realEstate);
@@ -167,45 +156,6 @@ class List extends React.Component {
 		}
 	}
 
-
-	putIntoLoveList(e, id, realEstate) {
-		// console.log(id);
-		let currentLoveList = this.state.loveListStatus;
-		for (let i = 0 ; i < currentLoveList.length ; i++ ) {
-			if (currentLoveList[i].id === id) {
-				currentLoveList[i].inList = true;
-			}
-		}
-		this.setState({ loveListStatus: currentLoveList});
-
-		let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
-		if( JSONforRenew === null ) {
-			JSONforRenew = [];
-		} 
-		JSONforRenew.push(realEstate);
-		localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
-		this.setState({loveListDetail: JSONforRenew});
-	}
-	removeFromLoveList(e, id, realEstate) {
-		// console.log(id);
-		let currentLoveList = this.state.loveListStatus;
-		for (let i = 0 ; i < currentLoveList.length ; i++ ) {
-			if (currentLoveList[i].id === id) {
-				currentLoveList[i].inList = false;
-			}
-		}
-		this.setState({ loveListStatus: currentLoveList});
-
-		let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
-
-		for ( let i = 0 ; i < JSONforRenew.length ; i++ ) {
-			if ( JSONforRenew[i].id === realEstate.id ) {
-				JSONforRenew.splice(i,1);
-			}
-		}
-		localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
-		this.setState({loveListDetail: JSONforRenew})		
-	}
 
 }
 

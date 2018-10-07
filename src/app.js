@@ -111,7 +111,7 @@ class App extends React.Component {
     // console.log(e.keyCode);
     // console.log(e.currentTarget.value);
     if (e.keyCode === 13) {
-      consoole.log('enter key press');
+      console.log('enter key press');
       this.setState({search: e.currentTarget.value});
     }
   }
@@ -137,7 +137,12 @@ class App extends React.Component {
       let NELng = results[0].geometry.viewport.getNorthEast().lng(); 
       let locationLat = results[0].geometry.location.lat();
       let locationLng = results[0].geometry.location.lng();
-      this.props.history.push("/apartments?location=" + locationLat + "," + locationLng)         
+      // this.props.history.push("/apartments?location=" + locationLat + "," + locationLng)
+      this.props.history.push({
+        pathname:"/apartments",
+        search: `?location=${locationLat},${locationLng}`,
+        state: {detail: 123}
+      }) 
       // this.props.history.push("/?view="+SWLat+","+SWLng+","+NELat+","+NELng)         
     });
     

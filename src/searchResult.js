@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import lib from "./lib.js";
+import PriceChart from "./PriceChart.js";
 //FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
 //FontAwesome主程式
@@ -31,7 +32,7 @@ class SearchResult extends React.Component {
 						<div className="filterArea">
 							<div className="filterType">
 								<p>租金</p>
-								<div className="filterDetail"></div>
+								<PriceChart completeList={this.props.completeList} />
 							</div>
 							<div className="filterType">
 								<p>房間數量</p>
@@ -85,23 +86,24 @@ class SearchResult extends React.Component {
 									let monthly_price = realEstate.monthly_price.split(".")[0];
 									let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
 									let daily_price_pureN = daily_price.toLocaleString("en");
-									let loveListStatusIndex = this.props.getloveListStatusIndex(realEstate.id, this.props.loveListStatus);
+									let loveListStatusIndex = this.props.loveListStatus != null && this.props.getloveListStatusIndex(realEstate.id, this.props.loveListStatus);
 									let hidden = false;
 									if ( this.props.hiddenList != null ) {
 										for (let i = 0 ; i< this.props.hiddenList.length; i++) {
 											if ( realEstate.id === this.props.hiddenList[i]) { hidden = true; }
 										}
 									}
+
 									if (hidden === false) {
 										return (
-											<div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { this.props.goSimpleDetail(realEstate.id, realEstate); } }>
+											<div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { this.props.goSimpleDetail(realEstate.id, realEstate); this.props.addSelectedIndex(index) } }>
 												<div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
 												<div className="description">
 													<div className="priceGesture absolute">
 														<div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
 														<div className="gesture" onClick={this.stopPropagation.bind(this)}>
 															{ 
-																this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true 
+																this.props.loveListStatus != null &&this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true 
 															  ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ this.props.removeFromLoveList(e, realEstate.id, realEstate) }}/>
 															  : <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate) }}/>
 															}

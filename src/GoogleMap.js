@@ -96,6 +96,19 @@ googleMap.geocode = ( address, callback ) => {
   })
 }
 
+googleMap.contain = ( bounds,lat,Lng) => {
+  let contain = [];
+  let currentbounds = bounds;
+  let latLng = new google.maps.LatLng(parseFloat(lat),parseFloat(lng));
+  let inside = currentbounds.contains(latLng);
+  if ( inside === true ) {
+    return true
+  } else if ( inside === false ) {
+    return false
+  } else {
+    return null
+  }
+}
 
 
 export default googleMap;

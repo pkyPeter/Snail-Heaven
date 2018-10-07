@@ -64,6 +64,9 @@
 		justify-content: flex-start;
 		align-items: center;
 	}
+	.apartments>section>.right>.filterArea>.filterType:nth-child(1) {
+		height: 95px;
+	}
 	.apartments>section>.right>.filterArea>.filterType>p {
 		width: 29%;
 	}
@@ -75,6 +78,13 @@
 		justify-content: space-between;
 	}
 
+/*租金條件*/
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.cashBar {
+		height: 100%;
+	    width: 2px;
+	    background-color: black;
+	    margin-right: 3px;
+	}
 /*房間 數量 篩選條件*/
 	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomAmount {
 		width: 23.5%;
