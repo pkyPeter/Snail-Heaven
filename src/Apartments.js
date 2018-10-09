@@ -16,30 +16,35 @@ import data from "./result_export.json";
 
 class Apartments extends React.Component {
 	constructor() {
-	    super();	
-	    this.state = {
-	    	goLoveList: false,
-	    	loveListStatus: null,
-	    	loveListDetail: lib.func.getLocalStorageJSON("loveList") !== null ?  lib.func.getLocalStorageJSON("loveList") : [],
-	    	completeList: data,//10/6：原本應該是[]，暫時改成data測試
-	    	currentLocation: [25.0484402,121.5278391],
-	    	currentDistrict: null,
-	    	latLng: [],
-	    	toggleEmail: false,
-	    	selectedIndex: -1
-	    };
-
-	  	firebaseApp.fBaseDB.getListing(dataFromFB => {
-	  		console.log(dataFromFB);
-	  		for ( let i = 0 ; i<dataFromFB.length ; i++ ) {dataFromFB[i].index = i;}
-	  		this.setState({completeList: dataFromFB});
-	  		this.setState({loveListStatus: this.createLoveListStatus(dataFromFB)});
-	  		console.log(this.state.completeList);
+			super();	
+			this.state = {
+				goLoveList: false,
+				loveListStatus: null,
+				loveListDetail: lib.func.getLocalStorageJSON("loveList") !== null ?  lib.func.getLocalStorageJSON("loveList") : [],
+				completeList: data,//10/6：原本應該是[]，暫時改成data測試
+				currentViewData: [],
+				filteredData:[],
+				filters: { priceFloor:0 , priceCeiling: 100000, roomAmount: [], roomType:[], district:[], photoRequired: false},
+				currentLocation: [25.0484402,121.5278391],
+				currentDistrict: null,
+				latLng: [],
+				toggleEmail: false,
+				selectedIndex: -1
+			};
+		this.changeFilters = this.changeFilters.bind(this);
+		this.doFilter = this.doFilter.bind(this);
+			firebaseApp.fBaseDB.getListing(dataFromFB => {
+				// for ( let i = 0 ; i<dataFromFB.length ; i++ ) {dataFromFB[i].index = i;}
+				// this.setState({completeList: dataFromFB});
+				// this.setState({loveListStatus: this.createLoveListStatus(dataFromFB)});
+				for ( let i = 0 ; i<data.length ; i++ ) {data[i].index = i;}
+				this.setState({loveListStatus: this.createLoveListStatus(data)})
 			//製作給marker使用的state
-			let location = firebaseApp.sortLatLng(dataFromFB);
+			// let location = firebaseApp.sortLatLng(dataFromFB);
+			let location =firebaseApp.sortLatLng(data);
 			this.setState({latLng: location});
 			//等google map相關程序完成，再進行後續動作
-			Promise.all([googleMap.load, googleMap.loadMarkerCluster])
+			Promise.all([googleMap.load])
 			.then(()=>{
 					let queryLocation = [ false , false ]
 					if ( lib.func.getQueryStringAndSearch("location") ) {
@@ -54,7 +59,7 @@ class Apartments extends React.Component {
 					//製作地圖的promise，以及接連進行的一系列動作
 					googleMap.init.initMapPromise( zoom, lat, lng ,"googleMap" )
 					.then((map)=>{
-						let markers = googleMap.makeMarkers(this.state.latLng);
+						let markers = googleMap.makeMarkers(this.state.latLng, true);
 						let markersAndMap = [map,markers];
 						return markersAndMap;
 					})
@@ -66,38 +71,51 @@ class Apartments extends React.Component {
 						//點擊marker，就改變state，這個state會連動影響，把state改成index是因completeList相對應的資料就是在同一個位置
 						markers.map(( marker, i ) => {
 							google.maps.event.addListener(marker, "click", ()=>{
-								marker.setIcon(googleMap.produceMarkerStyle('red', 10));
+								marker.setIcon(googleMap.produceMarkerStyle('red', 64));
 								this.setState({selectedIndex: i})
 							})
+							google.maps.event.addListener(marker, 'visible_changed', function(){
+										if ( marker.getVisible() ) {
+											// console.log(i, marker.getVisible())
+												googleMap.markerclusterer.addMarker(marker, false);
+										} else {
+												googleMap.markerclusterer.removeMarker(marker, false);
+										}  
+								});
 						})
 						//如果點擊地圖的其他地方，則將原本focus的點釋放
 						google.maps.event.addListener( googleMap.map,"click", ()=>{
 							console.log("click");
 							let Index = this.state.selectedIndex;
 							if ( Index != -1 ) {
-								googleMap.markers[Index].setIcon(googleMap.produceMarkerStyle('rgb(240, 243, 244)', 5))
+								googleMap.markers[Index].setIcon(googleMap.produceMarkerStyle('rgb(240, 243, 244)', 38))
 								this.setState({selectedIndex: -1})
 							}
 						})
 
 						//隨時偵測地圖的動態
-						google.maps.event.addListener( googleMap.map, "bounds_changed", ()=>{
-							console.log("bounds_changed");
-							let descriptions = lib.func.getAll(".apartments>section>.right>.resultArea>.results");
-							let currentLocation = googleMap.map.getBounds();
+						google.maps.event.addListener( googleMap.map, "idle", ()=>{
+							// console.log("bounds_changed");
+							googleMap.markerclusterer.clearMarkers();
+							console.log("idle");
+							let completeList = this.state.completeList;
+							let currentLocation = googleMap.customArea ? googleMap.customArea : googleMap.map.getBounds();
+							let currentViewData = [];
 							for ( let i = 0 ; i< this.state.latLng.length ; i++ ) {
 								let latLng = new google.maps.LatLng(parseFloat(this.state.latLng[i].lat),parseFloat(this.state.latLng[i].lng))
-								let inside = currentLocation.contains(latLng);
-								if ( inside ) {
-									googleMap.markers[i].setVisible(true);
-									descriptions[i].classList.remove("hidden");
+								let inside = false;
+								if ( googleMap.customArea ) { 
+									inside = google.maps.geometry.poly.containsLocation(latLng, currentLocation)
 								} else {
-									googleMap.markers[i].setVisible(false);
-									descriptions[i].classList.add("hidden");
+								  inside = currentLocation.contains(latLng)
+								}
+								if ( inside ) {
+									currentViewData.push(completeList[i]);
+									googleMap.markerclusterer.addMarker(googleMap.markers[i], false);
 								}
 							}
+							this.setState({currentViewData: currentViewData, filteredData: currentViewData});
 						})
-
 					})
 			})
 		})
@@ -105,7 +123,7 @@ class Apartments extends React.Component {
 	}
 	componentDidMount() {
 		// console.log(this.props.location.state.district)
-		console.log("componentDidMount");
+		// console.log("componentDidMount");
 		if ( lib.func.getQueryStringAndSearch("loveList") === true ) {
 			this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
 			this.setState({toggleSimpleDetail: false})
@@ -117,44 +135,90 @@ class Apartments extends React.Component {
 		}
 	}
 	componentDidUpdate() {
-		console.log("componentDidUpdate");
-		console.log(this.state.selectedIndex);
-		if (lib.func.getAll(".apartments>section>.right>.resultArea>.results")) {
-			let results = lib.func.getAll(".apartments>section>.right>.resultArea>.results");
-			for ( let i = 0 ; i < results.length ; i ++) {
-				google.maps.event.addDomListener( results[i], "mouseenter", (e)=>{
-					e.stopPropagation();
-					console.log("mouseenter");
-					googleMap.markers[i].setAnimation(google.maps.Animation.BOUNCE);
-					googleMap.markers[i].setIcon(googleMap.produceMarkerStyle('red', 10));
-					setTimeout(()=>{
-						googleMap.markers[i].setAnimation(null)
-						googleMap.markers[i].setIcon(googleMap.produceMarkerStyle('red', 5));
-					},3000)
-				})
+		console.log("apartment componentDidUpdate");
+		console.log(this.state.filters)
+		// console.log(this.state.selectedIndex);
+		//篩選功能
+		if( this.state.currentViewData.length ) {
+			// googleMap.markerclusterer.clearMarkers();
+			console.log("start filter");
+			let filters = this.state.filters;
+			// console.log(filters);
+			let dataForFilter = this.state.currentViewData;
+			//roomAmount
+			console.log(filters.roomAmount.length);
+			if ( filters.roomAmount.length  ) {
+				console.log("room amount filter");
+				// let dataAfterRoomAmountFilter = []; 
+				// for ( let i = 0 ; i < filters.roomAmount.length; i++) {
+				// 	for ( let j = 0 ; j < dataForFilter.length ; j++ ) {
+				// 		if ( parseInt(dataForFilter[j].bedrooms) === filters.roomAmount[i] ) {
+				// 			dataAfterRoomAmountFilter.push(dataForFilter[j]);
+				// 		} 
+				// 	}
+				// }
+				// dataForFilter = dataAfterRoomAmountFilter;
+				dataForFilter = this.doFilter(filters.roomAmount, dataForFilter);
+			} 
+			//roomType
+			if ( filters.roomType.length ) {
+				console.log("room type filter");
+				let dataAfterRoomTypeFilter = []; 
+				for ( let i = 0 ; i < filters.roomType.length; i++) {
+					for ( let j = 0 ; j < dataForFilter.length ; j++ ) {
+						if ( dataForFilter[j].room_type === filters.roomType[i] ) {
+							dataAfterRoomTypeFilter.push(dataForFilter[j]);
+						} 
+					}
+				}
+				dataForFilter = dataAfterRoomTypeFilter;
+			}
+		
+			//District  neighbourhood_cleansed
+			if ( filters.district.length ) {
+				console.log("district filter");
+				let dataAfterDistrictFilter = []; 
+				for ( let i = 0 ; i < filters.district.length; i++) {
+					for ( let j = 0 ; j < dataForFilter.length ; j++ ) {
+						if ( dataForFilter[j].neighbourhood_cleansed === filters.district[i] ) {
+							dataAfterDistrictFilter.push(dataForFilter[j]);						
+						} 
+					}
+				}
+				dataForFilter = dataAfterDistrictFilter;
+			}
+			//photoRequired
+			if ( filters.photoRequired != false ) {
+				// console.log("photoRequired filter");
+				let dataAfterPhotoRequiredFilter = [];
+				for ( let i = 0 ; i < dataForFilter.length ; i ++ ) {
+					if ( dataForFilter[i].picture_url != "" ) {
+						dataAfterPhotoRequiredFilter.push(dataForFilter[i]);
+					}  
+				}
+				dataForFilter = dataAfterPhotoRequiredFilter;
+			}
+
+			if (this.state.filteredData.length !== dataForFilter.length ) {
+				for ( let i = 0 ; i < googleMap.markers.length ; i ++ ) {
+						let shouldShow = false;
+						for ( let j = 0 ; j < dataForFilter.length ; j ++ ) {
+							if ( i === dataForFilter[j].index ) {
+								shouldShow = true;
+							}
+						}
+						if ( shouldShow ) { googleMap.markers[i].setVisible(true) } else { 
+							googleMap.markers[i].setVisible(false) }
+				}
+				// console.log('set state');
+				// console.log(dataForFilter);
+				this.setState({filteredData: dataForFilter});
 			}
 		}
 
-		google.maps.event.addDomListener( lib.func.get("body"), "mouseenter", ()=>{
-			if (lib.func.getAll(".apartments>section>.right>.resultArea>.hidden").length === 0) {
-				console.log("mouseenter");
-				let descriptions = lib.func.getAll(".apartments>section>.right>.resultArea>.results");
-				let currentLocation = googleMap.map.getBounds();
-				for ( let i = 0 ; i< this.state.latLng.length ; i++ ) {
-					let latLng = new google.maps.LatLng(parseFloat(this.state.latLng[i].lat),parseFloat(this.state.latLng[i].lng))
-					let inside = currentLocation.contains(latLng);
-					if ( inside ) {
-						googleMap.markers[i].setVisible(true);
-						descriptions[i].classList.remove("hidden");
-					} else {
-						googleMap.markers[i].setVisible(false);
-						descriptions[i].classList.add("hidden");
-					}
-				}
-			}
-		})
 	}
-	render() {			
+	render() {
+		console.log(259, "apartment render")			
 		return(
 		<div className="apartments">
 			<Header goLoveList={this.state.goLoveList} 
@@ -176,6 +240,10 @@ class Apartments extends React.Component {
 			putIntoLoveList={this.putIntoLoveList.bind(this)}
 			removeFromLoveList={this.removeFromLoveList.bind(this)}
 			getloveListStatusIndex={this.getloveListStatusIndex.bind(this)}
+			currentViewData={this.state.currentViewData}
+			filteredData={this.state.filteredData}
+			changeFilters={this.changeFilters}
+			filters={this.state.filters}
 			/>
 		</div>
 		)
@@ -183,11 +251,11 @@ class Apartments extends React.Component {
 	addSelectedIndex(currentMarkerIndex) {
 		console.log(currentMarkerIndex);
 		this.setState({selectedIndex: currentMarkerIndex})
-		googleMap.markers[currentMarkerIndex].setIcon(googleMap.produceMarkerStyle('red', 10))
+		googleMap.markers[currentMarkerIndex].setIcon(googleMap.produceMarkerStyle('red', 64))
 	}
 	removeSelectedIndex(currentMarkerIndex){
 		this.setState({selectedIndex: -1});
-		googleMap.markers[currentMarkerIndex].setIcon(googleMap.produceMarkerStyle('rgb(240, 243, 244)', 5));
+		googleMap.markers[currentMarkerIndex].setIcon(googleMap.produceMarkerStyle('rgb(240, 243, 244)', 32));
 	}
 
 	goIndex(e) {
@@ -229,11 +297,7 @@ class Apartments extends React.Component {
 		}
 		return loveListStatus;
 	}
-	createLatLng( lat,lng ) {
-	    let newOne = new google.maps.LatLng(lat,lng);
-	    return newOne;
- 	}
- 	putIntoLoveList(e, id, realEstate) {
+	putIntoLoveList(e, id, realEstate) {
 		// console.log(id);
 		let currentLoveList = this.state.loveListStatus;
 		for (let i = 0 ; i < currentLoveList.length ; i++ ) {
@@ -280,6 +344,56 @@ class Apartments extends React.Component {
 			}
 		}
 	}
+
+	changeFilters(filter, value) {
+		console.log(filter,value)
+		if(filter === "photoRequired") {
+			let currentState = this.state.filters;
+			console.log(currentState["photoRequired"])
+			if (currentState["photoRequired"]===true) { currentState["photoRequired"] = false } else {currentState["photoRequired"] = true}
+			this.setState({filters: currentState})
+		} else if (filter === "priceFloor" || filter === "priceCeiling") {
+			let currentState = this.state.filters;
+			if (filter === "priceFloor") { currentState["priceFloor"] = value }
+			else {currentState["priceCeiling"] = value}
+			this.setState({filters: currentState})
+		} else {
+			let currentState = this.state.filters;
+			if (currentState[filter].length > 0) {
+				console.log("something inside")
+				let existed = false;
+				let currentIndex;
+				for ( let i = 0 ; i < currentState[filter].length ; i++ ) {
+					console.log(filter);
+					console.log(currentState[filter][i])
+					if (currentState[filter][i] === value) {
+						existed = true
+						currentIndex = i;
+					};
+				}
+				if (existed) {
+					currentState[filter].splice(currentIndex,1);
+				} else if (!existed) {
+					currentState[filter].push(value);	
+				}
+			} else {
+				currentState[filter].push(value);	
+			}
+			this.setState({filters: currentState});
+		}
+	}
+	doFilter (filter, dataForFilter) {
+		let data = [];
+		for ( let i = 0 ; i < filter.length; i++) {
+			for ( let j = 0 ; j < dataForFilter.length ; j++ ) {
+				if ( parseInt(dataForFilter[j].bedrooms) === filter[i] ) {
+					data.push(dataForFilter[j]);
+				} 
+			}
+		}
+		return data;
+	}
+
 }
 
 

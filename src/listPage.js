@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import lib from "./lib.js";
 import LoveList from "./LoveList.js";
 import SimpleDetail from "./SimpleDetail.js";
-import SearchResult from "./searchResult.js"
+import SearchResult from "./searchResult.js";
+import googleMap from "./GoogleMap.js";
 //FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
 //FontAwesome主程式
@@ -11,8 +12,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 //FontAwesome引用圖片
-import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons';
-library.add(faMapMarkedAlt);
+import { faMapMarkedAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+library.add(faMapMarkedAlt,faPencilAlt);
 
 class List extends React.Component {
 	constructor(props) {
@@ -22,7 +23,8 @@ class List extends React.Component {
 			toggleSimpleDetail: false,
 			currentSimpleDetail: {},
 			hiddenList: lib.func.getLocalStorageJSON("hiddenList"),
-			selectedIndex: -1
+			selectedIndex: -1,
+			customArea: false
 		}
 		this.changeAreaSize = this.changeAreaSize.bind(this);
 		this.goSimpleDetail = this.goSimpleDetail.bind(this);
@@ -41,14 +43,18 @@ class List extends React.Component {
 				this.goSimpleDetail("",{})
 			}
 		}
-		google.maps.event.addDomListener( lib.func.get(".filterType>p"), "click", (e)=>{
-					console.log("test")
+
+		lib.func.get(".paint").addEventListener("click",(e)=>{
+			console.log("paint Clicked");
+			let drawStatus = googleMap.evt.drawCustomArea();
 		})
+
 	}
 	render () {
 		return (
 			<section>
 				<div className="left">
+					<div className="paint"><FontAwesomeIcon className="icon" icon={['fas','pencil-alt']} /><span>自行繪製區域</span></div>
 					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>	
 				</div>
 				{	!this.props.goLoveList && !this.state.toggleSimpleDetail && (
@@ -65,6 +71,11 @@ class List extends React.Component {
 					hideList={this.hideList}
 					addSelectedIndex={this.props.addSelectedIndex}
 					removeSelectedIndex={this.props.removeSelectedIndex}
+					currentViewData={this.props.currentViewData}
+					filteredData={this.props.filteredData}
+					changeFilters={this.props.changeFilters}
+					filters={this.props.filters}
+
 					/>
 				)} 
 				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (

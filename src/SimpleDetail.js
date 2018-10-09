@@ -26,7 +26,7 @@ library.add(faHotTub,faSnowflake);
 
 
 const SimpleDetail = props => {
-	console.log(props.currentSimpleDetail);
+	console.log(props.currentSimpleDetail.id);
 	if ( props.currentSimpleDetail != null ) {
 		let monthly_price = props.currentSimpleDetail.monthly_price.split(".")[0];
 			let daily_price = parseInt(props.currentSimpleDetail.price.split(".")[0].split("$")[1].replace(",",""))*30;
@@ -82,10 +82,10 @@ const SimpleDetail = props => {
 								<div className="photo" style={{backgroundImage: `url("https://a0.muscache.com/im/pictures/10794157/4b52b591_original.jpg?aki_policy=large")`}}></div>
 							</div>
 							<div className="leftSelector" onClick={(e)=>{changePhoto(e, "leftSelector");}}>
-								<FontAwesomeIcon className="icon" icon={['fas','caret-left']} onClick={(e)=>{changePhoto(e, "leftSelector");}}/>
+								<FontAwesomeIcon className="icon" icon={['fas','caret-left']} onClick={(e)=>{changePhoto(e, "leftSelector"); stopPropagation(e);}}/>
 							</div>
 							<div className="rightSelector" onClick={(e)=>{changePhoto(e , "rightSelector");}}>
-								<FontAwesomeIcon className="icon" icon={['fas','caret-right']} onClick={(e)=>{changePhoto(e , "rightSelector");}}/>
+								<FontAwesomeIcon className="icon" icon={['fas','caret-right']} onClick={(e)=>{changePhoto(e , "rightSelector"); stopPropagation(e);}}/>
 							</div>
 						</div>
 						<div className="dotSelector">
@@ -169,6 +169,11 @@ const SimpleDetail = props => {
 
 }
 
+function stopPropagation(e) {
+	e.stopPropagation();
+	e.nativeEvent.stopImmediatePropagation();
+}
+
 function sortOutAmenities ( data, ruleArray) {
 	let amenities = [];
 	for (let i = 0; i<ruleArray.length; i++) {
@@ -181,9 +186,12 @@ function sortOutAmenities ( data, ruleArray) {
 }
 
 function changePhoto(e, target) {
+
 	let photoArray = lib.func.getAll(".photos>.photo");
 	let dotArray = lib.func.getAll(".dotSelector>.dot");
 	let dotFocus = lib.func.get(".dotSelector>.focus");
+	console.log(dotFocus);
+	console.log(dotFocus.dataset.order);
 	// 這邊做的是
 	if ( target === "dot" ) {
 		let dotFocusOrder = parseInt(dotFocus.dataset.order);
@@ -198,25 +206,42 @@ function changePhoto(e, target) {
 		e.target.classList.toggle("focus");
 		dotFocus.classList.toggle("focus");
 	} else {
-		for (let i = 0 ; i < photoArray.length; i++) {
-			let left = parseInt( lib.func.getStyle(photoArray[i],"left") );
-			if ( target === "leftSelector" ) {
-				if ( left === 0 && i > 0 ) {
-					photoArray[i].style.left = "100%";
-					photoArray[i-1].style.left = "0%";
-					dotArray[i].classList.toggle("focus");
-					dotArray[i-1].classList.toggle("focus");
-				}
-			}
-			if ( target === "rightSelector" ) {
-				if ( left === 0 && i < photoArray.length-1 ) {
-					photoArray[i].style.left = "-100%";
-					photoArray[i+1].style.left = "0%";
-					dotArray[i].classList.toggle("focus");
-					dotArray[i+1].classList.toggle("focus");
-				}
+		let order = parseInt(dotFocus.dataset.order);
+		if (target === "leftSelector") {
+			if ( order > 0 ) {
+				photoArray[order].style.left = "100%";
+				photoArray[order-1].style.left = "0%";
+				dotArray[order].classList.toggle("focus");
+				dotArray[order-1].classList.toggle("focus");
 			}
 		}
+		if (target === "rightSelector")	{
+			if ( order < photoArray.length-1 ) {
+				photoArray[order].style.left = "-100%";
+				photoArray[order+1].style.left = "0%";
+				dotArray[order].classList.toggle("focus");
+				dotArray[order+1].classList.toggle("focus");
+			}
+		}
+		// for (let i = 0 ; i < photoArray.length; i++) {
+		// 	let left = parseInt( lib.func.getStyle(photoArray[i],"left") );
+		// 	if ( target === "leftSelector" ) {
+		// 		if ( left === 0 && i > 0 ) {
+		// 			photoArray[i].style.left = "100%";
+		// 			photoArray[i-1].style.left = "0%";
+		// 			dotArray[i].classList.toggle("focus");
+		// 			dotArray[i-1].classList.toggle("focus");
+		// 		}
+		// 	}
+		// 	if ( target === "rightSelector" ) {
+		// 		if ( left === 0 && i < photoArray.length-1 ) {
+		// 			photoArray[i].style.left = "-100%";
+		// 			photoArray[i+1].style.left = "0%";
+		// 			dotArray[i].classList.toggle("focus");
+		// 			dotArray[i+1].classList.toggle("focus");
+		// 		}
+		// 	}
+		// }
 	}
 }
 

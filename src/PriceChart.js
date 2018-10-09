@@ -31,16 +31,16 @@ class PriceChart extends React.Component {
 		this.defineChartRange = this.defineChartRange.bind(this);
 	}
 	componentDidMount(){
-		console.log("componentDidMount");
+		// console.log("componentDidMount");
 	}
 	componentDidUpdate() {
-		console.log("componentDidUpdate");
+		// console.log("componentDidUpdate");
 	}
 	render() {
 		let priceArray = [];
 		let RangeAmountOfPrice = [];
 		let maxLength = 0;
-		this.props.completeList.map((realEstate, index)=>{
+		this.props.filteredData.map((realEstate, index)=>{
 			if (realEstate.monthly_price != "") {
 				let monthly_price = parseInt(realEstate.monthly_price.split(".")[0].split("$")[1].replace(",",""));
 				priceArray.push(monthly_price);
@@ -52,17 +52,18 @@ class PriceChart extends React.Component {
 		// 這邊把所有資產分門別類的２００個區間內
 		for ( let i = 0; i < 99501; i+= 500 ) {
 			let priceContent;
-			if ( i === 99500 ) { priceContent = priceArray.filter( price=> price>i ) }
-			else { priceContent = priceArray.filter( price=> price>i&&price<=i+500 ) }
+			if ( i === 99500 ) { priceContent = priceArray.filter( price => price>i ) }
+			else { priceContent = priceArray.filter( price=> price>i && price<=i+500 ) }
 			let length = priceContent.length;
 			RangeAmountOfPrice.push(length);
 			if ( length > maxLength ) { maxLength = length };
 		}
+
 		return (
 			<div className="filterDetail priceChart">
 				<div className="bars">
-					{
-						RangeAmountOfPrice.map(( count,index )=>{
+					{	
+						priceArray.length !== 0 && RangeAmountOfPrice.map(( count,index )=>{
 							let heightPerUnit = 61/maxLength;
 							let height = RangeAmountOfPrice[index]*heightPerUnit;
 							let currentPrice = 500 + index*500;
@@ -116,8 +117,13 @@ class PriceChart extends React.Component {
 		// 接著setState，判斷天花板/地板，也要同時注意是否左右已經換邊
 		   	if ( this.state.rightMoney > moveCashTranform ) {
 		   		this.setState({ priceCeiling: this.state.rightMoney, priceFloor: moveCashTranform })
+		   		this.props.changeFilters("priceFloor",moveCashTranform);
+	   			this.props.changeFilters("priceCeiling",this.state.rightMoney);
 		   	} else if ( this.state.rightMoney < moveCashTranform ) {
 		   		this.setState({ priceCeiling: moveCashTranform, priceFloor: this.state.rightMoney })
+		   		this.props.changeFilters("priceFloor",moveCashTranform);
+	   			this.props.changeFilters("priceCeiling",this.state.rightMoney);
+
 	   	}
 	   	// 這邊是針對底線的部分進行變色判斷，判斷底線寬度；如果換邊則邏輯也會不一樣
 			this.defineChartRange();
@@ -150,8 +156,12 @@ class PriceChart extends React.Component {
 
 	   	if ( this.state.leftMoney > moveCashTranform ) {
 	   		this.setState({priceFloor: moveCashTranform, priceCeiling:this.state.leftMoney})
+	   		this.props.changeFilters("priceFloor",moveCashTranform);
+	   		this.props.changeFilters("priceCeiling",this.state.leftMoney);
 	   	} else if ( this.state.leftMoney < moveCashTranform ){
 	   		this.setState({priceCeiling: moveCashTranform, priceFloor:this.state.leftMoney})
+	   		this.props.changeFilters("priceFloor",this.state.leftMoney);
+	   		this.props.changeFilters("priceCeiling",moveCashTranform);
 	   	}
 		this.defineChartRange();
 		//距離太近時，價錢進行合併

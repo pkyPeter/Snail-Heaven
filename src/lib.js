@@ -33,7 +33,15 @@ lib.func.toggleClass = ( action , target, classes) => {
 		}
 	}
 }
-
+lib.func.searchInsideArray = ( srcArray, target ) => {
+	let existed = false;
+	for ( let i = 0 ; i < srcArray.length ; i ++ ) {
+		if ( srcArray[i] === target ) {
+			existed = true;
+		}
+	}
+	return existed;
+}
 lib.func.getQueryStringAndSearch = ( target ) => {
 	console.log('lib getQueryString')
 	let queryString = window.location.search;
@@ -48,7 +56,6 @@ lib.func.getQueryStringAndSearch = ( target ) => {
 lib.func.getLocalStorageJSON = ( storageName ) => {
 	let current = localStorage.getItem(storageName);
 	let JSONparsed = JSON.parse(current);
-	console.log(JSONparsed);
 	return JSONparsed
 }
 

@@ -15,6 +15,7 @@
 
 .apartments>section>.left {
 	width: calc(100% - 600px);
+	position: relative;
 }
 
 .apartments>section>.right {
@@ -47,6 +48,29 @@
 	flex-direction: row;
 
 }
+/*google map 使用繪圖工具*/
+.apartments>section>.left>.paint {
+	position: absolute;
+    right: 25px;
+    top: 15px;
+    z-index: 50;
+    border: 1px #00A99D solid;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background-color: rgba(255,255,255,0.6);
+    color: #006A62;
+    font-weight: 400;
+    cursor: pointer;
+}
+.apartments>section>.left>.paint>.icon {
+	margin: 0px 4px 0px 2px;
+	cursor: pointer;
+}
+.apartments>section>.left>.paint:hover {
+	background-color: #40BEB6;
+    color: white;
+}	
+
 
 /*篩選條件區域共同條件*/
 	.apartments>section>.right>.filterArea {
@@ -69,6 +93,7 @@
 	}
 	.apartments>section>.right>.filterArea>.filterType>p {
 		width: 29%;
+		color:#002A27;
 	}
 
 	.apartments>section>.right>.filterArea>.filterType>.filterDetail {
@@ -76,6 +101,13 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.active {
+		background-color: #60C9C2;
+		color: white !important;
+		font-weight: 100;
 	}
 
 /*租金條件*/
@@ -88,15 +120,16 @@
 /*房間 數量 篩選條件*/
 	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomAmount {
 		width: 23.5%;
+		color: #002A27;
 		text-align: center;
-		border: 1px solid #BBBBBB;
+		border: 1px solid #00A99D;
 		border-radius: 3px;
 		padding: 2px 10px;
 		cursor: pointer;
 	}
 	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomAmount:hover {
-		background-color: #626567;
-		border: 1px solid #626567;
+		background-color: #60C9C2;
+		border: 1px solid #00A99D;
 		color:white;
 		font-weight: 100;
 	}
@@ -104,22 +137,64 @@
 /*房間 類型 篩選條件*/
 	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomType {
 		width: 32%;
+		color: #002A27;
 		text-align: center;
-		border: 1px solid #BBBBBB;
+		border: 1px solid #00A99D;
 		border-radius: 3px;
 		padding: 2px 10px;
 		cursor: pointer;
 	}
 	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomType:hover {
-		background-color: #626567;
-		border: 1px solid #626567;
+		background-color: #60C9C2;
+		border: 1px solid #00A99D;
 		color:white;
 		font-weight: 100;
 	}
 
+/*行政區域 篩選條件*/
+	.apartments>section>.right>.filterArea>.districts {
+		height: unset;
+	}
+	.apartments>section>.right>.filterArea>.districts>.filterDetail {
+		padding: 8px 0px 17px 0px;
+	}
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.district {
+		width: 32%;
+		color: #002A27;
+		text-align: center;
+		border: 1px solid #00A99D;
+		border-radius: 3px;
+		padding: 2px 10px;
+		cursor: pointer;
+   		margin-top: 8px;
+	}
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.district:hover {
+		background-color: #60C9C2;
+		border: 1px solid #00A99D;
+		color:white;
+		font-weight: 100;
+	}
+
+/*必備照片 篩選條件*/
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.required {
+		width: 100%;
+		color: #002A27;
+		text-align: center;
+		border: 1px solid #00A99D;
+		border-radius: 3px;
+		padding: 2px 10px;
+		cursor: pointer;
+	}
+	.apartments>section>.right>.filterArea>.filterType>.filterDetail>.required:hover {
+		background-color: #60C9C2;
+		border: 1px solid #00A99D;
+		color:white;
+		font-weight: 100;
+	}
 /*篩選條件 相關按鈕*/
 	.apartments>section>.right>.filterArea>.buttons {
 		border-bottom: none;
+		color:#002A27;
 		display: flex;
 	    justify-content: flex-end;
 	}

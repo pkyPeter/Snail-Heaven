@@ -19,6 +19,7 @@
   height: 90%;
   margin-left: 0.1%;
   background: #00A99D;
+  transition: height 1s, background-color 0.5s;
 }
 
 .priceChart>.control {
@@ -45,7 +46,7 @@
 }
 
 .priceChart>.control>.left {
-  left: 0%;
+  left: -8px;
 }
 .priceChart>.control>.bottomLine {
     height: 3px;
@@ -60,7 +61,7 @@
     background-color: #DEE2E3;
 }
 .priceChart>.control>.right {
-  right: 0%;
+  right: -8px;
 }
 
 .priceChart>.control>.right>.money, 
@@ -73,6 +74,6 @@
   width: 110px;
 }
 .priceChart>.control>.right>.money {
-  right: 0;
+  right: -180%;
   text-align: right;
 }
