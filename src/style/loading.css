@@ -1,0 +1,37 @@
+.loading {
+	width: 100%;
+	height: 60%;
+	margin-top: 14%;
+	display:flex;
+	align-items: flex-end;
+	justify-content: center;
+	position:relative;
+	background-image: url("../imgs/buildings.jpg");
+	background-repeat: repeat-x;
+	animation: animatedBackground 8s linear infinite;
+}
+.loading>.loadingContainer {
+	position:relative;
+}
+.loading>.loadingContainer>.snail {
+	width: 125px;
+	position: absolute;
+	transform: rotate(7deg);
+	left: 34%;
+	top: 4.2%;
+}
+.loading>.loadingContainer>.car {
+	width: 320px;
+}
+.loading>.loadingContainer>.description {
+	position:absolute;
+	width:100%;
+	bottom:60px;
+	text-align: center;
+}
+
+
+@keyframes animatedBackground {
+	from { background-position: 0 65%; }
+	to { background-position: 100% 65%; }
+}

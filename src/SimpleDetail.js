@@ -36,12 +36,12 @@ const SimpleDetail = props => {
 			let TV = sortOutAmenities(props.currentSimpleDetail.amenities, [/TV/ig]).length === 2 ? ["TV", "Cable TV"] : ["TV"];//因為電視無法拆解
 			let loveListStatusIndex = props.getloveListStatusIndex(props.currentSimpleDetail.id, props.loveListStatus);
 			return (
-				<div className="right">
-					<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize}></div>
+				<div className="right" style={{width: props.leftRightWidth.rightWidth}}>
+					<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize} style={{right: props.leftRightWidth.resizerRight}}></div>
 					<div className="sdTitle">
 						<div className="button return" onClick={(e)=>{props.goSimpleDetail("",{}); 
 						props.selectedIndex !== -1 &&
-						props.removeSelectedIndex(props.selectedIndex)}}>							
+						props.removeSelectedIndex(props.currentSimpleDetail.index)}}>							
 							<FontAwesomeIcon className="icon" icon={['fas','long-arrow-alt-left']}/>
 							<div>回到搜尋結果</div>
 						</div>

@@ -62,13 +62,19 @@
     font-weight: 400;
     cursor: pointer;
 }
-.apartments>section>.left>.paint>.icon {
+.apartments>section>.left>.paint .icon {
 	margin: 0px 4px 0px 2px;
 	cursor: pointer;
 }
 .apartments>section>.left>.paint:hover {
 	background-color: #40BEB6;
     color: white;
+    font-weight: 100;
+}	
+.apartments>section>.left>.active {
+	background-color: #40BEB6;
+    color: white;
+    font-weight: 100;
 }	
 
 

@@ -135,9 +135,14 @@
  	.property>.propContent>.left>.propGraphicInfo>.graphics {
   		width: 100%;
   		height: 480px;
+  		position: relative;
   	}
   	.property>.propContent>.left>.propGraphicInfo>.graphics>.photoGallery {
   		height: 100%;
+  		width: 100%;
+  		position: absolute;
+  		z-index: 2;
+  		background-color: white;
   	}
   	.property>.propContent>.left>.propGraphicInfo>.graphics>.photoGallery>.gallery {
   		position:relative;
@@ -224,10 +229,23 @@
     	border: 1px solid #F7D56B;
     	box-shadow: 0px 0px 1px #F7D56B;
     }
+    .property>.propContent>.left>.propGraphicInfo>.graphics>.map {
+  		height: 100%;
+  		width: 100%;
+  		position: absolute;
+  		z-index: 1;
+  	}
+
+	.property>.propContent>.left>.propGraphicInfo>.graphics>.streetView {
+  		height: 100%;
+  		width: 100%;
+  		position: absolute;
+  		z-index: 1;
+  	}
 
   	/*描述*/
   	.property>.propContent>.left>.description {
-
+  		margin-top: 15px;
   	}
   	/*房屋設備*/
   	.property>.propContent>.left>.Amenities {

@@ -26,6 +26,14 @@ firebaseApp.fBaseDB.getListing = callback => {
 	})
 }
 
+firebaseApp.fBaseDB.getListingByID = ( ID ,callback) => {
+	firebaseDB.ref("listings").orderByChild("id").equalTo(ID).once("value").then(snapshot => {
+		if (callback) {
+			callback(snapshot.val());
+		}
+	})
+}
+
 firebaseApp.sortLatLng = ( data ) => {
 	let location = [];
 	for(let i = 0; i < data.length; i++ ) {

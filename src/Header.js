@@ -18,22 +18,23 @@ library.add(faRegularHeart, faBuilding, faBars, faSolidHeart, faRegularBookmark,
 class Header extends React.Component {
 	constructor(props) {
 		super(props);
+		this.toggleRight = this.toggleRight.bind(this);
 	}
 	render () {
 		return (
 			<header>
 				<div className="left">
-					<div className="burger" onClick={this.toggleRight.bind(this)}>
+					<div className="burger" onClick={this.toggleRight}>
 						<FontAwesomeIcon className="icon" icon={['fas','bars']}/>
 					</div>
-					<div className="logo" onClick={this.goIndex.bind(this)}>
+					<div className="logo" onClick={this.props.goIndex}>
 						<div className="snail"></div>
 						<h2>SNAIL HEAVEN</h2>
 					</div>
 					<input type="text" placeholder="小蝸牛想住哪？"/>
 				</div>
 				<div className="right">
-					<div className="mobileClose" onClick={this.toggleRight.bind(this)}>
+					<div className="mobileClose" onClick={this.toggleRight}>
 						<FontAwesomeIcon className="icon" icon={['fas','times']}/>
 					</div>
 					<div className="searchFav">
@@ -83,9 +84,7 @@ class Header extends React.Component {
 			}, 300)
 		}
 	}
-	goIndex(e) {
-		this.props.history.push(`/property?id=${id}`);
-	}
+
 }
 
 

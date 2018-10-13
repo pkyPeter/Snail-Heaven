@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import React from "react";
 import googleMap from "./GoogleMap.js";
+import lib from "./lib.js"
 import 'firebase/database';
 import { firebaseApp } from "./firebaseApp.js";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -31,7 +32,18 @@ class App extends React.Component {
       location: [],
       district: []
     };
-    googleMap.load.then(()=>{console.log("map loaded")});
+    googleMap.load.then(()=>{
+      console.log("map loaded")
+      googleMap.initAutocomplete(lib.func.get('.form>input'), "index");
+      googleMap.addAutocompleteListener(googleMap.autocomplete.index, (place)=>{
+          console.log(place);
+          this.props.history.push({
+          pathname:"/apartments",
+          search: `?search=${place.geometry.location.lat()},${place.geometry.location.lng()}`,
+        }) 
+      });
+
+    });
   }
   componentDidMount() {
       // googleMap.load.then(()=>{
@@ -122,7 +134,8 @@ class App extends React.Component {
     if (e.keyCode === 13) {
       console.log('enter key press');
       this.setState({search: e.currentTarget.value});
-      this.props.history.push("/apartments?position=" + e.target.value);
+
+      // this.props.history.push("/apartments?position=" + e.target.value);
     }
   }
 

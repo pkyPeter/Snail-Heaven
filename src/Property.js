@@ -1,12 +1,16 @@
 import React from "react";
-import PropTypes from 'prop-types';
 import Header from "./Header.js";
 import lib from "./lib.js";
+import googleMap from "./GoogleMap.js";
 import "./style/common.css";
 import "./style/header.css";
 import "./style/Property.css";
+import "./style/loading.css";
 import data from "./result_export.json";
 import Email from "./Email.js";
+import { firebaseApp } from "./firebaseApp.js";
+import racing from "./imgs/racing.svg"
+import snail_face from "./imgs/snail_face.png";
 //FontAwesome主程式
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,7 +23,6 @@ import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faRegularHeart,faSolidHeart,faShareAlt, faCaretLeft);
 
-
 class Property extends React.Component {
 	constructor() {
 		super();
@@ -30,24 +33,59 @@ class Property extends React.Component {
 	    	loveListDetail: lib.func.getLocalStorageJSON("loveList"),
 	    	completeList: data,
 	    	currentList: {},
+	    	currentAddress: null,
 	    	toggleEmail: false
 	    };
+	    this.switchTab = this.switchTab.bind(this);
 	}
-	componentDidMount() {
+	componentDidMount() { 
 		this.getQueryStringID((outputArray)=>{
-			console.log(outputArray);
 			let targetID = outputArray[0];
-			let completeList = this.state.completeList;
-			for (let i = 0; i< completeList.length; i++) {
-				if (completeList[i].id === targetID) {
-					this.setState({currentList: completeList[i]});
-					console.log(completeList[i]);
-				}
-			}
+			firebaseApp.fBaseDB.getListingByID(targetID, (data)=>{
+				let objectKey = parseInt(Object.keys(data)[0]);
+				let currentList = data[objectKey];
+				this.setState({currentList: currentList});
+				let zoom = 18;
+				let lat = parseFloat(currentList.latitude)
+				let lng = parseFloat(currentList.longitude)
+				// googleMap.init.initMapPromise( zoom, lat, lng ,"googleMap")
+				// .then((map)=>{
+				// 	let markers = googleMap.makeMarkers([{lat: lat, lng: lng}], true);
+				// 	markers[0].setMap(googleMap.map);
+				// 	markers[0].setIcon(googleMap.produceMarkerStyle(true ,64))
+				// })
+				// let panorama = new google.maps.StreetViewPanorama(
+				//   lib.func.get('#streetView'), {
+				//     position: {lat: lat, lng: lng},
+				//     addressControlOptions: {
+				//       position: google.maps.ControlPosition.BOTTOM_CENTER
+				//     },
+				//     linksControl: false,
+				//     panControl: false,
+				//     enableCloseButton: false
+				// });
+				// googleMap.reverseGeocode(lat,lng, (results)=>{
+				// 	this.setState({currentAddress: results[0].formatted_address});
+				// 	console.log(results)
+				// })
+			})
 		});
+		// this.getQueryStringID((outputArray)=>{
+		// 	console.log(outputArray);
+		// 	let targetID = outputArray[0];
+		// 	let completeList = this.state.completeList;
+		// 	for (let i = 0; i< completeList.length; i++) {
+		// 		if (completeList[i].id === targetID) {
+		// 			this.setState({currentList: completeList[i]});
+		// 			console.log(completeList[i]);
+		// 		}
+		// 	}
+		// });
+
 	}
 	render() {
-		if (Object.keys(this.state.currentList).length > 0) {
+		console.log(this.state.currentList);
+		if (Object.keys(this.state.currentList).length) {
 			let monthly_price = this.state.currentList.monthly_price.split(".")[0];
 			let daily_price = parseInt(this.state.currentList.price.split(".")[0].split("$")[1].replace(",",""))*30;
 			let daily_price_pureN = daily_price.toLocaleString("en");
@@ -93,13 +131,13 @@ class Property extends React.Component {
 						<div className="left">
 							<div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
 							<div className="name">{this.state.currentList.name}</div>
-							<div className="address">「地址」：還要用google map製作，再接再厲</div>
+							<div className="address">{this.state.currentAddress}</div>
 							<div className="checkAvailable" onClick={this.openEmailForm.bind(this)}>立即詢問</div>
 							<div className="propGraphicInfo">
 								<div className="tabs">
-									<div className="tab active">照片</div>
-									<div className="tab">地圖</div>
-									<div className="tab">街景</div>
+									<div className="tab active" onClick={(e)=>{this.switchTab(e, "photoGallery")}}>照片</div>
+									<div className="tab" onClick={(e)=>{this.switchTab(e, "map")}}>地圖</div>
+									<div className="tab" onClick={(e)=>{this.switchTab(e, "streetView")}}>街景</div>
 								</div>
 								<div className="graphics">
 									<div className="photoGallery">
@@ -125,8 +163,8 @@ class Property extends React.Component {
 											<div className="selector"></div>
 										</div>
 									</div>
-									<div className="map"></div>
-									<div className="streetView"></div>
+									<div className="map" id="googleMap"></div>
+									<div className="streetView" id="streetView"></div>
 								</div>
 							</div>
 							<div className="description">
@@ -170,13 +208,21 @@ class Property extends React.Component {
 						</div>
 					</div>
 					<div className="footer">
-						&copy;
 					</div>
 				</section>
 			</div>
 		)
 		} else {
-			return "loading";
+			return (
+			<div className="loading">
+				<div className="loadingContainer" >
+					<img className="snail"src={snail_face}  />
+					<img className="car" src={racing}  />
+					<div className="description"  >立刻為您取得房況中......</div>
+				</div>
+
+			</div>
+			)
 		}
 	}
 
@@ -290,6 +336,32 @@ class Property extends React.Component {
 		}
 		localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
 		this.setState({loveListDetail: JSONforRenew})		
+	}
+	switchTab (e, tabClicked) {
+		let photoGallery = lib.func.get(".photoGallery");
+		let map = lib.func.get(".map");
+		let streetView = lib.func.get(".streetView");
+		let tab = lib.func.getAll(".tabs>.tab");
+		console.log(tab)
+		for( let i = 0 ; i < tab.length ; i ++ ) {
+			tab[i].classList.remove("active");
+		}
+		e.currentTarget.classList.add("active");
+		if ( tabClicked === "photoGallery") {
+			photoGallery.style.zIndex = 2;
+			map.style.zIndex = 1;
+			streetView.style.zIndex = 1;
+		}
+		if ( tabClicked === "map") {
+			photoGallery.style.zIndex = 1;
+			map.style.zIndex = 2;
+			streetView.style.zIndex = 1;
+		}
+		if ( tabClicked === "streetView") {
+			photoGallery.style.zIndex = 1;
+			map.style.zIndex = 1;
+			streetView.style.zIndex = 2;
+		}		
 	}
 }
 

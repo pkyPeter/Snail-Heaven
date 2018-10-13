@@ -16,8 +16,8 @@ library.add(faRegularHeart, faThumbsDown, faEnvelope, faSearch, faCaretLeft);
 const LoveList = props => {
 	console.log(props.loveListDetail)
 	return  (
-		<div className="right">
-			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize}></div>
+		<div className="right" style={{width: props.leftRightWidth.rightWidth}}>
+			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize} style={{right: props.leftRightWidth.resizerRight}}></div>
 			<div className="favTitle">
 				<div className="return" onClick={props.goLoveListPage}>							
 					<FontAwesomeIcon className="icon" icon={['fas','long-arrow-alt-left']}/>

@@ -8,7 +8,7 @@ import snail_seen_24 from "./imgs/snail.png";
 import snail_seen_32 from "./imgs/snail_seen_32.png";
 import snail from "./imgs/snail_32.png";
 import snail_happy from "./imgs/snail_happy_64.png";
-
+import shell from "./imgs/shell.png";
 console.log(MarkerClusterer);
 // import "./markerclusterer.js";
 const script = "https://maps.googleapis.com/maps/api/js?region=TW&language=zh-TW&key=AIzaSyDxFq8QlAbDRIiQvSGD_a2C1Vwru0Q69rE&libraries=places,drawing,geometry"
@@ -36,7 +36,8 @@ const googleMap = {
 	init: {},
   markers:[],
   evt: {},
-  customArea: null
+  customArea: null,
+  autocomplete: {}
 };
 
 //創造新地圖
@@ -71,7 +72,7 @@ googleMap.makeMarkers = (locations, visible) => {
   return new google.maps.Marker({
             // map: googleMap.map,
             position: location,
-            icon: googleMap.produceMarkerStyle("red",38),        
+            icon: googleMap.produceMarkerStyle(true ,38),        
             draggable: false,
             animation: google.maps.Animation.DROP,
             visible: visible
@@ -80,12 +81,33 @@ googleMap.makeMarkers = (locations, visible) => {
  googleMap.markers = markers;
  return markers;
 }
+// //marker style的參考
+// googleMap.produceMarkerStyle = ( newStuff , scale) => {
+//   return {
+//       path: google.maps.SymbolPath.CIRCLE,
+//       fillColor: "red",
+//       fillOpacity: 1,
+//       scale: 5,
+//       strokeColor: 'black',
+//       strokeWeight: .5
+//     }
+
+// }
 //marker style的參考
-googleMap.produceMarkerStyle = (fillColor, scale) => {
-  return {
+googleMap.produceMarkerStyle = ( newStuff , scale) => {
+  // console.log(newStuff)
+  if (newStuff === true) {
+      return {
       url: snail_happy,
       scaledSize: new google.maps.Size(scale ,scale)
     }
+  } else {
+    return {
+      url: shell,
+      scaledSize: new google.maps.Size(scale ,scale)
+    }
+  }
+
 }
 // googleMap.produceMarkerStyle = (fillColor, scale) => {
 //   return {
@@ -126,6 +148,20 @@ googleMap.geocode = ( address, callback ) => {
   })
 }
 
+googleMap.reverseGeocode = (lat,lng, callback) => {
+  let geocoder = new google.maps.Geocoder();
+  let latLng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+  geocoder.geocode({"location": latLng},  (results, status)=>{
+    if (status == 'OK') {
+      if (callback) {
+        callback(results);  
+      } 
+    } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+    }
+  })
+}
+
 googleMap.contain = ( bounds,lat,Lng) => {
   let contain = [];
   let currentbounds = bounds;
@@ -141,20 +177,24 @@ googleMap.contain = ( bounds,lat,Lng) => {
 }
 
 //google map 繪製客製化區域功能
-googleMap.evt.drawCustomArea = () => {
-     let mouseDown = google.maps.event.addDomListener(googleMap.map.getDiv(),'mousedown', (e) => {
+googleMap.evt.drawCustomArea = ( deletion ) => {
+     let mouseMove;
+     let mouseUp;
+     let mouseDown = google.maps.event.addDomListener( googleMap.map,'mousedown', (e) => {
             googleMap.map.setOptions({draggable: false})
              //the polygon
             let poly = new google.maps.Polyline({ map:googleMap.map, clickable:false, strokeColor: "#00A99D" });
+            let bounds = new google.maps.LatLngBounds();
             //move-listener
-            let move = google.maps.event.addListener( googleMap.map, 'mousemove', (e) => {
+            mouseMove = google.maps.event.addListener( googleMap.map, 'mousemove', (e) => {
                   console.log("move")
                   poly.getPath().push(e.latLng);
+                  bounds.extend(e.latLng);
             });
             //mouseup-listener
-            google.maps.event.addDomListenerOnce(window.document,'mouseup', (e) => {
+            mouseUp = google.maps.event.addDomListenerOnce(window.document,'mouseup', (e) => {
                   console.log("mouseup")
-                  google.maps.event.removeListener(move);
+                  google.maps.event.removeListener(mouseMove);
                   let path = poly.getPath();
                   poly.setMap(null);
                   poly = new google.maps.Polygon(googleMap.polygonOptions(path));
@@ -162,9 +202,30 @@ googleMap.evt.drawCustomArea = () => {
                   googleMap.customArea = poly;
                   googleMap.map.setOptions({draggable: true})     
                   google.maps.event.removeListener(mouseDown);
-                  return true;
+                  googleMap.map.fitBounds(bounds);
             });
     });
+    if ( deletion ) {
+                  // google.maps.event.removeListener(mouseMove);
+                  // google.maps.event.removeListener(mouseUp);
+                  console.log(mouseDown)
+                  // google.maps.event.removeListener(mouseDown);
+                  console.log(mouseMove)
+                  console.log(mouseUp)
+                  console.log(mouseDown)
+                  mouseDown.remove();
+                  console.log(mouseDown)
+                  google.maps.event.clearListeners(googleMap.map, 'mousedown');
+                  console.log(mouseDown)
+                  // google.maps.event.clearListeners(googleMap.map, 'mousemove');
+                  if (googleMap.customArea) {
+                    googleMap.customArea.setMap(null);
+                    googleMap.customArea = null;
+                    googleMap.map.panTo({lat:25.0484402,lng:121.5278391});
+                    googleMap.map.setZoom(12); 
+                  }
+    }
+    return mouseDown;
 }
 
 // googleMap.filterLocation = (mode, filterList, latLngList, currentLocation) => {
@@ -196,5 +257,49 @@ googleMap.polygonOptions = (path) => {
   return options;
 }
 
+//autoComplete
+googleMap.initAutocomplete = (DomElement, sitePosition) => {
+  let input = DomElement;
+  let autocomplete;
+  let map = googleMap.map;
+  if (sitePosition === "index") {
+    googleMap.autocomplete.index = new google.maps.places.Autocomplete(input);
+    autocomplete = googleMap.autocomplete.index;
+  } else if (sitePosition === "apartments") {
+    googleMap.autocomplete.apartments = new google.maps.places.Autocomplete(input);
+    autocomplete = googleMap.autocomplete.apartments;
+  }
+  if (map) {
+    autocomplete.bindTo('bounds', googleMap.map);  
+  }
+  
+  autocomplete.setFields(['geometry']);
+  autocomplete.setComponentRestrictions({'country': ['tw']});
+}
+
+googleMap.addAutocompleteListener = (autocomplete, callback) => {
+  autocomplete.addListener('place_changed', () => {
+  let place = autocomplete.getPlace();
+  let map = googleMap.map;
+    if (!place.geometry) {
+      // User entered the name of a Place that was not suggested and
+      // pressed the Enter key, or the Place Details request failed.
+      window.alert("No details available for input: '" + place.name + "'");
+      return;
+    }
+    if (googleMap.map) {
+      // If the place has a geometry, then present it on a map.
+      if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+      } else {
+        map.setCenter(place.geometry.location);
+        map.setZoom(17);  // Why 17? Because it looks good.
+      }
+    } else {
+      callback(place);
+    }
+
+  })
+}
 
 export default googleMap;
