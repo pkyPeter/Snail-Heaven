@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "/Users/alvin/brother/Projects/Snail\\ Heaven/Snail-Heaven/dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

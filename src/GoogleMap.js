@@ -9,6 +9,12 @@ import snail_seen_32 from "./imgs/snail_seen_32.png";
 import snail from "./imgs/snail_32.png";
 import snail_happy from "./imgs/snail_happy_64.png";
 import shell from "./imgs/shell.png";
+//marker cluster
+import m1 from "./imgs/m1.png";
+import m2 from "./imgs/m2.png";
+import m3 from "./imgs/m3.png";
+import m4 from "./imgs/m4.png";
+import m5 from "./imgs/m5.png";
 console.log(MarkerClusterer);
 // import "./markerclusterer.js";
 const script = "https://maps.googleapis.com/maps/api/js?region=TW&language=zh-TW&key=AIzaSyDxFq8QlAbDRIiQvSGD_a2C1Vwru0Q69rE&libraries=places,drawing,geometry"
@@ -121,17 +127,56 @@ googleMap.produceMarkerStyle = ( newStuff , scale) => {
 // }
 //製造群聚效果
 googleMap.enableCluster = (map, markers) => {
-   let markerclusterer = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+   let markerclusterer = new MarkerClusterer(map, markers, googleMap.makeClusterOpstions());
    googleMap.markerclusterer = markerclusterer;
    return markerclusterer;
 }
 googleMap.makeClusterOpstions = () => {
   let options = {
-    styles: [{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}],
-    gridSize: 100
+    styles: googleMap.clusterStyles,
+    gridSize: 100,
+    minimumClusterSize: 2
   }
   return options;
 }
+
+googleMap.clusterStyles = [{
+        url: m1,
+        height: 53,
+        width: 53,
+        // anchor: [16, 0],
+        textColor: 'black',
+        textSize: 10
+      }, {
+        url: m2,
+        height: 56,
+        width: 56,
+        // anchor: [24, 0],
+        textColor: 'black',
+        textSize: 11
+      }, {
+        url: m3,
+        height: 66,
+        width: 66,
+        // anchor: [24, 24],
+        textColor: 'black',
+        textSize: 12
+      }, {
+        url: m4,
+        height: 78,
+        width: 78,
+        // anchor: [24, 24],
+        textColor: 'black',
+        textSize: 12
+      }, {
+        url: m5,
+        height: 90,
+        width: 90,
+        // anchor: [24, 24],
+        textColor: 'black',
+        textSize: 12
+      }];
+
 
 
 //取得地點的geocode
@@ -221,8 +266,8 @@ googleMap.evt.drawCustomArea = ( deletion ) => {
                   if (googleMap.customArea) {
                     googleMap.customArea.setMap(null);
                     googleMap.customArea = null;
-                    googleMap.map.panTo({lat:25.0484402,lng:121.5278391});
-                    googleMap.map.setZoom(12); 
+                    // googleMap.map.panTo({lat:25.0484402,lng:121.5278391});
+                    // googleMap.map.setZoom(12); 
                   }
     }
     return mouseDown;

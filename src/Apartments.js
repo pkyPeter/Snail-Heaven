@@ -12,7 +12,7 @@ import "./style/header.css";
 import "./style/body.css";
 import "./style/LoveList.css";
 import "./style/SimpleDetail.css";
-import data from "./result_export.json";
+import data from "./result_700.json";
 
 class Apartments extends React.Component {
   constructor() {
@@ -25,7 +25,6 @@ class Apartments extends React.Component {
       currentViewData: [],
       filteredData:[],
       filters: { priceFloor:0 , priceCeiling: 100000, roomAmount: [], roomType:[], district:[], photoRequired: false},
-      filtersDone : [],
       currentLocation: [25.0484402,121.5278391],
       currentDistrict: null,
       latLng: [],
@@ -44,7 +43,7 @@ class Apartments extends React.Component {
     this.putIntoLoveList=this.putIntoLoveList.bind(this);
     this.removeFromLoveList=this.removeFromLoveList.bind(this);
     this.getloveListStatusIndex=this.getloveListStatusIndex.bind(this);
-
+    this.getFilteredData = this.getFilteredData.bind(this);
 
     firebaseApp.fBaseDB.getListing(dataFromFB => {
       // for ( let i = 0 ; i<dataFromFB.length ; i++ ) {dataFromFB[i].index = i;}
@@ -131,15 +130,21 @@ class Apartments extends React.Component {
                   if ( googleMap.customArea ) { 
                     inside = google.maps.geometry.poly.containsLocation(latLng, currentLocation);
                   } else {
-					inside = currentLocation.contains(latLng);
+										inside = currentLocation.contains(latLng);
                   }
                   if ( inside ) {
                     currentViewData.push(completeList[i]);
                     googleMap.markerclusterer.addMarker(googleMap.markers[i], false);
                   }
                 }
-                // this.setState({currentViewData: currentViewData, filteredData: currentViewData});
-                this.setState({currentViewData: currentViewData });
+
+                // this.setState({currentViewData: currentViewData });
+                if( this.state.currentViewData.length && (this.state.filters.roomAmount.length || this.state.filters.roomType.length || this.state.filters.district.length) ) {
+	              	this.setState({currentViewData: currentViewData});
+	                this.getFilteredData();
+	              } else {
+	              	this.setState({currentViewData: currentViewData, filteredData: currentViewData});
+	              }
               });
             });
         });
@@ -163,93 +168,7 @@ class Apartments extends React.Component {
     console.log(this.state.filters);
     // console.log(this.state.selectedIndex);
     //篩選功能
-    if( this.state.currentViewData.length ) {
-      // googleMap.markerclusterer.clearMarkers();
-      console.log("start filter");
-      let filters = this.state.filters;
-      // console.log(filters);
-      let dataForFilter = this.state.currentViewData;
-      //roomAmount
-      if ( filters.roomAmount.length  ) {
-        dataForFilter = this.doFilter("roomAmount",filters.roomAmount, dataForFilter);
-      } 
-      //roomType
-      if ( filters.roomType.length ) {
-        dataForFilter = this.doFilter("room_type",filters.roomType, dataForFilter);
-      }
-      //District  neighbourhood_cleansed
-      if ( filters.district.length ) {
-        dataForFilter = this.doFilter("neighbourhood_cleansed",filters.district, dataForFilter);
-      }
-      //photoRequired
-      if ( filters.photoRequired != false ) {
-        let dataAfterPhotoRequiredFilter = [];
-        for ( let i = 0 ; i < dataForFilter.length ; i ++ ) {
-          if ( dataForFilter[i].picture_url != "" ) {
-            dataAfterPhotoRequiredFilter.push(dataForFilter[i]);
-          }  
-        }
-        dataForFilter = dataAfterPhotoRequiredFilter;
-      }
-      //hideList 
-      let hiddenList = lib.func.getLocalStorageJSON("hiddenList");
-      if ( hiddenList ) {
-        let dataAfterHideList = [];
-        for ( let i = 0; i < dataForFilter.length ; i++ ) {
-          let shouldShow = true;
-          for ( let j = 0 ; j < hiddenList.length ; j++ ) {
-            if ( dataForFilter[i].id === hiddenList[j] ) {
-              shouldShow = false;
-            }
-          }
-          if (shouldShow) { dataAfterHideList.push(dataForFilter[i]); }
-        }
-        dataForFilter = dataAfterHideList;
-      }
-      console.log(this.state.filteredData.length,dataForFilter.length)
-      if ( this.state.filteredData.length !== dataForFilter.length ) {
-        let hiddenMarker = [];
-        this.setState({filteredData: dataForFilter});
-       	for ( let i = 0 ; i < this.state.hiddenMarkerIndex ; i ++ ) {
-       		console.log("把隱藏露出");
-       		googleMap.markers[this.state.hiddenMarkerIndex[i]].setVisible(true);
-       	}
-       	for ( let i = 0 ; i < googleMap.markers.length ; i ++ ) {
-      			let shouldShow = false;
-      			for ( let j = 0 ; j < dataForFilter.length ; j ++ ) {
-      				if ( i === dataForFilter[j].index ) {
-      					shouldShow = true;
-      				}
-      			}
-      			if ( !shouldShow ) { 
-      				// console.log("這裡這裡這裡這裡")
-      				googleMap.markers[i].setVisible(false)
-      				hiddenMarker.push(i);
-      			}
-      	}
-      	// console.log("hiddenMarker", hiddenMarker)
-      	this.setState({hiddenMarkerIndex: hiddenMarker});
-      }
-      // if (this.state.filteredData.length !== dataForFilter.length ) {
-      // 	for ( let i = 0 ; i < googleMap.markers.length ; i ++ ) {
-      // 			let shouldShow = false;
-      // 			for ( let j = 0 ; j < dataForFilter.length ; j ++ ) {
-      // 				if ( i === dataForFilter[j].index ) {
-      // 					shouldShow = true;
-      // 				}
-      // 			}
-      // 			if ( shouldShow ) { 
-      // 				console.log("這裡這裡這裡這裡")
-      // 				googleMap.markers[i].setVisible(true) 
-      // 			} else { 
-      // 				googleMap.markers[i].setVisible(false) 
-      // 			}
-      // 	}
-      	// console.log('set state');
-      	// console.log(dataForFilter);
-      // this.setState({filteredData: dataForFilter});
-      // }
-    }
+    
 
   }
   render() {
@@ -424,6 +343,7 @@ class Apartments extends React.Component {
       }
       this.setState({filters: currentState});
     }
+    googleMap.map.setZoom(googleMap.map.getZoom());
   }
   doFilter (type, filter, dataForFilter) {
     let data = [];
@@ -443,6 +363,65 @@ class Apartments extends React.Component {
     }
     return data;
   }
+
+  getFilteredData () {
+  			console.log(this.state.currentViewData)
+	      console.log("start filter");
+	      googleMap.markerclusterer.clearMarkers();
+	      let filters = this.state.filters;
+	      // console.log(filters);
+	      let dataForFilter = this.state.currentViewData;
+	      //roomAmount
+	      if ( filters.roomAmount.length  ) {
+	        dataForFilter = this.doFilter("roomAmount",filters.roomAmount, dataForFilter);
+	      } 
+	      //roomType
+	      if ( filters.roomType.length ) {
+	        dataForFilter = this.doFilter("room_type",filters.roomType, dataForFilter);
+	      }
+	      //District  neighbourhood_cleansed
+	      if ( filters.district.length ) {
+	        dataForFilter = this.doFilter("neighbourhood_cleansed",filters.district, dataForFilter);
+	      }
+	      //photoRequired
+	      if ( filters.photoRequired != false ) {
+	        let dataAfterPhotoRequiredFilter = [];
+	        for ( let i = 0 ; i < dataForFilter.length ; i ++ ) {
+	          if ( dataForFilter[i].picture_url != "" ) {
+	            dataAfterPhotoRequiredFilter.push(dataForFilter[i]);
+	          }  
+	        }
+	        dataForFilter = dataAfterPhotoRequiredFilter;
+	      }
+	      //hideList 
+	      let hiddenList = lib.func.getLocalStorageJSON("hiddenList");
+	      if ( hiddenList ) {
+	        let dataAfterHideList = [];
+	        for ( let i = 0; i < dataForFilter.length ; i++ ) {
+	          let shouldShow = true;
+	          for ( let j = 0 ; j < hiddenList.length ; j++ ) {
+	            if ( dataForFilter[i].id === hiddenList[j] ) {
+	              shouldShow = false;
+	            }
+	          }
+	          if (shouldShow) { dataAfterHideList.push(dataForFilter[i]); }
+	        }
+	        dataForFilter = dataAfterHideList;
+	      }
+	      let hiddenMarker = [];
+	
+				for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
+					console.log("該顯示顯示");
+					googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
+				}
+
+	      if ( this.state.filteredData.length !== dataForFilter.length ) {
+	      	// console.log("hiddenMarker", hiddenMarker)
+	      	this.setState({filteredData: dataForFilter});
+	      }
+			
+		}
+
 
 }
 
