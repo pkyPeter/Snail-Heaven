@@ -1,10 +1,14 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import "firebase/database";
+import { firebaseApp } from "./firebaseApp.js";
 import lib from "./lib.js";
 import LoveList from "./LoveList.js";
 import SimpleDetail from "./SimpleDetail.js";
 import SearchResult from "./searchResult.js";
 import googleMap from "./GoogleMap.js";
+// import snail_face from "./imgs/snail_white.png";
+import snail_face from "./imgs/snail_cousin_white.png";
 //FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
 //FontAwesome主程式
@@ -21,29 +25,71 @@ class List extends React.Component {
 		this.state = {
 			resultAreaDisplayType: ["resultArea","results"],
 			toggleSimpleDetail: false,
-			currentSimpleDetail: {},
+			currentSimpleDetail: false,
 			hiddenList: lib.func.getLocalStorageJSON("hiddenList"),
 			selectedIndex: -1,
 			customArea: false,
-			leftRightWidth: { rightWidth: "600px", leftWidth: "calc(100% - 600px)", resizerRight: "600px" }
+			showBusiness: false,
+			showRoad: false,
+			leftRightWidth: { rightWidth: "600px", leftWidth: "calc(100% - 600px)", resizerRight: "600px" },
+			sort: null,
+			readyForSort: false,
+			loadEnd: true
 		}
 		this.drawCustomArea =this.drawCustomArea.bind(this);
+		this.openMapMarker = this.openMapMarker.bind(this);
 		this.changeAreaSize = this.changeAreaSize.bind(this);
 		this.goSimpleDetail = this.goSimpleDetail.bind(this);
 		this.hideList = this.hideList.bind(this);
 		this.stopPropagation= this.stopPropagation.bind(this);
+		this.switchToMap = this.switchToMap.bind(this);
+		this.getSelect = this.getSelect.bind(this);
+	}
+	componentDidMount() {
+		if (document.documentElement.clientWidth <= 900) {
+			let leftRightWidth = this.state.leftRightWidth;
+			leftRightWidth.rightWidth = "100%";
+			leftRightWidth.leftWidth = "100%";
+			this.setState({leftRightWidth: leftRightWidth})
+		} else {
+			let leftRightWidth = this.state.leftRightWidth;
+			leftRightWidth.rightWidth = "600px";
+			leftRightWidth.leftWidth = "calc(100% - 600px)";
+			this.setState({leftRightWidth: leftRightWidth})
+		}
 	}
 	componentDidUpdate() {
 		// console.log(this.props.loveListStatus);
 		//20181003 : selectedIndex 預設值是－１，點擊後會儲存 marker 在 markers 中所在的位置，這個位置跟 completeList 的物件相對位置是一樣的
 		if ( this.props.selectedIndex !== this.state.selectedIndex ) {
 			this.setState({selectedIndex: this.props.selectedIndex});
+			//這邊這個行為，取代了在每個地方加上goSimpleDetail的意義，只要加在這裡就好了
 			if ( this.props.selectedIndex !== -1 && this.state.toggleSimpleDetail === false) {
-				this.goSimpleDetail("", this.props.completeList[this.props.selectedIndex]);
+				console.log(this.props.filteredData)
+				for ( let i = 0 ; i < this.props.completeList.length; i++ ) {
+					if ( this.props.completeList[i].index === this.props.selectedIndex ) {
+						this.goSimpleDetail(this.props.completeList[i].id, this.props.completeList[i]);
+					}
+				}
 				// this.state({currentSimpleDetail: this.props.completeList[this.props.selectedIndex]});
 			} 
 			else if ( this.props.selectedIndex === -1 && this.state.toggleSimpleDetail === true ) {
-				this.goSimpleDetail("",{})
+				this.goSimpleDetail("back",{})
+			}
+		}
+		if ( this.props.filteredData.length !== 0  ) {
+			if (document.documentElement.clientWidth > 900 ) {
+				lib.func.get(".apartments>section>.loading").style.opacity = "0";
+				setTimeout(()=>{			
+					lib.func.get(".apartments>section>.loading").style.zIndex = "0";
+				}, 1000)
+			} else {
+				if ( !lib.func.get(".apartments>section>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset") {
+					lib.func.get(".apartments>section>.loading").style.opacity = "0";
+					setTimeout(()=>{			
+						lib.func.get(".apartments>section>.loading").style.zIndex = "0";
+					}, 1000)
+				}
 			}
 		}
 	}
@@ -58,12 +104,27 @@ class List extends React.Component {
 								<FontAwesomeIcon className="icon" icon={['fas','pencil-alt']} />自行繪製區域
 							</span> )
 							: ( <span>取消繪製區域</span> )
-						}
-						
+						}						
+					</div>
+					<div className="business" onClick={()=>{this.openMapMarker("business")}}>
+							{	!this.state.showBusiness 
+								?( <span>顯示周邊商家</span> )
+								:( <span>隱藏周邊商家</span> )
+							}
+					</div>
+					<div className="road" onClick={()=>{this.openMapMarker("road")}}>
+							{	!this.state.showRoad 
+								?( <span>顯示道路名稱</span> )
+								:( <span>隱藏道路名稱</span> )
+							}
 					</div>
 					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>	
 				</div>
-				{	!this.props.goLoveList && !this.state.toggleSimpleDetail && this.props.filteredData.length && (
+				<div className="loading">
+					<img src={snail_face}  />
+					<div className="description">LOADING</div>
+	            </div>
+				{	!this.props.goLoveList && !this.state.toggleSimpleDetail && (
 					<SearchResult changeAreaSize={this.changeAreaSize}
 					leftRightWidth = {this.state.leftRightWidth}
 					resultAreaDisplayType={this.state.resultAreaDisplayType}
@@ -82,13 +143,16 @@ class List extends React.Component {
 					filteredData={this.props.filteredData}
 					changeFilters={this.props.changeFilters}
 					filters={this.props.filters}
-
+					readyForSort = {this.state.readyForSort}
+					sort = {this.state.sort}
+					getSelect={this.getSelect}
 					/>
 				)} 
 				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (
 					<LoveList 	leftRightWidth = {this.state.leftRightWidth}
 					resultAreaDisplayType={this.state.resultAreaDisplayType} 
 					goLoveListPage={this.props.goLoveListPage} 
+					addSelectedIndex={this.props.addSelectedIndex}
 					goSimpleDetail={this.goSimpleDetail} 
 					stopPropagation={this.stopPropagation}
 					loveListDetail={this.props.loveListDetail}
@@ -98,7 +162,7 @@ class List extends React.Component {
 					putIntoLoveList={this.props.putIntoLoveList}
 					/>
 				)}
-				{	this.state.toggleSimpleDetail != false && (
+				{	this.state.toggleSimpleDetail != false && this.state.currentSimpleDetail && (
 					<SimpleDetail  leftRightWidth = {this.state.leftRightWidth}
 					goSimpleDetail={this.goSimpleDetail} 
 					goPropertyPage={this.props.goPropertyPage}
@@ -113,7 +177,7 @@ class List extends React.Component {
 					selectedIndex={this.state.selectedIndex}
 					/>
 				)}
-				<div className="mapMode"><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
+				<div className="mapMode" onClick={this.switchToMap}><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
 				<div className="listMode"></div>
 			</section>
 		)
@@ -128,8 +192,9 @@ class List extends React.Component {
 		let resizer = document.querySelector(".apartments>section>.right>.areaSizer ");
 		let leftRightWidth = this.state.leftRightWidth;
 		if ( e.type === "drag" && e.clientX != 0 && window.innerWidth - e.clientX >= 600) {
-				left.style.width = e.clientX;
-				right.style.width = window.innerWidth - e.clientX;
+				// left.style.width = e.clientX;
+				// right.style.width = window.innerWidth - e.clientX;
+				e.preventDefault();
 				resizer.style.right = window.innerWidth - e.clientX;	
 		}
 		if ( e.type === "dragend") {
@@ -156,22 +221,38 @@ class List extends React.Component {
 	goSimpleDetail( id, realEstate ) {
 		// console.log(this.state.toggleSimpleDetail);
 		// console.log(realEstate);
-		this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
-		this.setState({goLoveList: false})	
-		if( id !="" || realEstate != {}) {
-			this.setState({currentSimpleDetail: realEstate})
+		if (id && id != "back") {
+			if (document.documentElement.clientWidth > 900) {
+				let latLng = new google.maps.LatLng(parseFloat(realEstate.lat),parseFloat(realEstate.lng));
+				googleMap.map.setCenter(latLng);
+				googleMap.map.setZoom(20);
+			}
+			firebaseApp.fBaseDB.getData("details",(detail)=>{
+				let objectKey = parseInt(Object.keys(detail)[0]);
+				let currentDetail = detail[objectKey];
+				this.setState({currentSimpleDetail: currentDetail})
+				this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
+				this.setState({goLoveList: false})
+			}, "id", id );
+		}
+		if (id === "back") {
+			if (document.documentElement.clientWidth <= 900) {
+				let right = lib.func.get(".apartments>section>.right")
+				right.style.display = "none";
+			}
+			console.log("back");
+			this.setState({currentSimpleDetail: false})
+			this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
 		}
 	}
 
-	hideList(e, id) {
+	hideList(e, id, index) {
 		let confirmHidden = confirm("您確定要隱藏這筆物件嗎？");
 		if (confirmHidden === true) {
 			let currentHidden = this.state.hiddenList;
 			if (currentHidden === null) {
 				currentHidden = [];
 			}
-			// console.log(id);
-			// console.log(currentHidden);
 			currentHidden.push(id);
 			this.setState({ hiddenList: currentHidden });
 			let JSONforRenew = lib.func.getLocalStorageJSON("hiddenList");
@@ -180,7 +261,10 @@ class List extends React.Component {
 			} 
 			JSONforRenew.push(id);
 			localStorage.setItem("hiddenList", JSON.stringify(JSONforRenew));
-			this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));	
+			if (this.state.toggleSimpleDetail === true) {
+				this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));		
+			}
+			googleMap.markers[index].setVisible(false);
 		}
 	}
 
@@ -188,11 +272,76 @@ class List extends React.Component {
 		console.log("paint Clicked");
 		let mouseDown = googleMap.evt.drawCustomArea(false);
 		lib.func.get(".left>.paint").classList.toggle("active");
+		googleMap.map.setOptions({draggableCursor:'crosshair'}); 
 		if (this.state.customArea) {
 			googleMap.evt.drawCustomArea(true);
+			googleMap.map.setOptions({draggableCursor:'default'}); 
 		}
 		this.setState( currentState=>({ customArea: !currentState.customArea}) )
 	}
+
+	openMapMarker(target) {
+		
+		console.log("openBusinessMarker")
+		if ( target === "business" ) {
+			if ( !this.state.showBusiness ) {
+				googleMap.style[5].stylers[0].visibility = "simplified";
+				googleMap.map.setOptions({styles: googleMap.style});	
+				this.setState({showBusiness: true})
+			} else {
+				googleMap.style[5].stylers[0].visibility = "off";
+				googleMap.map.setOptions({styles: googleMap.style});	
+				this.setState({showBusiness: false})
+			}
+		}
+		if ( target === "road" ) {
+			if ( !this.state.showRoad ) {
+				googleMap.style[9].stylers[0].visibility = "simplified";
+				googleMap.map.setOptions({styles: googleMap.style});	
+				this.setState({showRoad: true})
+			} else {
+				googleMap.style[9].stylers[0].visibility = "off";
+				googleMap.map.setOptions({styles: googleMap.style});	
+				this.setState({showRoad: false})
+			}
+		}
+		
+	}
+
+	switchToMap() {
+		let left = lib.func.get(".apartments>section>.left")
+		let right = lib.func.get(".apartments>section>.right")
+		if ( left.style.opacity !== "1" || left.style.opacity === undefined || !left.style.opacity ) {
+			console.log(left.style.opacity)
+			left.style.opacity = "1";
+			right.style.display = "none";
+		} else {
+			console.log(left.style.opacity)
+			left.style.opacity = "0";
+			right.style.display = "flex";
+		}
+	}
+	getSelect(e, usage) {
+		if (usage === "select") {
+			switch ( e.currentTarget.value ) {
+		    	case "default":
+		    	this.setState({sort: "default", readyForSort: true})
+		    	break;
+		    	case "latest":
+		    	this.setState({sort: "latest", readyForSort: true})
+		    	break;
+		    	case "lowest":
+		    	this.setState({sort: "lowest", readyForSort: true})
+		    	break;
+		    	case "highest":
+		    	this.setState({sort: "highest", readyForSort: true})
+		    	break;
+		    }
+		} else if ( usage === "disable") {
+			this.setState({readyForSort: false})
+		}
+
+	 }
 
 }
 

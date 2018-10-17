@@ -35,7 +35,7 @@ const LoveList = props => {
 						console.log(index ,loveListStatusIndex);
 						console.log(index ,props.loveListStatus)
 						return(
-								<div className={props.resultAreaDisplayType[1]} onClick={(e)=>{props.goSimpleDetail(realEstate.id,realEstate)}} key={index}>
+								<div className={props.resultAreaDisplayType[1]} onClick={(e)=>{ props.addSelectedIndex(loveListStatusIndex); }} key={index}>
 									<div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
 									<div className="description">
 									<div className="priceGesture absolute" onClick={props.stopPropagation}>

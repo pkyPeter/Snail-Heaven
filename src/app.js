@@ -8,8 +8,8 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import Apartments from "./Apartments.js";
 import Property from "./Property.js";
-import "./style/common.css"
-import "./style/index.css"
+import "./style/common.css";
+import "./style/index.css";
 
 let firebaseDB = firebaseApp.fBase.database();
 const RouterComponent = () => (
@@ -65,24 +65,16 @@ class App extends React.Component {
  	    let districts = ["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"]; 
       let districtsAmount = [0,0,0,0,0,0,0,0,0,0,0,0];
       let districtsCombined = [];
-      firebaseDB.ref("listings/").orderByChild("neighbourhood_cleansed").once('value',(snapshot)=>{
+      firebaseDB.ref("districts/").once('value',(snapshot)=>{
+        console.log(snapshot.val());
         let data = snapshot.val();
-        for(let i = 0 ; i < data.length ; i++ ) {
-          for (let j = 0 ; j < districts.length ; j++ ) {
-            if ( data[i].neighbourhood_cleansed === districts[j] ) {
-              districtsAmount[j] = districtsAmount[j]+1;
-            }
-          }
+        for ( let i = 0 ; i < districts.length ; i ++ ) {
+          let districtsAmout = data[districts[i]];
+          let districtDetail = [districts[i], districtsAmout];
+          districtsCombined.push(districtDetail);
         }
-        for (let i = 0; i < districts.length; i++) {
-          let combineStuff = [districts[i],districtsAmount[i]];
-          districtsCombined.push(combineStuff);
-        }
-          console.log(districtsCombined);
-          console.log(districtsAmount);
-          this.setState({district: districtsCombined});
+        this.setState({district: districtsCombined})
       })
-
   }
   render() {
         return (
@@ -92,7 +84,7 @@ class App extends React.Component {
           		<div className="form">
           			<div className="formItem">
           				<div className="snail"></div>
-          				<h2>Snail Heaven</h2>
+          				<h2>SNAIL HEAVEN</h2>
           			</div>
           			<h2 className="formItem">租房超簡單，大腦零負擔</h2>
           			<input type="text" placeholder="小蝸牛，想找哪裡的房子呢？" onChange={this.searchHandler.bind(this)} onKeyDown={this.submitSearch.bind(this)}/>
@@ -103,7 +95,7 @@ class App extends React.Component {
                       <div className="district" key={index} onClick={(e)=>{this.clickDistrict(e, district[0])}}>
                         <div className="background"></div>
                         <h2>{district[0]}</h2>
-                        <h4>{district[1]}間夢想租屋</h4>
+                        <h4>{district[1]} 間夢想租屋</h4>
                       </div>
                       )
                     })

@@ -29,7 +29,7 @@ class Property extends React.Component {
     this.state = {
 	    	goLoveList: false,
 	    	toggleSimpleDetail: false,
-	    	loveListStatus: this.createLoveListStatus(data),
+	    	// loveListStatus: this.createLoveListStatus(data),
 	    	loveListDetail: lib.func.getLocalStorageJSON("loveList"),
 	    	completeList: data,
 	    	currentList: {},
@@ -41,13 +41,14 @@ class Property extends React.Component {
   componentDidMount() { 
     this.getQueryStringID((outputArray)=>{
       let targetID = outputArray[0];
-      firebaseApp.fBaseDB.getListingByID(targetID, (data)=>{
+      firebaseApp.fBaseDB.getDetailByID(targetID, (data)=>{
+        console.log(data)
         let objectKey = parseInt(Object.keys(data)[0]);
         let currentList = data[objectKey];
         this.setState({currentList: currentList});
         let zoom = 18;
-        let lat = parseFloat(currentList.latitude);
-        let lng = parseFloat(currentList.longitude);
+        let lat = parseFloat(currentList.lat);
+        let lng = parseFloat(currentList.lng);
         googleMap.init.initMapPromise( zoom, lat, lng ,"googleMap")
           .then((map)=>{
             let markers = googleMap.makeMarkers([{lat: lat, lng: lng}], true);
@@ -85,14 +86,15 @@ class Property extends React.Component {
   }
   render() {
     console.log(this.state.currentList);
-    if (Object.keys(this.state.currentList).length) {
+    if (Object.keys(this.state.currentList).length ) {
+
       let monthly_price = this.state.currentList.monthly_price.split(".")[0];
       let daily_price = parseInt(this.state.currentList.price.split(".")[0].split("$")[1].replace(",",""))*30;
       let daily_price_pureN = daily_price.toLocaleString("en");
       let amenities = this.sortOutAmenities(this.state.currentList.amenities,[/Internet/ig, /Hot water/ig, /Air conditioning/ig, /Refrigerator/ig,/Laptop friendly workspace/ig,  /washer/ig, /Pets allowed/ig]);
       let otherAmenities = this.sortOutAmenities(this.state.currentList.amenities,[/Kitchen/ig,/Paid parking off premises/ig, /Free street parking/ig, /Elevator/ig, /Gym/ig]);
       let TV = this.sortOutAmenities(this.state.currentList.amenities, [/TV/ig]).length === 2 ? ["TV", "Cable TV"] : ["TV"];//因為電視無法拆
-      let loveListStatusIndex = this.getloveListStatusIndex(this.state.currentList.id, this.state.loveListStatus);
+      let loveListStatusIndex = this.getloveListStatusIndex(this.state.currentList.id, this.state.loveListDetail);
       return(
         <div className="properties">
           <Header goLoveListPage={this.goLoveList.bind(this)}/>
@@ -111,7 +113,7 @@ class Property extends React.Component {
                   <div>分享</div>
                 </div>
                 { 
-                  this.state.loveListStatus != undefined && this.state.loveListStatus[loveListStatusIndex].inList === true 
+                  loveListStatusIndex != undefined && loveListStatusIndex != null 
                     ? (
                       <div className="button" onClick={(e)=>{ this.removeFromLoveList(e, this.state.currentList.id, this.state.currentList); }}>
                         <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} />
@@ -220,7 +222,6 @@ class Property extends React.Component {
             <img className="car" src={racing}  />
             <div className="description"  >立刻為您取得房況中......</div>
           </div>
-
         </div>
       );
     }
@@ -253,12 +254,17 @@ class Property extends React.Component {
   }
   getloveListStatusIndex( targetID, source ) {
     let targetIDPositionIndex;
-    for ( let i = 0 ; i < source.length ; i++ ){
-      if ( targetID === source[i].id ) {
-        targetIDPositionIndex = i;
-        return targetIDPositionIndex;
-      }
+    if ( source ) {
+      for ( let i = 0 ; i < source.length ; i++ ){
+        if ( targetID === source[i].id ) {
+          targetIDPositionIndex = i;
+          return targetIDPositionIndex;
+        }
+      }  
+    } else {
+      return null;
     }
+    
   }
 
   createLoveListStatus(ObjectArray) {
@@ -298,16 +304,6 @@ class Property extends React.Component {
     return amenities;
   }
   putIntoLoveList(e, id, realEstate) {
-    console.log(id);
-    let currentLoveList = this.state.loveListStatus;
-    // currentLoveList[index].love = true;
-    for (let i = 0 ; i < currentLoveList.length ; i++ ) {
-      if (currentLoveList[i].id === id) {
-        currentLoveList[i].inList = true;
-      }
-    }
-    this.setState({ loveListStatus: currentLoveList});
-
     let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
     if( JSONforRenew === null ) {
       JSONforRenew = [];
@@ -318,15 +314,6 @@ class Property extends React.Component {
   }
   removeFromLoveList(e, id, realEstate) {
     console.log(id);
-    let currentLoveList = this.state.loveListStatus;
-    // currentLoveList[index].love = false;
-    for (let i = 0 ; i < currentLoveList.length ; i++ ) {
-      if (currentLoveList[i].id === id) {
-        currentLoveList[i].inList = false;
-      }
-    }
-    this.setState({ loveListStatus: currentLoveList});
-
     let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
 
     for ( let i = 0 ; i < JSONforRenew.length ; i++ ) {

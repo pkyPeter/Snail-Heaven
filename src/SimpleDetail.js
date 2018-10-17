@@ -27,6 +27,7 @@ library.add(faHotTub,faSnowflake);
 
 const SimpleDetail = props => {
 	console.log(props.currentSimpleDetail.id);
+	console.log(props.selectedIndex);
 	if ( props.currentSimpleDetail != null ) {
 		let monthly_price = props.currentSimpleDetail.monthly_price.split(".")[0];
 			let daily_price = parseInt(props.currentSimpleDetail.price.split(".")[0].split("$")[1].replace(",",""))*30;
@@ -39,9 +40,13 @@ const SimpleDetail = props => {
 				<div className="right" style={{width: props.leftRightWidth.rightWidth}}>
 					<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize} style={{right: props.leftRightWidth.resizerRight}}></div>
 					<div className="sdTitle">
-						<div className="button return" onClick={(e)=>{props.goSimpleDetail("",{}); 
+						<div className="button return" 
+						onClick={
+						(e)=>{
+						props.goSimpleDetail("back",{}); 
 						props.selectedIndex !== -1 &&
-						props.removeSelectedIndex(props.currentSimpleDetail.index)}}>							
+						props.removeSelectedIndex(props.selectedIndex)}}
+						>							
 							<FontAwesomeIcon className="icon" icon={['fas','long-arrow-alt-left']}/>
 							<div>回到搜尋結果</div>
 						</div>
@@ -67,7 +72,7 @@ const SimpleDetail = props => {
 							}
 							<div className="button" onClick={(e)=>{
 								console.log('hidden');
-								props.hideList(e, props.currentSimpleDetail.id, props.currentSimpleDetail)}}>							
+								props.hideList(e, props.currentSimpleDetail.id, props.currentSimpleDetail.index)}}>							
 								<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
 								<div>不想再見</div>
 							</div>
@@ -131,13 +136,16 @@ const SimpleDetail = props => {
 							}
 							{
 								amenities.map((amenity, index)=>{
-									if ( amenity === "Internet") { amenity = "網路" }
-									if ( amenity === "Hot water") { amenity = "熱水器" }
-									if ( amenity === "Air conditioning") { amenity = "冷氣" }
-									if ( amenity === "Refrigerator") { amenity = "冰箱" }
-									if ( amenity === "Laptop friendly workspace") { amenity = "書桌/工作區" }
-									if ( amenity === "Washer") { amenity = "洗衣機" }
-									if ( amenity === "Pets allowed") { amenity = "可養寵物" }
+									switch (amenity) {
+										case "Internet": amenity = "網路"; break;
+										case "Hot water": amenity = "熱水器"; break;
+										case "Air conditioning": amenity = "冷氣"; break;
+										case "Refrigerator": amenity = "冰箱"; break;
+										case "Laptop friendly workspace": amenity = "書桌/工作區"; break;
+										case "Washer": amenity = "洗衣機"; break;
+										case "Pets allowed": amenity = "可養寵物"; break;
+									}
+
 									return(<div className="amenity" key={index}>{amenity}</div>)
 								})
 							}
@@ -146,11 +154,13 @@ const SimpleDetail = props => {
 						<div className="content">
 							{
 								otherAmenities.map((amenity, index)=>{
-									if ( amenity === "Kitchen") { amenity = "廚房" }
-									if ( amenity === "Gym") { amenity = "健身房" }
-									if ( amenity === "Elevator") { amenity = "電梯" }
-									if ( amenity === "Paid parking off premises") { amenity = "付費停車場" }
-									if ( amenity === "Free street parking") { amenity = "周邊有路邊停車格" }
+									switch (amenity) {
+										case "Kitchen": amenity = "廚房"; break;
+										case "Gym": amenity = "健身房"; break;
+										case "Elevator": amenity = "電梯"; break;
+										case "Paid parking off premises": amenity = "付費停車場"; break;
+										case "Free street parking": amenity = "周邊有路邊停車格"; break;
+									}
 									return(<div className="amenity" key={index}>{amenity}</div>)
 								})
 							}

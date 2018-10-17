@@ -1,20 +1,19 @@
 import React from "react";
 // import MarkerClusterer from "@google/markerclusterer";
 import MarkerClusterer from "./markerclusterer.js";
-import snail_new from "./imgs/snail_new.png";
-import snail_seen from "./imgs/snail_seen.png";
-import snail_new_24 from "./imgs/snail_new_24.png";
-import snail_seen_24 from "./imgs/snail.png";
-import snail_seen_32 from "./imgs/snail_seen_32.png";
 import snail from "./imgs/snail_32.png";
-import snail_happy from "./imgs/snail_happy_64.png";
-import shell from "./imgs/shell.png";
+// import snail_happy from "./imgs/snail_happy_64.png";
+// import snail_happy from "./imgs/snail_cousin.png";
+// import snail_happy from "./imgs/placeholder_light.png";
+import snail_happy from "./imgs/house_icon.png";
+// import shell from "./imgs/shell.png";
+// import shell from "./imgs/snail_cousin_shell.png";
+// import shell from "./imgs/placeholder_seen.png";
+import shell from "./imgs/house_icon_seen.png";
+
 //marker cluster
-import m1 from "./imgs/m1.png";
-import m2 from "./imgs/m2.png";
-import m3 from "./imgs/m3.png";
-import m4 from "./imgs/m4.png";
-import m5 from "./imgs/m5.png";
+import m3 from "./imgs/icon_green.png";
+
 console.log(MarkerClusterer);
 // import "./markerclusterer.js";
 const script = "https://maps.googleapis.com/maps/api/js?region=TW&language=zh-TW&key=AIzaSyDxFq8QlAbDRIiQvSGD_a2C1Vwru0Q69rE&libraries=places,drawing,geometry"
@@ -56,7 +55,8 @@ googleMap.init.initMapNew = ( zoom, lat, lng, targetID ) => {
     },
     mapTypeControl: false,
     streetViewControl: false,
-    fullscreenControl: false
+    fullscreenControl: false,
+    styles: googleMap.style
   });
     googleMap.map = map;
     return map;
@@ -72,13 +72,170 @@ googleMap.init.initMapPromise = ( zoom, lat, lng, targetID) => {
     }
   })
 }
+
+// map style 
+googleMap.style = 
+  [
+    {
+        "featureType": "administrative.province",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#010101"
+            },
+            {
+                "visibility": "on"
+            },
+            {
+                "weight": "1.63"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.man_made",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#f7f1df"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#d0e3b4"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural.terrain",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.business",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.medical",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#fbd3da"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#bde6ab"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#ffe15f"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#efd151"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "black"
+            }
+        ]
+    },
+    {
+        "featureType": "transit.station.airport",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#cfb2db"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#a2daf2"
+            }
+        ]
+    }
+  ]
+
+
 //放置marker在地圖上面
 googleMap.makeMarkers = (locations, visible) => {
  let markers = locations.map((location, i)=>{
   return new google.maps.Marker({
             // map: googleMap.map,
             position: location,
-            icon: googleMap.produceMarkerStyle(true ,38),        
+            icon: googleMap.produceMarkerStyle(true , 35),        
             draggable: false,
             animation: google.maps.Animation.DROP,
             visible: visible
@@ -129,54 +286,98 @@ googleMap.produceMarkerStyle = ( newStuff , scale) => {
 googleMap.enableCluster = (map, markers) => {
    let markerclusterer = new MarkerClusterer(map, markers, googleMap.makeClusterOpstions());
    googleMap.markerclusterer = markerclusterer;
+   console.log(googleMap.markerclusterer)
+   google.maps.event.trigger(googleMap.markerclusterer,"clusterclick", (e)=>{
+    console.log(e.target);
+
+   })
    return markerclusterer;
 }
 googleMap.makeClusterOpstions = () => {
   let options = {
     styles: googleMap.clusterStyles,
     gridSize: 100,
-    minimumClusterSize: 2
+    minimumClusterSize: 3
   }
   return options;
 }
 
+// googleMap.clusterStyles = [{
+//         url: m1,
+//         height: 53,
+//         width: 53,
+//         // anchor: [16, 0],
+//         textColor: 'black',
+//         textSize: 10
+//       }, {
+//         url: m2,
+//         height: 56,
+//         width: 56,
+//         // anchor: [24, 0],
+//         textColor: 'black',
+//         textSize: 11
+//       }, {
+//         url: m3,
+//         height: 65,
+//         width: 48,
+//         // height: 66,
+//         // width: 66,
+//         anchor: [17, 0],
+//         textColor: '#FFFFFF',
+//         textSize: 12,
+//         backgroundPosition: "40% 40%"
+//       }, {
+//         url: m4,
+//         height: 78,
+//         width: 78,
+//         // anchor: [24, 24],
+//         textColor: 'black',
+//         textSize: 12
+//       }, {
+//         url: m5,
+//         height: 90,
+//         width: 90,
+//         // anchor: [24, 24],
+//         textColor: 'black',
+//         textSize: 12
+//       }];
 googleMap.clusterStyles = [{
-        url: m1,
-        height: 53,
-        width: 53,
+        url: m3,
+        height: 36,
+        width: 36,
         // anchor: [16, 0],
-        textColor: 'black',
+        textColor: 'white',
         textSize: 10
       }, {
-        url: m2,
-        height: 56,
-        width: 56,
+        url: m3,
+        height: 48,
+        width: 48,
         // anchor: [24, 0],
-        textColor: 'black',
-        textSize: 11
+        textColor: 'white',
+        textSize: 10
       }, {
         url: m3,
-        height: 66,
-        width: 66,
-        // anchor: [24, 24],
-        textColor: 'black',
+        height: 56,
+        width: 56,
+        // height: 66,
+        // width: 66,
+        textColor: '#FFFFFF',
         textSize: 12
       }, {
-        url: m4,
+        url: m3,
         height: 78,
         width: 78,
         // anchor: [24, 24],
-        textColor: 'black',
+        textColor: 'white',
         textSize: 12
       }, {
-        url: m5,
+        url: m3,
         height: 90,
         width: 90,
         // anchor: [24, 24],
-        textColor: 'black',
+        textColor: 'white',
         textSize: 12
       }];
-
 
 
 //取得地點的geocode

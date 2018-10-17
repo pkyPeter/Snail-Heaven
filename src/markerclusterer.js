@@ -1080,7 +1080,7 @@ ClusterIcon.prototype.onAdd = function() {
   if (this.visible_) {
     var pos = this.getPosFromLatLng_(this.center_);
     this.div_.style.cssText = this.createCss(pos);
-    this.div_.innerHTML = this.sums_.text;
+    this.div_.innerHTML = this.sums_.text + " 間";
   }
 
   var panes = this.getPanes();
@@ -1200,6 +1200,8 @@ ClusterIcon.prototype.useStyle = function() {
   this.anchor_ = style['anchor'];
   this.textSize_ = style['textSize'];
   this.backgroundPosition_ = style['backgroundPosition'];
+  this.backgroundSize_ = style['backgroundSize'];
+
 };
 
 
@@ -1224,7 +1226,9 @@ ClusterIcon.prototype.createCss = function(pos) {
   style.push('background-image:url(' + this.url_ + ');');
   var backgroundPosition = this.backgroundPosition_ ? this.backgroundPosition_ : '0 0';
   style.push('background-position:' + backgroundPosition + ';');
-
+  //2018/10/17 Peter added style to markerClusterer Library
+  var backgroundSize = this.backgroundSize_ ? this.backgroundSize_ : "cover";
+  style.push('background-size:' + backgroundSize + ";")
   if (typeof this.anchor_ === 'object') {
     if (typeof this.anchor_[0] === 'number' && this.anchor_[0] > 0 &&
         this.anchor_[0] < this.height_) {
@@ -1251,7 +1255,7 @@ ClusterIcon.prototype.createCss = function(pos) {
 
   style.push('cursor:pointer; top:' + pos.y + 'px; left:' +
       pos.x + 'px; color:' + txtColor + '; position:absolute; font-size:' +
-      txtSize + 'px; font-family:Arial,sans-serif; font-weight:bold');
+      txtSize + 'px; font-family:Microsoft JhengHei,Arial,sans-serif; font-weight:400');
   return style.join('');
 };
 

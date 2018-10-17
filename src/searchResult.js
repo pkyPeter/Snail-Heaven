@@ -20,13 +20,12 @@ class SearchResult extends React.Component {
     super(props);
     this.state = {
       filters: {priceFloor:0 , priceCeiling: 100000},
-      sort: null,
+      readyForSort: false,
       originData: [],
-      currentLoadAmount: 1,
+      currentLoadAmount: 3,
       currentLoad: [],
       shouldStartRenew : true
     };
-    this.changeFilters = this.changeFilters.bind(this);
     this.showMoreFilter = this.showMoreFilter.bind(this);
     this.changeToList = this.changeToList.bind(this);
     this.changeToRowBlocks = this.changeToRowBlocks.bind(this);
@@ -36,14 +35,17 @@ class SearchResult extends React.Component {
     this.getMarkerBounce = this.getMarkerBounce.bind(this);
     this.stopMarkerBounce = this.stopMarkerBounce.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
-    this.getSelect = this.getSelect.bind(this);
   }
   componentDidMount() {
     // console.log("search Result componentDidMount")
     console.log(this.props.filteredData);
     //剛進來第一次要初始化Origin data，並且進行初步印製
     this.setState({originData: this.props.filteredData});
-    this.recursive(this.props.filteredData, this.state.currentLoadAmount);
+    if (this.props.filteredData < 3) {
+      this.setState({currentLoad: this.props.filteredData});  
+    } else {
+      this.recursive(this.props.filteredData, this.state.currentLoadAmount)
+    }
   }
   componentDidUpdate() {
     console.log("searchResult.js component did update");
@@ -51,7 +53,7 @@ class SearchResult extends React.Component {
     let filtersFromApartments = this.props.filters;
     let roomAmount = lib.func.getAll(".roomAmount");
     let roomType = lib.func.getAll(".roomType");
-    let roomTypeEN = ["Shared room","Private room","Entire home/apt"];
+    let roomTypeEN = ["SR","PR","EHA"];
     let district = lib.func.getAll(".district");
     for ( let i = 0 ; i < roomAmount.length ; i++ ) {
       if ( lib.func.searchInsideArray(filtersFromApartments.roomAmount, i+1) ) {
@@ -79,8 +81,9 @@ class SearchResult extends React.Component {
     } else {
       lib.func.get(".filterDetail>.required").classList.remove("active");
     }
-    //價格篩選
+    //價格篩選 或 有排序條件
     if ( this.props.filteredData.length ) {
+    	console.log("這裏？")
       let dataForFilter = this.props.filteredData;
       let filters = this.props.filters;
       // console.log(filters.priceCeiling)
@@ -88,7 +91,6 @@ class SearchResult extends React.Component {
       if ( filters.priceCeiling != 100000 || filters.priceFloor != 0 ) {
         let priceArray = [];
         let dataAfterPriceFilter =[];
-        let maxLength = 0;
         dataForFilter.map((realEstate, index)=>{
           if (realEstate.monthly_price != "") {
             let monthly_price = parseInt(realEstate.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
@@ -98,13 +100,13 @@ class SearchResult extends React.Component {
             priceArray.push(daily_price);
           }
         });
-
         //如果資料的價格介於priceCeilig以及priceFloor之間，就進行篩選
         googleMap.markerclusterer.clearMarkers();
         for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
           if ( filters.priceFloor < priceArray[i] && priceArray[i] <= filters.priceCeiling ) {
             dataAfterPriceFilter.push(dataForFilter[i]);
             googleMap.markers[dataForFilter[i].index].setVisible(true);
+            googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
           } else {
             googleMap.markers[dataForFilter[i].index].setVisible(false);
           }
@@ -113,15 +115,89 @@ class SearchResult extends React.Component {
           dataForFilter = dataAfterPriceFilter;
         }
       } 
+      if ( this.props.sort ) {
+      	console.log("篩選")
+      	let priceArray = [];
+      	let dataAfterSort = dataForFilter;
+      	let options = lib.func.getAll("select>option");
+        dataForFilter.map((realEstate, index)=>{
+          if (realEstate.monthly_price != "") {
+            let monthly_price = parseInt(realEstate.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+            priceArray.push(monthly_price);
+          } else {
+            let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
+            priceArray.push(daily_price);
+          }
+        });
+        console.log(options);
+      	switch (this.props.sort) {
+      		case "default":
+		    	break;
+		    	case "latest":
+
+		    	break;
+		    	case "lowest":
+		    	options[2].selected = "selected";
+		    	dataAfterSort.sort((a,b)=>{
+		    		let priceA;
+		    		let priceB;
+		    		if (a.monthly_price != "") {
+	            let monthly_price = parseInt(a.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+	            priceA = monthly_price;
+	          } else {
+	            let daily_price = parseInt(a.price.split(".")[0].split("$")[1].replace(",",""))*30;
+	            priceA = daily_price;
+	          }
+	          if (b.monthly_price != "") {
+	            let monthly_price = parseInt(b.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+	            priceB = monthly_price;
+	          } else {
+	            let daily_price = parseInt(b.price.split(".")[0].split("$")[1].replace(",",""))*30;
+	            priceB = daily_price;
+	          }
+	          return priceA - priceB ;
+		    	})
+		    	break;
+		    	case "highest":
+		    	options[3].selected = "selected";
+		    	dataAfterSort.sort((a,b)=>{
+		    		let priceA;
+		    		let priceB;
+		    		if (a.monthly_price != "") {
+	            let monthly_price = parseInt(a.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+	            priceA = monthly_price;
+	          } else {
+	            let daily_price = parseInt(a.price.split(".")[0].split("$")[1].replace(",",""))*30;
+	            priceA = daily_price;
+	          }
+	          if (b.monthly_price != "") {
+	            let monthly_price = parseInt(b.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+	            priceB = monthly_price;
+	          } else {
+	            let daily_price = parseInt(b.price.split(".")[0].split("$")[1].replace(",",""))*30;
+	            priceB = daily_price;
+	          }
+	          return priceB - priceA ;
+		    	})
+		    	break;
+      	}
+      	console.log(dataAfterSort);
+      	dataForFilter = dataAfterSort;
+      }
+
       // console.log(132,"是否為真",dataForFilter !== this.state.originData)
-      //首次資料進入會不同，此時將originData設為dataForFilter，並呼叫recursive來印製畫面。
+      //首次資料進入會不同，已經在componentDidMount中，將originData設為dataForFilter，並呼叫recursive來印製畫面。
       //originData將作為比較值讓當次的render不會重新呼叫recursive，但當資料有更新時，還是會執行一次
       // console.log(114, "currentLoadAmount", this.state.currentLoadAmount)
-      if ( dataForFilter.length !== this.state.originData.length ) { 
+      if ( dataForFilter.length !== this.state.originData.length || this.props.readyForSort ) { 
         this.setState({originData: dataForFilter});
+        this.props.getSelect("","disable");
         this.recursive(dataForFilter, this.state.currentLoadAmount);
       }
     }
+  }
+  componentWillUnmount () {
+    // this.recursive = null;
   }
   render() {
     console.log("render searchResult.js");
@@ -155,9 +231,9 @@ class SearchResult extends React.Component {
           <div className="filterType">
             <p>房屋類型</p>
             <div className="filterDetail">
-              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","Shared room");}} >分租套房</div>
-              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","Private room");}} >獨立套房</div>
-              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","Entire home/apt");}} >整層住家</div>
+              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","SR");}} >分租套房</div>
+              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","PR");}} >獨立套房</div>
+              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","EHA");}} >整層住家</div>
             </div>
           </div>
           <div className="filterType districts hidden">
@@ -190,11 +266,11 @@ class SearchResult extends React.Component {
         </div>
         <div className="resultTitle">
           <div className="showLogic">
-            <select onChange={this.getSelect}>
-              <option value="0">預設排序</option>
-              <option value="1">最新物件</option>
-              <option value="2">最低價優先</option>
-              <option value="3">最高價優先</option>
+            <select onChange={(e)=>{this.props.getSelect(e, "select")}}>
+              <option value="default">預設排序</option>
+              <option value="latest">最新物件</option>
+              <option value="lowest">最低價優先</option>
+              <option value="highest">最高價優先</option>
             </select>
           </div>
           <p>{ this.state.originData.length }筆結果</p>
@@ -212,6 +288,15 @@ class SearchResult extends React.Component {
               let daily_price_pureN = daily_price.toLocaleString("en");
               let loveListStatusIndex = this.props.loveListStatus != null && this.props.getloveListStatusIndex(realEstate.id, this.props.loveListStatus);
               let hidden = false;
+              let roomType;
+              switch(realEstate.room_type) {
+                case "EHA":
+                roomType = "整層住家";
+                case "PR":
+                roomType = "獨立套房";
+                case "SR":
+                roomType = "分租套房";
+              }
               if ( this.props.hiddenList != null ) {
                 for (let i = 0 ; i< this.props.hiddenList.length; i++) {
                   if ( realEstate.id === this.props.hiddenList[i]) { hidden = true; }
@@ -220,7 +305,10 @@ class SearchResult extends React.Component {
 
               if (hidden === false) {
                 return (
-                  <div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { this.props.goSimpleDetail(realEstate.id, realEstate); this.props.addSelectedIndex(realEstate.index); } } onMouseEnter={(e)=>{
+                  <div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { 
+                    // this.props.goSimpleDetail(realEstate.id, realEstate); 
+                    this.props.addSelectedIndex(realEstate.index); 
+                  } } onMouseEnter={(e)=>{
                     this.getMarkerBounce(e, realEstate.index);
                   }} onMouseLeave={(e)=>{this.stopMarkerBounce(e, realEstate.index);}}>
                     <div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
@@ -234,12 +322,12 @@ class SearchResult extends React.Component {
 															  : <FontAwesomeIcon className="icon" icon={["far","heart"]} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate); }}/>
                           }
                           <FontAwesomeIcon className="icon" icon={["far","envelope"]} onClick={this.props.openEmailForm}/>
-                          <FontAwesomeIcon className="icon" icon={["far","thumbs-down"]} onClick={(e)=>{this.props.hideList(e, realEstate.id);}} />
+                          <FontAwesomeIcon className="icon" icon={["far","thumbs-down"]} onClick={(e)=>{this.props.hideList(e, realEstate.id, realEstate.index);}} />
                         </div>
                       </div>
-                      <p>{realEstate.bedrooms} rooms {realEstate.room_type}</p>
-                      <p>{realEstate.neighbourhood_cleansed}</p>
-                      <p className="updateTime">{realEstate.calendar_updated}</p>
+                      <p>{realEstate.bedrooms} 間房間 {roomType}</p>
+                      <p>{realEstate.district}</p>
+                      <p className="updateTime">{realEstate.updated}</p>
                     </div>
                   </div>
                 );
@@ -298,26 +386,27 @@ class SearchResult extends React.Component {
     lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex", "resultsList"]);	
     this.setState({resultAreaDisplayType: ["resultArea","results"]});
   } 
-  changeFilters(filter, value) {
-    let currentState = this.state.filters;
-    currentState[filter] = value;
-    this.setState({filters: currentState});
-  }
   recursive(dataForFilter, loadingAmount) {
     // console.log(301, "loadingAmount:", loadingAmount)
     // console.log("result legnth",lib.func.getAll(".results").length)
-	  setTimeout(() => {
-	    // let hasMore = this.state.currentLoad.length + 50 < dataForFilter.length + 50;
-	    let hasMore = this.state.currentLoad.length < loadingAmount;
-	    this.setState( (prev, props) => ({
-	      currentLoad: dataForFilter.slice(0, prev.currentLoad.length + loadingAmount)
-	    }));
-	    if (hasMore) {
-	    	this.recursive(dataForFilter, loadingAmount); 
-	    } else {
-	    	// console.log(325,"has More ends!!!!!!!!!!")
-	    }
-	  }, 10);
+	  if ( dataForFilter.length>3 ) {
+        setTimeout(() => {
+          console.log("是不是這裡在leak?")
+          // let hasMore = this.state.currentLoad.length + 50 < dataForFilter.length + 50;
+          let hasMore = this.state.currentLoad.length < loadingAmount;
+          this.setState( (prev, props) => ({
+            currentLoad: dataForFilter.slice(0, prev.currentLoad.length + loadingAmount)
+          }));
+          if (hasMore) {
+            this.recursive(dataForFilter, loadingAmount); 
+          } 
+        }, 10);
+    } else {
+      this.setState( (prev, props) => ({
+        currentLoad: dataForFilter.slice(0, 4)
+      }));
+    }
+
   }
   getMarkerBounce(e, index) {
     e.stopPropagation();
@@ -335,19 +424,24 @@ class SearchResult extends React.Component {
     let clientHeight = e.currentTarget.clientHeight;
     // console.log(scrollHeight,scrollTop,clientHeight)
 
-    if (scrollHeight - scrollTop < (clientHeight + 100)) {
+    if (scrollHeight - scrollTop === clientHeight) {
+      console.log("是不是這裡在leak?")
       // console.log(true,true,true,true,true)
       // this.setState((prev) => ({ currentLoadAmount: prev.currentLoadAmount + 2 }))
-      setTimeout(()=>{
+      if (this.state.originData.length<3) {
+        setTimeout(()=>{
+        this.recursive(this.state.originData, 1);
+        }, 0)
+      } else {
+        setTimeout(()=>{
         this.recursive(this.state.originData, this.state.currentLoadAmount);
-      }, 0);	
+      }, 0)
+      }
+      ;	
     }
     // console.log(this.state.currentLoadAmount);
   }
-  getSelect(e) {
-    console.log(e.currentTarget);
-    console.log(e.currentTarget.value);
-  }
+
 }
 
 export default SearchResult;

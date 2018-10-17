@@ -7,7 +7,7 @@
 	position: fixed;
 	width: 100%;
 	height: 100%;
-	background-image: url("../imgs/background.jpg");
+	background-image: url("../imgs/background7_S.jpg");
 	background-size: cover;
 	background-position: bottom;
 }
@@ -23,7 +23,7 @@
 .index>.formContainer>.form {
 	height: 100%;
 	overflow: auto;
-	width: 850px;
+	width: 780px;
 	margin: 0 auto;
 	padding: 30px;
 	background-color: white;
@@ -105,12 +105,27 @@
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	background-image: url(../imgs/bedroom.jpg);
+	background-image: url(../imgs/city1_R.jpg);
 	background-size: cover;
 	background-position: center 80%;
 	z-index:100;
-	filter: blur(2px);
+	filter: blur(4px) grayscale(35%) ;
 	cursor: pointer;
+}
+.index>.formContainer>.form>.districtContainer>.district:nth-child(5n-4)>.background {
+	background-image: url(../imgs/city1_R.jpg);
+}
+.index>.formContainer>.form>.districtContainer>.district:nth-child(5n-3)>.background {
+	background-image: url(../imgs/city2_R.jpg);
+}
+.index>.formContainer>.form>.districtContainer>.district:nth-child(5n-2)>.background{
+	background-image: url(../imgs/city5_R.jpg);
+}
+.index>.formContainer>.form>.districtContainer>.district:nth-child(5n-1)>.background{
+	background-image: url(../imgs/city7_R.jpg);
+}
+.index>.formContainer>.form>.districtContainer>.district:nth-child(5n)>.background{
+	background-image: url(../imgs/city8_R.jpg);
 }
 .index>.formContainer>.form>.districtContainer>.district>.background:hover {
 	filter: blur(0px);
@@ -120,11 +135,19 @@
 	z-index: 150;
 	margin-bottom: 3px;
 	cursor: pointer;
+	text-shadow: 2px 2px 4px #404040;
+    font-family: Microsoft Jhenghei;
+    font-weight: 400;
+    color: white;
 }
 .index>.formContainer>.form>.districtContainer>.district>h4 {
 	z-index: 150;
 	cursor: pointer;
 	font-weight: 400;
+	text-shadow: 2px 2px 4px #404040;
+    font-family: Microsoft Jhenghei;
+    font-weight: 200;
+    color: white;
 }
 
 @media (min-width: 280px) and (max-width: 800px) {
@@ -182,10 +205,14 @@
 	.index>.formContainer>.form>.districtContainer>.district>h2 {
 		font-size: 1.2em;
 		margin-bottom: 3px;
+		text-shadow: unset;
+		color: black;
 	}
 	.index>.formContainer>.form>.districtContainer>.district>h4 {
 		font-size: .5em;
 		font-weight: 400;
+		text-shadow: unset;
+    	color: black;
 	}
 
 }

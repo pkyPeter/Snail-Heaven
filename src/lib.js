@@ -1,7 +1,17 @@
+import favicon from "./imgs/favicon.ico"
 
 const lib = {
+	init: {},
 	func: {},
 }
+lib.init.getFavicon = () => {
+	let link = document.createElement("link");
+	link.rel = "shortcut icon";
+	link.href = favicon;
+	document.head.appendChild(link);
+}
+
+document.addEventListener('load', lib.init.getFavicon());
 
 lib.func.get = (selector) => {
 	return document.querySelector(selector);

@@ -26,6 +26,31 @@ firebaseApp.fBaseDB.getListing = callback => {
 	})
 }
 
+firebaseApp.fBaseDB.getData = (src, callback, childNode, equalValue) => {
+	if ( childNode ) {
+		firebaseDB.ref(src).orderByChild(childNode).equalTo(equalValue).once("value").then(snapshot => {
+			if (callback) {
+				callback(snapshot.val());
+			}
+		})
+	} else {
+		firebaseDB.ref(src).once("value").then(snapshot => {
+			if (callback) {
+				callback(snapshot.val());
+			}
+		})
+	}
+}
+
+firebaseApp.fBaseDB.getDetailByID = ( ID ,callback ) => {
+	firebaseDB.ref("details").orderByChild("id").equalTo(ID).once("value").then(snapshot => {
+		if (callback) {
+			callback(snapshot.val());
+		}
+	})
+}
+
+
 firebaseApp.fBaseDB.getListingByID = ( ID ,callback) => {
 	firebaseDB.ref("listings").orderByChild("id").equalTo(ID).once("value").then(snapshot => {
 		if (callback) {
@@ -38,8 +63,8 @@ firebaseApp.sortLatLng = ( data ) => {
 	let location = [];
 	for(let i = 0; i < data.length; i++ ) {
 		let laAndLong = {lat:"", lng:""};
-		laAndLong.lat = parseFloat(data[i].latitude);
-		laAndLong.lng = parseFloat(data[i].longitude);
+		laAndLong.lat = parseFloat(data[i].lat);
+		laAndLong.lng = parseFloat(data[i].lng);
 		location.push(laAndLong);
 	}
 	return location;
