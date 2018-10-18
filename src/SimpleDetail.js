@@ -58,7 +58,7 @@ const SimpleDetail = props => {
 							{ 
 								props.loveListStatus != undefined && props.loveListStatus[loveListStatusIndex].inList === true 
 								? (
-								<div className="button" onClick={(e)=>{ props.removeFromLoveList(e, props.currentSimpleDetail.id, props.currentSimpleDetail) }}>
+								<div className="button" onClick={(e)=>{ props.removeFromLoveList(e, props.currentSimpleDetail.id, props.currentSimpleDetail) props.recordCurrentStatus}}>
 									<FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} />
 									<div>收藏</div>
 								</div>

@@ -44,6 +44,7 @@ class List extends React.Component {
 		this.stopPropagation= this.stopPropagation.bind(this);
 		this.switchToMap = this.switchToMap.bind(this);
 		this.getSelect = this.getSelect.bind(this);
+		this.recordCurrentStatus = this.recordCurrentStatus.bind(this);
 	}
 	componentDidMount() {
 		if (document.documentElement.clientWidth <= 900) {
@@ -60,22 +61,26 @@ class List extends React.Component {
 	}
 	componentDidUpdate() {
 		// console.log(this.props.loveListStatus);
+		console.log(this.props.selectedIndex)
 		//20181003 : selectedIndex 預設值是－１，點擊後會儲存 marker 在 markers 中所在的位置，這個位置跟 completeList 的物件相對位置是一樣的
 		if ( this.props.selectedIndex !== this.state.selectedIndex ) {
-			this.setState({selectedIndex: this.props.selectedIndex});
 			//這邊這個行為，取代了在每個地方加上goSimpleDetail的意義，只要加在這裡就好了
-			if ( this.props.selectedIndex !== -1 && this.state.toggleSimpleDetail === false) {
+			if ( this.props.selectedIndex !== -1 ) {
 				console.log(this.props.filteredData)
 				for ( let i = 0 ; i < this.props.completeList.length; i++ ) {
 					if ( this.props.completeList[i].index === this.props.selectedIndex ) {
 						this.goSimpleDetail(this.props.completeList[i].id, this.props.completeList[i]);
 					}
 				}
+				if ( this.state.selectedIndex !== -1 ) {
+					googleMap.markers[this.state.selectedIndex].setIcon(googleMap.produceMarkerStyle(false, 30));
+				} 
 				// this.state({currentSimpleDetail: this.props.completeList[this.props.selectedIndex]});
 			} 
 			else if ( this.props.selectedIndex === -1 && this.state.toggleSimpleDetail === true ) {
 				this.goSimpleDetail("back",{})
 			}
+			this.setState({selectedIndex: this.props.selectedIndex});
 		}
 		if ( this.props.filteredData.length !== 0  ) {
 			if (document.documentElement.clientWidth > 900 ) {
@@ -175,6 +180,7 @@ class List extends React.Component {
 					openEmailFrom={this.props.openEmailForm}
 					removeSelectedIndex={this.props.removeSelectedIndex}
 					selectedIndex={this.state.selectedIndex}
+					recordCurrentStatus={this.recordCurrentStatus}
 					/>
 				)}
 				<div className="mapMode" onClick={this.switchToMap}><FontAwesomeIcon className="icon" icon={['fas','map-marked-alt']} /></div>
@@ -224,14 +230,22 @@ class List extends React.Component {
 		if (id && id != "back") {
 			if (document.documentElement.clientWidth > 900) {
 				let latLng = new google.maps.LatLng(parseFloat(realEstate.lat),parseFloat(realEstate.lng));
-				googleMap.map.setCenter(latLng);
-				googleMap.map.setZoom(20);
+				if ( !googleMap.map.getBounds().contains(latLng) ) {
+					googleMap.map.setCenter(latLng);
+					googleMap.map.setZoom(googleMap.map.getZoom());	
+				}
 			}
 			firebaseApp.fBaseDB.getData("details",(detail)=>{
 				let objectKey = parseInt(Object.keys(detail)[0]);
 				let currentDetail = detail[objectKey];
 				this.setState({currentSimpleDetail: currentDetail})
-				this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
+				if ( this.props.selectedIndex === -1 ) {
+					this.setState({toggleSimpleDetail: false});		
+				} else {
+					this.setState({toggleSimpleDetail: true});
+					    googleMap.markers[currentMarkerIndex].setIcon(googleMap.produceMarkerStyle(false, 30));
+				}
+				
 				this.setState({goLoveList: false})
 			}, "id", id );
 		}
@@ -342,6 +356,17 @@ class List extends React.Component {
 		}
 
 	 }
+	recordCurrentStatus() {
+	    let mapZoom = googleMap.map.getZoom();
+	    let mapCenter = googleMap.map.getCenter();
+	    let currentFilters = this.props.filters;
+	    let sceenInfo = {
+	      zoom: mapZoom,
+	      center: mapCenter,
+	      screenInfo: currentFilters
+	    }
+	    localStorage.setItem("sceenInfo", JSON.stringify(sceenInfo));
+	  }
 
 }
 

@@ -53,8 +53,10 @@ class SearchResult extends React.Component {
     let filtersFromApartments = this.props.filters;
     let roomAmount = lib.func.getAll(".roomAmount");
     let roomType = lib.func.getAll(".roomType");
-    let roomTypeEN = ["SR","PR","EHA"];
     let district = lib.func.getAll(".district");
+    let amenity = lib.func.getAll(".amenity")
+    let roomTypeEN = ["SR","PR","EHA"];
+    let amenitiesEN = ["Internet","Hot water","Air conditioning","Refrigerator","Laptop friendly workspace","Washer","Pets allowed","Kitchen","Gym","Elevator","Paid parking off premises","Free street parking"];
     for ( let i = 0 ; i < roomAmount.length ; i++ ) {
       if ( lib.func.searchInsideArray(filtersFromApartments.roomAmount, i+1) ) {
         roomAmount[i].classList.add("active");
@@ -81,8 +83,15 @@ class SearchResult extends React.Component {
     } else {
       lib.func.get(".filterDetail>.required").classList.remove("active");
     }
+    for ( let i = 0 ; i < amenity.length ; i++ ) {
+      if ( lib.func.searchInsideArray(filtersFromApartments.amenities, amenitiesEN[i]) ) {
+        amenity[i].classList.add("active");
+      } else {
+        amenity[i].classList.remove("active");
+      }
+    }
     //價格篩選 或 有排序條件
-    if ( this.props.filteredData.length ) {
+    if ( this.props.filteredData.length >= 0 ) {
     	console.log("這裏？")
       let dataForFilter = this.props.filteredData;
       let filters = this.props.filters;
@@ -109,6 +118,7 @@ class SearchResult extends React.Component {
             googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
           } else {
             googleMap.markers[dataForFilter[i].index].setVisible(false);
+            googleMap.markerclusterer.removeMarker(googleMap.markers[dataForFilter[i].index]);
           }
         }
         if (this.props.filteredData.length !== dataAfterPriceFilter.length ) {		
@@ -212,7 +222,7 @@ class SearchResult extends React.Component {
         </div>
         <div className="filterArea">
           <div className="filterType">
-            <p>租金</p>
+            <p>月租金</p>
             <PriceChart completeList={this.props.completeList} 
               currentViewData={this.props.currentViewData} 
               changeFilters={this.props.changeFilters} 
@@ -257,6 +267,23 @@ class SearchResult extends React.Component {
             <p>有無房屋照片</p>
             <div className="filterDetail">
               <div className="required" onClick={()=>{this.props.changeFilters("photoRequired",true);}}>必須有照片</div>
+            </div>
+          </div>
+          <div className="filterType amenities hidden">
+            <p>必備設備<br />( 複選皆為必備 )</p>
+            <div className="filterDetail">
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Internet");}} >網路</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Hot water");}} >熱水器</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Air conditioning");}} >冷氣</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Refrigerator");}} >冰箱</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Laptop friendly workspace");}} >書桌/工作區</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Washer");}} >洗衣機</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Pets allowed");}} >可養寵物</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Kitchen");}} >廚房</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Gym");}} >健身房</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Elevator");}} >電梯</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Paid parking off premises");}} >付費停車場</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Free street parking");}} >路邊停車格</div>
             </div>
           </div>
           <div className="filterType buttons">
@@ -349,12 +376,14 @@ class SearchResult extends React.Component {
     let filterbutton = lib.func.getAll(".buttons>.button");	
     if ( document.body.clientWidth > 900 ) {
       filterTypes[3].classList.toggle("hidden");
-      filterTypes[4].classList.toggle("hidden");	
+      filterTypes[4].classList.toggle("hidden");
+      filterTypes[5].classList.toggle("hidden");  	
       filterbutton[0].classList.toggle("hidden");
       filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "收合條件" : filterbutton[1].textContent = "更多條件";
     } else {
       filterTypes[3].classList.remove("hidden");
       filterTypes[4].classList.remove("hidden");
+      filterTypes[5].classList.remove("hidden");    
       for ( let i = 0 ; i< filterTypes.length-1 ; i++ ) {
         if ( filterTypes[i].style.display ==="" || filterTypes[i].style.display ==="none" ){
           filterTypes[i].style.display = "flex";
@@ -439,7 +468,6 @@ class SearchResult extends React.Component {
       }
       ;	
     }
-    // console.log(this.state.currentLoadAmount);
   }
 
 }
