@@ -77,15 +77,16 @@ header>.right>.searchFav {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	border: 1px solid #BBBBBB;
+	border: 1px solid #00A99D;
     border-radius: 3px;
     padding: 6px 11px;	
     margin-right: 20px;
     cursor: pointer;
+    color: #002A27;
 }
 header>.right>.searchFav:hover {
-	background-color: #626567;
-	border: 1px solid #626567;
+	background-color: #60C9C2;
+	border: 1px solid #00A99D;
 	color:white;
 	font-weight: 100;
 }
@@ -201,6 +202,7 @@ header>.right>.postHouse>.icon {
 	header>.left>.burger {
 		display: block;
 		margin-left: 20px;
+		padding: 20px 20px 20px 0;
 		z-index: 150;
 	}
 

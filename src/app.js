@@ -10,6 +10,7 @@ import Apartments from "./Apartments.js";
 import Property from "./Property.js";
 import "./style/common.css";
 import "./style/index.css";
+import "./imgs/close.png"
 
 let firebaseDB = firebaseApp.fBase.database();
 const RouterComponent = () => (
@@ -80,6 +81,7 @@ class App extends React.Component {
         return (
         <div className="index">
         	<div className="background"></div>
+          <div className="background"></div>
           	<div className="formContainer">
           		<div className="form">
           			<div className="formItem">
@@ -87,7 +89,7 @@ class App extends React.Component {
           				<h2>SNAIL HEAVEN</h2>
           			</div>
           			<h2 className="formItem">租房超簡單，大腦零負擔</h2>
-          			<input type="text" placeholder="小蝸牛，想找哪裡的房子呢？" onChange={this.searchHandler.bind(this)} onKeyDown={this.submitSearch.bind(this)}/>
+          			<input type="text" placeholder="小蝸牛，想找哪裡的房子呢？" onChange={this.searchHandler.bind(this)}/>
           			<div className="districtContainer">
             			{
                     this.state.district.map((district, index)=>{
@@ -102,7 +104,7 @@ class App extends React.Component {
                   }
 
           			</div>
-          			<div className="formItem"><Link to="/apartments">Apartments Page</Link></div>
+          			<div className="formItem close"><Link to="/apartments"></Link></div>
           		</div>
           	</div>     	
         </div>

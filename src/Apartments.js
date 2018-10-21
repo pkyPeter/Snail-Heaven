@@ -13,6 +13,7 @@ import "./style/body.css";
 import "./style/LoveList.css";
 import "./style/SimpleDetail.css";
 import data from "./result_export.json";
+import snail_face from "./imgs/snail_cousin_white.png";
 
 class Apartments extends React.Component {
   constructor() {
@@ -29,7 +30,7 @@ class Apartments extends React.Component {
       currentLocation: [25.0484402,121.5278391],
       currentDistrict: null,
       latLng: [],
-      toggleEmail: false,
+      toggleEmail: {open: false, currentDetail: null},
       selectedIndex: -1,
       hiddenMarkerIndex: []
     };
@@ -45,6 +46,12 @@ class Apartments extends React.Component {
     this.removeFromLoveList=this.removeFromLoveList.bind(this);
     this.getloveListStatusIndex=this.getloveListStatusIndex.bind(this);
     this.getFilteredData = this.getFilteredData.bind(this);
+
+    firebaseApp.sortAmenity().then((amenitiesList)=>{
+      // console.log(amenitiesList);
+      // console.log(amenitiesList.length);
+      this.setState({ amenitiesList: amenitiesList})
+    })
 
     firebaseApp.fBaseDB.getListing(dataFromFB => {
       for ( let i = 0 ; i<dataFromFB.length ; i++ ) { dataFromFB[i].index = i; }
@@ -75,7 +82,7 @@ class Apartments extends React.Component {
           let lat = queryLocation[0] || this.state.currentLocation[0];
           let lng = queryLocation[1] || this.state.currentLocation[1];
 
-          console.log(zoom, lat, lng);
+          // console.log(zoom, lat, lng);
           //製作地圖的promise，以及接連進行的一系列動作
           googleMap.init.initMapPromise( zoom, lat, lng ,"googleMap" )
             .then((map)=>{
@@ -149,35 +156,73 @@ class Apartments extends React.Component {
         });
     });
 
+
+
   }
   componentDidMount() {
     // console.log("componentDidMount");
-    if ( lib.func.getQueryStringAndSearch("loveList") === true ) {
-      this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
-      this.setState({toggleSimpleDetail: false});
-    }
     if ( lib.func.getQueryStringAndSearch("dis") ) {
       let dis = decodeURIComponent(window.location.search.split("=")[1]);
       // let viewBox = [view.split(",")[0].split("=")[1],...[view.split(",")[1],view.split(",")[2],view.split(",")[3]]];
       this.setState({currentDistrict: dis});
     }
-    //製作完整各 amenty 底下的所屬 id array
-    let amenitiesList = firebaseApp.sortAmenity();
-    console.log(amenitiesList);
-    this.setState({ amenitiesList: amenitiesList})
+    // if ( lib.func.getLocalStorageJSON("screenInfo") ) {
+    //   let filters = lib.func.getLocalStorageJSON("screenInfo").filters;
+    //   let zoom = lib.func.getLocalStorageJSON("screenInfo").zoom
+    //   let center = lib.func.getLocalStorageJSON("screenInfo").center
+    //   console.log(filters);
+    //   // googleMap.map.setCenter(center);
+    //   // googleMap.map.setZoom(zoom);
+    //   // this.setState({});
+    // }
+    //製作完整各 amenty 底下的所屬 id array    
   }
   componentDidUpdate() {
-    console.log("apartment componentDidUpdate");
-    // console.log(this.state.filters);
-    // console.log(this.state.selectedIndex);
-    //篩選功能
-    
+    // console.log("apartment componentDidUpdate");
+    if ( this.state.loveListStatus && lib.func.getQueryStringAndSearch("loveList") === true ) {
+      this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
+      this.setState({toggleSimpleDetail: false});
+      window.history.replaceState({}, document.title, "/apartments");
+    }
+    //偵測如果都 load 完，並且 currentViewData 內已經沒有東西了，就可以執行這邊的程式碼
+    if ( lib.func.getLocalStorageJSON("screenInfo") && this.state.amenitiesList && this.state.currentViewData.length ) {
+      let filters = lib.func.getLocalStorageJSON("screenInfo").filters;
+      let zoom = lib.func.getLocalStorageJSON("screenInfo").zoom
+      let center = lib.func.getLocalStorageJSON("screenInfo").center
+      console.log(filters);
+      console.log("zoom",zoom)
+      console.log("center",center)
+      googleMap.map.setCenter(center);
+      googleMap.map.setZoom(zoom);
+      this.setState({filters: filters});
+      localStorage.removeItem("screenInfo");
+    }
+    if ( this.state.filteredData.length !== 0 && lib.func.get(".apartments>.loading") ) {
+      if (document.documentElement.clientWidth > 900 ) {
+        lib.func.get(".apartments>.loading").style.opacity = "0";
+        setTimeout(()=>{      
+          lib.func.get(".apartments>.loading").style.zIndex = "0";
+          lib.func.get(".apartments>.loading").remove();
+        }, 1000)
+      } else {
+        if ( !lib.func.get(".apartments>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset") {
+          lib.func.get(".apartments>.loading").style.opacity = "0";
+          setTimeout(()=>{      
+          lib.func.get(".apartments>.loading").remove();
+          }, 1000)
+        }
+      }
+    }
 
   }
   render() {
-    console.log(259, "apartment render");			
+    // console.log(259, "apartment render");			
     return(
       <div className="apartments">
+        <div className="loading">
+          <img src={snail_face}  />
+          <div className="description">LOADING</div>
+        </div>
         <Header goLoveList={this.state.goLoveList} 
           goLoveListPage={this.goLoveList}
           goIndex={this.goIndex}
@@ -236,11 +281,35 @@ class Apartments extends React.Component {
 	  //   state: { completeList: this.state.completeList}
 	  // }); 
   }
-  openEmailForm(e) {
+  openEmailForm(currentDetail, id, close) {
     console.log("open form");
-    this.setState((currentState,currentProps)=>({
-      toggleEmail: !currentState.toggleEmail
-    }));
+    if (close === "close") {
+        let toggleEmail = this.state.toggleEmail;
+        toggleEmail.open = false;
+        toggleEmail.currentDetail = null;
+        this.setState({toggleEmail: toggleEmail});
+
+    } else {
+      if (id) {
+        console.log("使用id")
+        firebaseApp.fBaseDB.getData("details",(detail)=>{
+          let toggleEmail = this.state.toggleEmail;
+          let objectKey = parseInt(Object.keys(detail)[0]);
+          let currentDetail = detail[objectKey];
+          toggleEmail.open = !toggleEmail.open;
+          toggleEmail.currentDetail = currentDetail;
+          this.setState({toggleEmail: toggleEmail});
+        }, "id", id );  
+      } else {
+        console.log("使用currentDetail")
+        let toggleEmail = this.state.toggleEmail;
+        toggleEmail.open = !toggleEmail.open;
+        toggleEmail.currentDetail = currentDetail;
+        this.setState({toggleEmail: toggleEmail});
+      }
+    }
+
+
   }
   createLoveListStatus(ObjectArray) {
     let loveListStatus = [];
@@ -371,7 +440,7 @@ class Apartments extends React.Component {
 
   getFilteredData () {
   			// console.log(this.state.currentViewData)
-	    //   console.log("start filter");
+	      console.log("start filter");
 	      googleMap.markerclusterer.clearMarkers();
 	      let filters = this.state.filters;
 	      // console.log(filters);
@@ -406,20 +475,13 @@ class Apartments extends React.Component {
 	        }
 	        dataForFilter = dataAfterPhotoRequiredFilter;
 	      }
+        // console.log(dataForFilter)
         //amenity
-        if (filters.amenities.length ) {
-          let amenitiesEN = ["Internet","Hot water","Air conditioning","Refrigerator","Laptop friendly workspace","Washer","Pets allowed","Kitchen","Gym","Elevator","Paid parking off premises","Free street parking"]
+        // console.log("amenities list", this.state.amenitiesList);
+
+        if (filters.amenities.length && this.state.amenitiesList ) {
+          let amenitiesEN = ["Internet","Hot water","A/C","Refrigerator","Laptop friendly workspace","Washer","Pets allowed","Kitchen","Gym","Elevator","Paid parking off premises","Free street parking"]
           let dataAfterAmenity = [];
-          // for ( let i = 0 ; i < filters.amenities.length ; i++ ) {
-          //   let index = amenitiesEN.indexOf(filters.amenities[i]);
-          //   let amenitiesList = this.state.amenitiesList[index];
-          //   for ( let j = 0 ; j < dataForFilter.length ; j++ ) {
-          //     let insideAmenities = amenitiesList.indexOf(dataForFilter[j].id);
-          //     if (insideAmenities != -1) {
-          //       dataAfterAmenity.push(dataForFilter[j]);
-          //     }
-          //   }
-          // }
           for ( let i = 0 ; i < dataForFilter.length ; i ++) {
               let shouldShow = false;
               for ( let j = 0 ; j < filters.amenities.length ; j++ ) {
@@ -432,17 +494,17 @@ class Apartments extends React.Component {
                   shouldShow = false;
                   break;
                 }
+                // console.log("should show")
               }
               if ( !shouldShow ) {
                 continue;
-              }
-              if ( shouldShow ) {
+              } else {
                 dataAfterAmenity.push(dataForFilter[i]);
               }
           }
           dataForFilter = dataAfterAmenity;
         }
-        console.log(dataForFilter);
+        // console.log(dataForFilter);
 	      //hideList 
 	      let hiddenList = lib.func.getLocalStorageJSON("hiddenList");
 	      if ( hiddenList ) {
@@ -456,7 +518,7 @@ class Apartments extends React.Component {
 	          }
 	          if (shouldShow) { dataAfterHideList.push(dataForFilter[i]); }
 	        }
-          console.log(dataAfterHideList,"dataAfterHideList")
+          // console.log(dataAfterHideList,"dataAfterHideList")
 	        dataForFilter = dataAfterHideList;
 	      }
 	      let hiddenMarker = [];
@@ -465,7 +527,31 @@ class Apartments extends React.Component {
 					// console.log("該顯示顯示");
 					googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
 				}
-        console.log("進不進去",this.state.filteredData.length !== dataForFilter.length)
+        //10/22 拼上線 先硬加
+        if ( this.state.filters.priceCeiling != 100000 || this.state.filters.priceFloor != 0 ) {
+          let filters = this.state.filters;
+          let priceArray = [];
+          let dataAfterPriceFilter =[];
+          dataForFilter.map((realEstate, index)=>{
+            if (realEstate.monthly_price != "") {
+              let monthly_price = parseInt(realEstate.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+              priceArray.push(monthly_price);
+            } else {
+              let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
+              priceArray.push(daily_price);
+            }
+          });
+          //如果資料的價格介於priceCeilig以及priceFloor之間，就進行篩選
+            for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
+              if ( filters.priceFloor < priceArray[i] && priceArray[i] <= filters.priceCeiling ) {
+              } else {
+                googleMap.markerclusterer.removeMarker(googleMap.markers[dataForFilter[i].index]);
+              }
+            }
+         } 
+
+
+        // console.log("進不進去",this.state.filteredData.length !== dataForFilter.length)
 	      if ( this.state.filteredData.length !== dataForFilter.length ) {
 	      	// console.log("hiddenMarker", hiddenMarker)
 	      	this.setState({filteredData: dataForFilter});

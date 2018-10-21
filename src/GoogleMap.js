@@ -14,7 +14,6 @@ import shell from "./imgs/house_icon_seen.png";
 //marker cluster
 import m3 from "./imgs/icon_green.png";
 
-console.log(MarkerClusterer);
 // import "./markerclusterer.js";
 const script = "https://maps.googleapis.com/maps/api/js?region=TW&language=zh-TW&key=AIzaSyDxFq8QlAbDRIiQvSGD_a2C1Vwru0Q69rE&libraries=places,drawing,geometry"
 // const script2 = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
@@ -297,7 +296,7 @@ googleMap.makeClusterOpstions = () => {
   let options = {
     styles: googleMap.clusterStyles,
     gridSize: 100,
-    minimumClusterSize: 3
+    minimumClusterSize: 5
   }
   return options;
 }

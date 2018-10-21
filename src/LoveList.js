@@ -15,6 +15,7 @@ library.add(faRegularHeart, faThumbsDown, faEnvelope, faSearch, faCaretLeft);
 
 const LoveList = props => {
 	console.log(props.loveListDetail)
+	console.log(props.loveListStatus)
 	return  (
 		<div className="right" style={{width: props.leftRightWidth.rightWidth}}>
 			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize} style={{right: props.leftRightWidth.resizerRight}}></div>
@@ -32,6 +33,15 @@ const LoveList = props => {
 						let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
 						let daily_price_pureN = daily_price.toLocaleString("en");
 						let loveListStatusIndex = props.getloveListStatusIndex(realEstate.id, props.loveListStatus);
+						let roomType;
+						switch(realEstate.room_type) {
+							case "EHA":
+							roomType = "整層住家";
+							case "PR":
+							roomType = "獨立套房";
+							case "SR":
+							roomType = "分租套房";
+						}
 						console.log(index ,loveListStatusIndex);
 						console.log(index ,props.loveListStatus)
 						return(
@@ -43,12 +53,12 @@ const LoveList = props => {
 										<div className="gesture">
 											{ props.loveListStatus != undefined && props.loveListStatus[loveListStatusIndex].inList === true ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ props.removeFromLoveList(e, realEstate.id, realEstate) }}/>
 												: <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ props.putIntoLoveList(e, realEstate.id, realEstate) }}/>}
-											<FontAwesomeIcon className="icon" icon={['far','envelope']}/>
+											<FontAwesomeIcon className="icon" icon={['far','envelope']} onClick={(e)=>{ 					props.openEmailForm("",realEstate.id)}}/>
 											<FontAwesomeIcon className="icon" icon={['far','thumbs-down']}/>
 										</div>
 									</div>
-									<p>{realEstate.bedrooms}rooms {realEstate.room_type}</p>
-									<p>{realEstate.neighbourhood_cleansed}</p>
+									<p>{realEstate.bedrooms} 間房間 · {realEstate.bathrooms} 間廁所 · {roomType}</p>
+									<p>{realEstate.district || realEstate.neighbourhood_cleansed}</p>
 									<p className="updateTime">2天前</p>
 									</div>
 								</div>		

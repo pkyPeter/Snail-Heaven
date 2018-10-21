@@ -37,7 +37,7 @@ class Header extends React.Component {
 					<div className="mobileClose" onClick={this.toggleRight}>
 						<FontAwesomeIcon className="icon" icon={['fas','times']}/>
 					</div>
-					<div className="searchFav">
+					<div className="searchFav" style={{display: "none"}}>
 						<FontAwesomeIcon className="icon" icon={["far","bookmark"]}/>
 						<p>儲存搜尋條件</p>
 					</div>
@@ -48,7 +48,7 @@ class Header extends React.Component {
 						 }
 						<p>我的最愛</p>
 					</div>
-					<div className="postHouse">
+					<div className="postHouse" style={{display: "none"}}>
 						<FontAwesomeIcon className="icon" icon={['far','building']}/>
 						<p>提供租屋</p>
 						<div className="signButton">登入</div>

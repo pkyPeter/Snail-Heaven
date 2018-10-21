@@ -21,6 +21,7 @@ class SearchResult extends React.Component {
     this.state = {
       filters: {priceFloor:0 , priceCeiling: 100000},
       readyForSort: false,
+      filteredDataLength: 0, //這個完全是流程控制，因為只要 filterdata 數量一樣，價格篩選都應該只要執行一次，主要是因為需要在 componentDidUpdate 的時候去做，但是因為不是每次 update 都有變動 filterdata 的數量
       originData: [],
       currentLoadAmount: 3,
       currentLoad: [],
@@ -37,8 +38,8 @@ class SearchResult extends React.Component {
     this.scrollToBottom = this.scrollToBottom.bind(this);
   }
   componentDidMount() {
-    // console.log("search Result componentDidMount")
-    console.log(this.props.filteredData);
+    // ("search Result componentDidMount")
+    // console.log(this.props.filteredData);
     //剛進來第一次要初始化Origin data，並且進行初步印製
     this.setState({originData: this.props.filteredData});
     if (this.props.filteredData < 3) {
@@ -56,7 +57,7 @@ class SearchResult extends React.Component {
     let district = lib.func.getAll(".district");
     let amenity = lib.func.getAll(".amenity")
     let roomTypeEN = ["SR","PR","EHA"];
-    let amenitiesEN = ["Internet","Hot water","Air conditioning","Refrigerator","Laptop friendly workspace","Washer","Pets allowed","Kitchen","Gym","Elevator","Paid parking off premises","Free street parking"];
+    let amenitiesEN = ["Internet","Hot water","A/C","Refrigerator","Laptop friendly workspace","Washer","Pets allowed","Kitchen","Gym","Elevator","Paid parking off premises","Free street parking"];
     for ( let i = 0 ; i < roomAmount.length ; i++ ) {
       if ( lib.func.searchInsideArray(filtersFromApartments.roomAmount, i+1) ) {
         roomAmount[i].classList.add("active");
@@ -92,11 +93,11 @@ class SearchResult extends React.Component {
     }
     //價格篩選 或 有排序條件
     if ( this.props.filteredData.length >= 0 ) {
-    	console.log("這裏？")
       let dataForFilter = this.props.filteredData;
       let filters = this.props.filters;
       // console.log(filters.priceCeiling)
       // console.log(filters.priceFloor)
+      
       if ( filters.priceCeiling != 100000 || filters.priceFloor != 0 ) {
         let priceArray = [];
         let dataAfterPriceFilter =[];
@@ -110,23 +111,28 @@ class SearchResult extends React.Component {
           }
         });
         //如果資料的價格介於priceCeilig以及priceFloor之間，就進行篩選
-        googleMap.markerclusterer.clearMarkers();
-        for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
-          if ( filters.priceFloor < priceArray[i] && priceArray[i] <= filters.priceCeiling ) {
-            dataAfterPriceFilter.push(dataForFilter[i]);
-            googleMap.markers[dataForFilter[i].index].setVisible(true);
-            googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
-          } else {
-            googleMap.markers[dataForFilter[i].index].setVisible(false);
-            googleMap.markerclusterer.removeMarker(googleMap.markers[dataForFilter[i].index]);
+        // console.log(this.props.filters.priceFloor != this.state.filters.priceFloor,this.props.filters.priceCeiling != this.state.filters.priceCeiling,this.props.filteredData.length != this.state.filteredDataLength)
+        // console.log(dataForFilter)
+
+          googleMap.markerclusterer.clearMarkers();
+          for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
+            if ( filters.priceFloor < priceArray[i] && priceArray[i] <= filters.priceCeiling ) {
+              dataAfterPriceFilter.push(dataForFilter[i]);
+              // googleMap.markers[dataForFilter[i].index].setVisible(true);
+              googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
+            } else {
+              // googleMap.markers[dataForFilter[i].index].setVisible(false);
+              // googleMap.markerclusterer.removeMarker(googleMap.markers[dataForFilter[i].index]);
+            }
           }
-        }
-        if (this.props.filteredData.length !== dataAfterPriceFilter.length ) {		
-          dataForFilter = dataAfterPriceFilter;
-        }
+          if (this.props.filteredData.length !== dataAfterPriceFilter.length ) {    
+            console.log(dataAfterPriceFilter)
+            dataForFilter = dataAfterPriceFilter;
+          }
+        
       } 
       if ( this.props.sort ) {
-      	console.log("篩選")
+      	// console.log("篩選")
       	let priceArray = [];
       	let dataAfterSort = dataForFilter;
       	let options = lib.func.getAll("select>option");
@@ -139,12 +145,8 @@ class SearchResult extends React.Component {
             priceArray.push(daily_price);
           }
         });
-        console.log(options);
       	switch (this.props.sort) {
       		case "default":
-		    	break;
-		    	case "latest":
-
 		    	break;
 		    	case "lowest":
 		    	options[2].selected = "selected";
@@ -191,10 +193,9 @@ class SearchResult extends React.Component {
 		    	})
 		    	break;
       	}
-      	console.log(dataAfterSort);
+      	// console.log(dataAfterSort);
       	dataForFilter = dataAfterSort;
       }
-
       // console.log(132,"是否為真",dataForFilter !== this.state.originData)
       //首次資料進入會不同，已經在componentDidMount中，將originData設為dataForFilter，並呼叫recursive來印製畫面。
       //originData將作為比較值讓當次的render不會重新呼叫recursive，但當資料有更新時，還是會執行一次
@@ -204,13 +205,20 @@ class SearchResult extends React.Component {
         this.props.getSelect("","disable");
         this.recursive(dataForFilter, this.state.currentLoadAmount);
       }
+      if ( this.props.filters.priceFloor != this.state.filters.priceFloor || this.props.filters.priceCeiling != this.state.filters.priceCeiling || this.props.filteredData.length !=  this.state.filteredDataLength) {
+        // console.log("會執行幾次")
+        let filters = this.state.filters;
+        filters.priceFloor = this.props.filters.priceFloor;
+        filters.priceCeiling = this.props.filters.priceCeiling;
+        this.setState({filters: filters, filteredDataLength: this.props.filteredData.length});
+      }
     }
   }
   componentWillUnmount () {
     // this.recursive = null;
   }
   render() {
-    console.log("render searchResult.js");
+    // console.log("render searchResult.js");
     // console.log(this.props.filteredData);
     return (
       <div className="right" style={{width: this.props.leftRightWidth.rightWidth}} onScroll={(e)=>{this.scrollToBottom(e);}}>
@@ -270,11 +278,11 @@ class SearchResult extends React.Component {
             </div>
           </div>
           <div className="filterType amenities hidden">
-            <p>必備設備<br />( 複選皆為必備 )</p>
+            <p>必備設備</p>
             <div className="filterDetail">
               <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Internet");}} >網路</div>
               <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Hot water");}} >熱水器</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Air conditioning");}} >冷氣</div>
+              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","A/C");}} >冷氣</div>
               <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Refrigerator");}} >冰箱</div>
               <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Laptop friendly workspace");}} >書桌/工作區</div>
               <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Washer");}} >洗衣機</div>
@@ -287,7 +295,7 @@ class SearchResult extends React.Component {
             </div>
           </div>
           <div className="filterType buttons">
-            <div className="button"><FontAwesomeIcon className="icon" icon={["far","save"]}/>儲存篩選組合</div>
+            <div className="button" style={{display:"none"}}><FontAwesomeIcon className="icon" icon={["far","save"]}/>儲存篩選組合</div>
             <div className="button" onClick={this.showMoreFilter}>更多條件</div>
           </div>
         </div>
@@ -295,16 +303,15 @@ class SearchResult extends React.Component {
           <div className="showLogic">
             <select onChange={(e)=>{this.props.getSelect(e, "select")}}>
               <option value="default">預設排序</option>
-              <option value="latest">最新物件</option>
               <option value="lowest">最低價優先</option>
               <option value="highest">最高價優先</option>
             </select>
           </div>
           <p>{ this.state.originData.length }筆結果</p>
           <div className="displayLogic">
-            <div className="displayType" onClick={this.changeToList}><FontAwesomeIcon icon={["fas","list-ul"]}/></div>
-            <div className="displayType" onClick={this.changeToRowBlocks}><FontAwesomeIcon icon={["fas","th-large"]}/></div>
-            <div className="displayType" onClick={this.changeToBlocks}><FontAwesomeIcon icon={["fas","square"]}/></div>
+            <div className="displayType" onClick={this.props.changeToList}><FontAwesomeIcon icon={["fas","list-ul"]}/></div>
+            <div className="displayType" onClick={this.props.changeToRowBlocks}><FontAwesomeIcon icon={["fas","th-large"]}/></div>
+            <div className="displayType" onClick={this.props.changeToBlocks}><FontAwesomeIcon icon={["fas","square"]}/></div>
           </div>
         </div>
         <div className={this.props.resultAreaDisplayType[0]}>
@@ -348,11 +355,11 @@ class SearchResult extends React.Component {
 															  ? <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} onClick={(e)=>{ this.props.removeFromLoveList(e, realEstate.id, realEstate); }}/>
 															  : <FontAwesomeIcon className="icon" icon={["far","heart"]} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate); }}/>
                           }
-                          <FontAwesomeIcon className="icon" icon={["far","envelope"]} onClick={this.props.openEmailForm}/>
+                          <FontAwesomeIcon className="icon" icon={["far","envelope"]} onClick={()=>{this.props.openEmailForm("",realEstate.id); console.log('icon clicked')}}/>
                           <FontAwesomeIcon className="icon" icon={["far","thumbs-down"]} onClick={(e)=>{this.props.hideList(e, realEstate.id, realEstate.index);}} />
                         </div>
                       </div>
-                      <p>{realEstate.bedrooms} 間房間 {roomType}</p>
+                      <p>{realEstate.bedrooms} 間房間 · {realEstate.bathrooms} 間廁所 · {roomType}</p>
                       <p>{realEstate.district}</p>
                       <p className="updateTime">{realEstate.updated}</p>
                     </div>
@@ -387,14 +394,12 @@ class SearchResult extends React.Component {
       for ( let i = 0 ; i< filterTypes.length-1 ; i++ ) {
         if ( filterTypes[i].style.display ==="" || filterTypes[i].style.display ==="none" ){
           filterTypes[i].style.display = "flex";
-          filterbutton[0].classList.toggle("hidden");
-          filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "收合條件" : filterbutton[1].textContent = "更多條件";
         } else { 
           filterTypes[i].style.display = "none"; 
-          filterbutton[0].classList.toggle("hidden");
-          filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "收合條件" : filterbutton[1].textContent = "更多條件";		
         }
       }
+      filterbutton[0].classList.toggle("hidden");
+      filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "收合條件" : filterbutton[1].textContent = "更多條件";
     }
   }
   changeToList(e) {
@@ -420,7 +425,7 @@ class SearchResult extends React.Component {
     // console.log("result legnth",lib.func.getAll(".results").length)
 	  if ( dataForFilter.length>3 ) {
         setTimeout(() => {
-          console.log("是不是這裡在leak?")
+          // console.log("是不是這裡在leak?")
           // let hasMore = this.state.currentLoad.length + 50 < dataForFilter.length + 50;
           let hasMore = this.state.currentLoad.length < loadingAmount;
           this.setState( (prev, props) => ({
@@ -454,7 +459,7 @@ class SearchResult extends React.Component {
     // console.log(scrollHeight,scrollTop,clientHeight)
 
     if (scrollHeight - scrollTop === clientHeight) {
-      console.log("是不是這裡在leak?")
+      // console.log("是不是這裡在leak?")
       // console.log(true,true,true,true,true)
       // this.setState((prev) => ({ currentLoadAmount: prev.currentLoadAmount + 2 }))
       if (this.state.originData.length<3) {

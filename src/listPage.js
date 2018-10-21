@@ -34,12 +34,14 @@ class List extends React.Component {
 			leftRightWidth: { rightWidth: "600px", leftWidth: "calc(100% - 600px)", resizerRight: "600px" },
 			sort: null,
 			readyForSort: false,
-			loadEnd: true
 		}
 		this.drawCustomArea =this.drawCustomArea.bind(this);
 		this.openMapMarker = this.openMapMarker.bind(this);
 		this.changeAreaSize = this.changeAreaSize.bind(this);
 		this.goSimpleDetail = this.goSimpleDetail.bind(this);
+		this.changeToList = this.changeToList.bind(this);
+    	this.changeToRowBlocks = this.changeToRowBlocks.bind(this);
+    	this.changeToBlocks = this.changeToBlocks.bind(this);
 		this.hideList = this.hideList.bind(this);
 		this.stopPropagation= this.stopPropagation.bind(this);
 		this.switchToMap = this.switchToMap.bind(this);
@@ -61,18 +63,20 @@ class List extends React.Component {
 	}
 	componentDidUpdate() {
 		// console.log(this.props.loveListStatus);
-		console.log(this.props.selectedIndex)
-		//20181003 : selectedIndex 預設值是－１，點擊後會儲存 marker 在 markers 中所在的位置，這個位置跟 completeList 的物件相對位置是一樣的
+		// console.log(this.props.selectedIndex)
+		//20181003：selectedIndex 預設值是－１；點擊後 marker 後，會儲存 marker 在 markers 中所在的位置，這個位置跟 completeList 的物件相對位置是一樣的
+		//20181018：props以及state會分別代表這次點擊的 marker 以及上次點擊的 marker，透過這樣的非同步關係，來更新 marker 的狀態
 		if ( this.props.selectedIndex !== this.state.selectedIndex ) {
-			//這邊這個行為，取代了在每個地方加上goSimpleDetail的意義，只要加在這裡就好了
 			if ( this.props.selectedIndex !== -1 ) {
-				console.log(this.props.filteredData)
-				for ( let i = 0 ; i < this.props.completeList.length; i++ ) {
-					if ( this.props.completeList[i].index === this.props.selectedIndex ) {
-						this.goSimpleDetail(this.props.completeList[i].id, this.props.completeList[i]);
+				for ( let i = 0 ; i < this.props.filteredData.length; i++ ) {
+					//找到點擊的 index 之後，就開啟細節
+					if ( this.props.filteredData[i].index === this.props.selectedIndex ) {
+						this.goSimpleDetail(this.props.filteredData[i].id, this.props.filteredData[i]);
 					}
 				}
+				//這邊主要判斷，如果客人直接點擊下一個按鈕，則會將前一次的 marker 還原
 				if ( this.state.selectedIndex !== -1 ) {
+					googleMap.markers[this.state.selectedIndex].setAnimation(null);
 					googleMap.markers[this.state.selectedIndex].setIcon(googleMap.produceMarkerStyle(false, 30));
 				} 
 				// this.state({currentSimpleDetail: this.props.completeList[this.props.selectedIndex]});
@@ -82,21 +86,21 @@ class List extends React.Component {
 			}
 			this.setState({selectedIndex: this.props.selectedIndex});
 		}
-		if ( this.props.filteredData.length !== 0  ) {
-			if (document.documentElement.clientWidth > 900 ) {
-				lib.func.get(".apartments>section>.loading").style.opacity = "0";
-				setTimeout(()=>{			
-					lib.func.get(".apartments>section>.loading").style.zIndex = "0";
-				}, 1000)
-			} else {
-				if ( !lib.func.get(".apartments>section>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset") {
-					lib.func.get(".apartments>section>.loading").style.opacity = "0";
-					setTimeout(()=>{			
-						lib.func.get(".apartments>section>.loading").style.zIndex = "0";
-					}, 1000)
-				}
-			}
-		}
+		// if ( this.props.filteredData.length !== 0  ) {
+		// 	if (document.documentElement.clientWidth > 900 ) {
+		// 		lib.func.get(".apartments>section>.loading").style.opacity = "0";
+		// 		setTimeout(()=>{			
+		// 			lib.func.get(".apartments>section>.loading").style.zIndex = "0";
+		// 		}, 1000)
+		// 	} else {
+		// 		if ( !lib.func.get(".apartments>section>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset") {
+		// 			lib.func.get(".apartments>section>.loading").style.opacity = "0";
+		// 			setTimeout(()=>{			
+		// 				lib.func.get(".apartments>section>.loading").style.zIndex = "0";
+		// 			}, 1000)
+		// 		}
+		// 	}
+		// }
 	}
 	render () {
 		return (
@@ -125,10 +129,6 @@ class List extends React.Component {
 					</div>
 					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>	
 				</div>
-				<div className="loading">
-					<img src={snail_face}  />
-					<div className="description">LOADING</div>
-	            </div>
 				{	!this.props.goLoveList && !this.state.toggleSimpleDetail && (
 					<SearchResult changeAreaSize={this.changeAreaSize}
 					leftRightWidth = {this.state.leftRightWidth}
@@ -140,7 +140,7 @@ class List extends React.Component {
 					goSimpleDetail={this.goSimpleDetail}
 					removeFromLoveList={this.props.removeFromLoveList}
 					putIntoLoveList={this.props.putIntoLoveList}
-					openEmailFrom={this.props.openEmailFrom}
+					openEmailForm={this.props.openEmailForm}
 					hideList={this.hideList}
 					addSelectedIndex={this.props.addSelectedIndex}
 					removeSelectedIndex={this.props.removeSelectedIndex}
@@ -151,6 +151,9 @@ class List extends React.Component {
 					readyForSort = {this.state.readyForSort}
 					sort = {this.state.sort}
 					getSelect={this.getSelect}
+					changeToList = {this.changeToList}
+					changeToRowBlocks = {this.changeToRowBlocks}
+					changeToBlocks = {this.changeToBlocks}
 					/>
 				)} 
 				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (
@@ -165,6 +168,7 @@ class List extends React.Component {
 					getloveListStatusIndex={this.props.getloveListStatusIndex}
 					removeFromLoveList={this.props.removeFromLoveList}
 					putIntoLoveList={this.props.putIntoLoveList}
+					openEmailForm={this.props.openEmailForm}
 					/>
 				)}
 				{	this.state.toggleSimpleDetail != false && this.state.currentSimpleDetail && (
@@ -177,7 +181,7 @@ class List extends React.Component {
 					putIntoLoveList={this.props.putIntoLoveList}
 					removeFromLoveList={this.props.removeFromLoveList}
 					hideList={this.hideList}
-					openEmailFrom={this.props.openEmailForm}
+					openEmailForm={this.props.openEmailForm}
 					removeSelectedIndex={this.props.removeSelectedIndex}
 					selectedIndex={this.state.selectedIndex}
 					recordCurrentStatus={this.recordCurrentStatus}
@@ -192,6 +196,24 @@ class List extends React.Component {
 		e.stopPropagation();
     	e.nativeEvent.stopImmediatePropagation();
 	}
+	  changeToList(e) {
+	    //先移除RowBlocks的class，再把自己的放進去
+	    lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
+	    lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex"]);	
+	    lib.func.toggleClass("toggle",".resultArea>.results", ["resultsList"]);	
+	    this.setState({resultAreaDisplayType: ["resultArea","results resultsList"]});
+	  }	
+	changeToRowBlocks(e) {
+		lib.func.toggleClass("remove",".resultArea>.results", ["resultsList"]);
+		lib.func.toggleClass("toggle",".resultArea", ["resultAreaFlex"]);
+		lib.func.toggleClass("toggle",".resultArea>.results", ["resultsFlex"]);
+		this.setState({resultAreaDisplayType: ["resultArea resultAreaFlex","results resultsFlex"]});	
+	}	
+	changeToBlocks(e) {
+		lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
+		lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex", "resultsList"]);	
+		this.setState({resultAreaDisplayType: ["resultArea","results"]});
+	} 
 	changeAreaSize(e) {
 		let left = document.querySelector(".apartments>section>.left");
 		let right = document.querySelector(".apartments>section>.right");
@@ -243,7 +265,6 @@ class List extends React.Component {
 					this.setState({toggleSimpleDetail: false});		
 				} else {
 					this.setState({toggleSimpleDetail: true});
-					    googleMap.markers[currentMarkerIndex].setIcon(googleMap.produceMarkerStyle(false, 30));
 				}
 				
 				this.setState({goLoveList: false})
@@ -278,6 +299,7 @@ class List extends React.Component {
 			if (this.state.toggleSimpleDetail === true) {
 				this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));		
 			}
+			console.log(index)
 			googleMap.markers[index].setVisible(false);
 		}
 	}
@@ -360,12 +382,12 @@ class List extends React.Component {
 	    let mapZoom = googleMap.map.getZoom();
 	    let mapCenter = googleMap.map.getCenter();
 	    let currentFilters = this.props.filters;
-	    let sceenInfo = {
+	    let screenInfo = {
 	      zoom: mapZoom,
 	      center: mapCenter,
-	      screenInfo: currentFilters
+	      filters: currentFilters
 	    }
-	    localStorage.setItem("sceenInfo", JSON.stringify(sceenInfo));
+	    localStorage.setItem("screenInfo", JSON.stringify(screenInfo));
 	  }
 
 }

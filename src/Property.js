@@ -11,6 +11,8 @@ import Email from "./Email.js";
 import { firebaseApp } from "./firebaseApp.js";
 import racing from "./imgs/racing.svg";
 import snail_face from "./imgs/snail_face.png";
+import line_share from "./imgs/line_share.png";
+import facebook from "./imgs/facebook.png";
 //FontAwesome主程式
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,9 +36,11 @@ class Property extends React.Component {
 	    	completeList: data,
 	    	currentList: {},
 	    	currentAddress: null,
-	    	toggleEmail: false
+        toggleEmail: {open: false, currentDetail: null},
 	    };
-	    this.switchTab = this.switchTab.bind(this);
+	    this.goIndex = this.goIndex.bind(this);
+      this.switchTab = this.switchTab.bind(this);
+      this.openEmailForm = this.openEmailForm.bind(this);
   }
   componentDidMount() { 
     this.getQueryStringID((outputArray)=>{
@@ -45,12 +49,17 @@ class Property extends React.Component {
         console.log(data)
         let objectKey = parseInt(Object.keys(data)[0]);
         let currentList = data[objectKey];
+        console.log(currentList);
         this.setState({currentList: currentList});
         let zoom = 18;
         let lat = parseFloat(currentList.lat);
         let lng = parseFloat(currentList.lng);
+        console.log(lat,lng)
         googleMap.init.initMapPromise( zoom, lat, lng ,"googleMap")
           .then((map)=>{
+            googleMap.style[5].stylers[0].visibility = "simplified";
+            googleMap.style[9].stylers[0].visibility = "simplified";
+            googleMap.map.setOptions({styles: googleMap.style});  
             let markers = googleMap.makeMarkers([{lat: lat, lng: lng}], true);
             markers[0].setMap(googleMap.map);
             markers[0].setIcon(googleMap.produceMarkerStyle(true ,64));
@@ -65,10 +74,10 @@ class Property extends React.Component {
 				    panControl: false,
 				    enableCloseButton: false
           });
-        googleMap.reverseGeocode(lat,lng, (results)=>{
-          this.setState({currentAddress: results[0].formatted_address});
-          console.log(results);
-        });
+        // googleMap.reverseGeocode(lat,lng, (results)=>{
+        //   this.setState({currentAddress: results[0].formatted_address});
+        //   console.log(results);
+        // });
       });
     });
     this.getQueryStringID((outputArray)=>{
@@ -91,15 +100,15 @@ class Property extends React.Component {
       let monthly_price = this.state.currentList.monthly_price.split(".")[0];
       let daily_price = parseInt(this.state.currentList.price.split(".")[0].split("$")[1].replace(",",""))*30;
       let daily_price_pureN = daily_price.toLocaleString("en");
-      let amenities = this.sortOutAmenities(this.state.currentList.amenities,[/Internet/ig, /Hot water/ig, /Air conditioning/ig, /Refrigerator/ig,/Laptop friendly workspace/ig,  /washer/ig, /Pets allowed/ig]);
+      let amenities = this.sortOutAmenities(this.state.currentList.amenities,[/Internet/ig, /Hot water/ig, /A\/C/ig, /Refrigerator/ig,/Laptop friendly workspace/ig,  /washer/ig, /Pets allowed/ig]);
       let otherAmenities = this.sortOutAmenities(this.state.currentList.amenities,[/Kitchen/ig,/Paid parking off premises/ig, /Free street parking/ig, /Elevator/ig, /Gym/ig]);
       let TV = this.sortOutAmenities(this.state.currentList.amenities, [/TV/ig]).length === 2 ? ["TV", "Cable TV"] : ["TV"];//因為電視無法拆
       let loveListStatusIndex = this.getloveListStatusIndex(this.state.currentList.id, this.state.loveListDetail);
       return(
         <div className="properties">
-          <Header goLoveListPage={this.goLoveList.bind(this)}/>
+          <Header goLoveListPage={this.goLoveList.bind(this)} goIndex={this.goIndex}/>
           <Email toggleEmail={this.state.toggleEmail}
-            openEmailForm={this.openEmailForm.bind(this)}
+            openEmailForm={this.openEmailForm}
           />
           <section className="property">
             <div className="propTitle">
@@ -108,10 +117,20 @@ class Property extends React.Component {
                 <div>回到搜尋結果</div>
               </div>
               <div className="sdRight">
-                <div className="button">							
-                  <FontAwesomeIcon className="icon" icon={["fas","share-alt"]}/>
-                  <div>分享</div>
-                </div>
+                <div className="button share" style={{marginRight: "5px", border: "none"}}>
+                  <img src={line_share} style={{width: "28px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.state.currentList.id}`); }}>
+                  </img>
+                  <img style={{width: "28px"}}
+                    onClick={()=>{FB.ui({
+                        method: "share",
+                        mobile_iframe: true,
+                        href: `https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.state.currentList.id}`,
+                    }, function(response){});}}
+                    src={facebook}
+                  >
+                  </img>
+              
+                </div>  
                 { 
                   loveListStatusIndex != undefined && loveListStatusIndex != null 
                     ? (
@@ -134,7 +153,7 @@ class Property extends React.Component {
                 <div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
                 <div className="name">{this.state.currentList.name}</div>
                 <div className="address">{this.state.currentAddress}</div>
-                <div className="checkAvailable" onClick={this.openEmailForm.bind(this)}>立即詢問</div>
+                <div className="checkAvailable" onClick={()=>{this.openEmailForm(this.state.currentList)}}>立即詢問</div>
                 <div className="propGraphicInfo">
                   <div className="tabs">
                     <div className="tab active" onClick={(e)=>{this.switchTab(e, "photoGallery");}}>照片</div>
@@ -186,7 +205,7 @@ class Property extends React.Component {
                       amenities.map((amenity, index)=>{
                         if ( amenity === "Internet") { amenity = "網路"; }
                         if ( amenity === "Hot water") { amenity = "熱水器"; }
-                        if ( amenity === "Air conditioning") { amenity = "冷氣"; }
+                        if ( amenity === "A/C") { amenity = "冷氣"; }
                         if ( amenity === "Refrigerator") { amenity = "冰箱"; }
                         if ( amenity === "Laptop friendly workspace") { amenity = "書桌/工作區"; }
                         if ( amenity === "Washer") { amenity = "洗衣機"; }
@@ -198,6 +217,33 @@ class Property extends React.Component {
                 </div>
               </div>
               <div className="right">
+                <div className="details">
+                  <h1>詳細資訊</h1>
+                  <div className="detail">
+                    <h3>月租金</h3>
+                    <p>{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</p>
+                  </div>
+                  <div className="detail">
+                    <h3>押金</h3>
+                    <p>{this.state.currentList.security_deposit}</p>
+                  </div>
+                  <div className="detail">
+                    <h3>房屋種類</h3>
+                    <p>{this.state.currentList.property_type}</p>
+                  </div>
+                  <div className="detail">
+                    <h3>坪數</h3>
+                    <p>{this.state.currentList.square_feet ? this.state.currentList.square_feet : "-"}</p>
+                  </div>
+                  <div className="detail">
+                    <h3>房間數量</h3>
+                    <p>{this.state.currentList.bedrooms}</p>
+                  </div>
+                  <div className="detail">
+                    <h3>廁所數量</h3>
+                    <p>{this.state.currentList.bathrooms}</p>
+                  </div>
+                </div>
                 <div className="profile">
                   <div className="avatar" style={{backgroundImage: `url(${this.state.currentList.host_picture_url})`}}></div>
                   <div className="description">
@@ -205,7 +251,7 @@ class Property extends React.Component {
                     <div className="name">{this.state.currentList.host_name}</div>
                   </div>
                 </div>
-                <div className="checkAvailable" onClick={this.openEmailForm.bind(this)}>立即詢問</div>
+                <div className="checkAvailable" onClick={()=>{this.openEmailForm(this.state.currentList)}}>立即詢問</div>
                 <div className="flag">檢舉這個物件</div>
               </div>
             </div>
@@ -226,6 +272,9 @@ class Property extends React.Component {
       );
     }
   }
+  goIndex(e) {
+    this.props.history.push("/");
+  }
 
   goLoveList(e) {
     this.props.history.push("/apartments?loveList");
@@ -233,11 +282,33 @@ class Property extends React.Component {
   goBackToSearch(e) {
     this.props.history.push("/apartments");
   }
-  openEmailForm(e) {
+  openEmailForm(currentDetail, id, close) {
     console.log("open form");
-    this.setState((currentState,currentProps)=>({
-      toggleEmail: !currentState.toggleEmail
-    }));
+    if (close === "close") {
+        let toggleEmail = this.state.toggleEmail;
+        toggleEmail.open = false;
+        toggleEmail.currentDetail = null;
+        this.setState({toggleEmail: toggleEmail});
+
+    } else {
+      if (id) {
+        console.log("使用id")
+        firebaseApp.fBaseDB.getData("details",(detail)=>{
+          let toggleEmail = this.state.toggleEmail;
+          let objectKey = parseInt(Object.keys(detail)[0]);
+          let currentDetail = detail[objectKey];
+          toggleEmail.open = !toggleEmail.open;
+          toggleEmail.currentDetail = currentDetail;
+          this.setState({toggleEmail: toggleEmail});
+        }, "id", id );  
+      } else {
+        console.log("使用currentDetail")
+        let toggleEmail = this.state.toggleEmail;
+        toggleEmail.open = !toggleEmail.open;
+        toggleEmail.currentDetail = currentDetail;
+        this.setState({toggleEmail: toggleEmail});
+      }
+    }
   }
   getQueryStringID(callback) {
     let queryString = window.location.search;

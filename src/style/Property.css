@@ -40,6 +40,12 @@
 		margin-right: 5px;
 		cursor: pointer;
 	}
+	.property>.propTitle>.sdRight>.share:hover {
+		background-color: unset !important;
+		border: unset !important;
+		color: unset !important;
+		font-weight: 100 !important;
+	}
 
 	.property>.propTitle>.button:hover, .property>.propTitle>.sdRight>.button:hover {
 		background-color: #626567;
@@ -65,6 +71,7 @@
 	.property>.propContent>.left {
 		width: calc(100% - 360px);
 		padding-left: 20px;
+		padding-right: 15px;
 	}
 	.property>.propContent>.right {
 		width: 360px;
@@ -75,11 +82,14 @@
   	 /*產品價格*/
   	.property>.propContent>.left>.price {
   		font-size: 2.5em;
+  		font-family: sans-serif;
+  		font-weight: 100;
   	}
   	/*資產名稱*/
   	.property>.propContent>.left>.name {
   		font-size: 1em;
   		margin-top: 5px;
+  		font-weight: 200;
   	}
   	/*地址*/
   	.property>.propContent>.left>.address {
@@ -284,6 +294,37 @@
 
 
   /*⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩ Right ⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩⇩*/
+  	.property>.propContent>.right>.details {
+  		width: 100%;
+  		margin-bottom: 35px;
+  	} 
+  	.property>.propContent>.right>.details>h1 {
+  		margin-bottom: 10px;
+	    font-weight: 300;
+	    padding: 10px 0px;
+  	}
+  	.property>.propContent>.right>.details>.detail {
+  		width: 100%;
+  		padding: 10px 15px;
+  		display: flex;
+  		justify-content: space-between;
+  	} 
+  	.property>.propContent>.right>.details>.detail>h3 {
+  		font-size: 14px;
+  		font-weight: 400;
+  	} 
+  	.property>.propContent>.right>.details>.detail>p {
+  		font-size: 14px;
+  		font-weight: 200;
+  		font-family: sans-serif;
+  	} 
+  	.property>.propContent>.right>.details>.detail:nth-child(2n+1) {
+  		background-color: #f6f6f8
+  	} 
+  	.property>.propContent>.right>.details>.detail:nth-child(2n) {
+  		background-color: #fbfbfb
+  	} 
+  	
 
   	.property>.propContent>.right>.profile {
   		width: 100%;
@@ -303,13 +344,19 @@
   		margin-right: 20px;
   	}
 
+  	.property>.propContent>.right>.profile>.description {
+  		    width: calc( 100% - 150px);
+  	}
+
   	.property>.propContent>.right>.profile>.description>.title {
   		font-size: 0.7em;
+  		font-family: sans-serif;
   	}
 
   	 .property>.propContent>.right>.profile>.description>.name {
   		font-size: 1.2em;
   		font-weight: 100;
+  		font-family: sans-serif;
   	}
 
  	/*立即聯繫*/
@@ -319,7 +366,7 @@
 		align-items: center;
 		justify-content: center;
 		flex-shrink: 0;
-		width:90%;
+		width: 100%;
 		min-width: 120px; 
 		height: 50px;
 		background-color: #00A99D;
@@ -365,12 +412,14 @@
 	.property>.propTitle>.button>.icon,.property>.propTitle>.sdRight>.button>.icon {
 		padding-right: 0px;
 	}
+
 	/*mainContent 主內容區域*/
  	 /*劃分內容*/
 
 	.property>.propContent>.left {
 		width: 100%;
 		padding-left: 0px;
+		padding-right: 0px;
 	}
 	.property>.propContent>.left>.price {
 		padding-left: 10px;
@@ -378,7 +427,7 @@
 	.property>.propContent>.right {
 		width: 100%;
 		margin-top: 30px;
-		padding: 0px;
+		padding: 0px 10px ;
 	}
 
 	.property>.propContent>.left>.propGraphicInfo>.tabs>.tab {
@@ -412,6 +461,7 @@
   	/*資產名稱*/
   	.property>.propContent>.left>.name {
   		padding: 0px 10px;
+  		font-weight: 200;
   	}
   	/*地址*/
   	.property>.propContent>.left>.address {
@@ -422,11 +472,11 @@
     	margin: 10px 0px;
 	}
   	.property>.propContent>.left>.checkAvailable {
-  		width: calc( 100% - 10px );
+  		width: calc( 100% - 20px );
   		margin: 0 auto 20px auto;
   	}
   	.property>.propContent>.right>.checkAvailable {
-  		width: calc( 100% - 10px );
+  		width: calc( 100% - 20px );
 
   	}
 

@@ -1,0 +1,23 @@
+/**/_xdc_._i31wb0 && _xdc_._i31wb0( {
+   "html_attributions" : [],
+   "result" : {
+      "geometry" : {
+         "location" : {
+            "lat" : 25.0783099,
+            "lng" : 121.5115628
+         },
+         "viewport" : {
+            "northeast" : {
+               "lat" : 25.0796607302915,
+               "lng" : 121.5129163802915
+            },
+            "southwest" : {
+               "lat" : 25.0769627697085,
+               "lng" : 121.5102184197085
+            }
+         }
+      }
+   },
+   "status" : "OK"
+}
+ )

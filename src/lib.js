@@ -11,7 +11,22 @@ lib.init.getFavicon = () => {
 	document.head.appendChild(link);
 }
 
+lib.init.loadLine = (src) => {
+  return new Promise((resolve, reject) => {
+    let script = document.createElement('script');
+    script.src = src;
+    script.addEventListener('load', function() {
+      resolve();
+    });
+    script.addEventListener('error', function(e) {
+      reject(e);
+    });
+    document.body.appendChild(script);
+  });
+}
+
 document.addEventListener('load', lib.init.getFavicon());
+// document.addEventListener('load', lib.init.loadLine("https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js"));
 
 lib.func.get = (selector) => {
 	return document.querySelector(selector);
@@ -53,7 +68,7 @@ lib.func.searchInsideArray = ( srcArray, target ) => {
 	return existed;
 }
 lib.func.getQueryStringAndSearch = ( target ) => {
-	console.log('lib getQueryString')
+	// console.log('lib getQueryString')
 	let queryString = window.location.search;
 	let targetQuery = target;
 	if (queryString.search(targetQuery) !== -1) {

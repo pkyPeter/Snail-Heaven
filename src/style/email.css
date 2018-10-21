@@ -91,6 +91,11 @@
 	width: 100%;
 }
 
+.email>.background>.form>#checkAvailability>input[type="date"]:before{
+    content: attr(placeholder);
+    color: rgb(139,139,139);
+}
+
 .email>.background>.form>#checkAvailability>.visitTime {
 	width: 100%;
 }

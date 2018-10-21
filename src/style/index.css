@@ -8,6 +8,7 @@
 	width: 100%;
 	height: 100%;
 	background-image: url("../imgs/background7_S.jpg");
+	/*background-image: linear-gradient(315deg, #9eabe4 0%, #77eed8 74%);*/
 	background-size: cover;
 	background-position: bottom;
 }
@@ -32,6 +33,7 @@
 	align-items: center;
 	border-radius: 4px;
 	box-shadow: 1px 1px 3px grey;
+	position: relative;
 }
 .index>.formContainer>.form>.formItem {
 	display: flex;
@@ -39,6 +41,20 @@
 	justify-content: center;
 	align-items: center;
 	margin-bottom: 20px;
+}
+.index>.formContainer>.form>.close {
+	background-image: url(../imgs/close.png);
+    background-size: cover;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: 14px;
+    right: 15px;
+    margin-bottom: 0px;
+}
+.index>.formContainer>.form>.close>a {
+	width:	100%;
+	height: 100%;
 }
 
 .index>.formContainer>.form>.formItem>.snail {
@@ -61,7 +77,7 @@
 
 .index>.formContainer>.form>input {
 	width: 80%;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 	padding: 13px 10px 13px 50px;
     font-size: 1em;
     color: black;
@@ -83,6 +99,7 @@
 	height: 100%;
 	overflow: auto;
 	margin-top: 30px;
+	margin-bottom: 15px;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -109,7 +126,7 @@
 	background-size: cover;
 	background-position: center 80%;
 	z-index:100;
-	filter: blur(4px) grayscale(35%) ;
+	filter: blur(2px) grayscale(0%) ;
 	cursor: pointer;
 }
 .index>.formContainer>.form>.districtContainer>.district:nth-child(5n-4)>.background {
@@ -133,20 +150,21 @@
 
 .index>.formContainer>.form>.districtContainer>.district>h2 {
 	z-index: 150;
-	margin-bottom: 3px;
-	cursor: pointer;
-	text-shadow: 2px 2px 4px #404040;
+    /*margin-bottom: 3px;*/
+    cursor: pointer;
+    text-shadow: 2px 2px 4px #404040;
     font-family: Microsoft Jhenghei;
-    font-weight: 400;
+    font-weight: 200;
     color: white;
+    font-size: 2em;
 }
 .index>.formContainer>.form>.districtContainer>.district>h4 {
 	z-index: 150;
 	cursor: pointer;
-	font-weight: 400;
 	text-shadow: 2px 2px 4px #404040;
     font-family: Microsoft Jhenghei;
     font-weight: 200;
+    font-size: 13px;
     color: white;
 }
 

@@ -77,3 +77,11 @@
   right: -180%;
   text-align: right;
 }
+
+
+@media (max-width: 900px) {
+.priceChart>.control>.right>.money {
+  right: 0%;
+  text-align: right;
+}
+}
