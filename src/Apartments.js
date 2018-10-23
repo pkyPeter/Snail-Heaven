@@ -161,21 +161,7 @@ class Apartments extends React.Component {
   }
   componentDidMount() {
     // console.log("componentDidMount");
-    if ( lib.func.getQueryStringAndSearch("dis") ) {
-      let dis = decodeURIComponent(window.location.search.split("=")[1]);
-      // let viewBox = [view.split(",")[0].split("=")[1],...[view.split(",")[1],view.split(",")[2],view.split(",")[3]]];
-      this.setState({currentDistrict: dis});
-    }
-    // if ( lib.func.getLocalStorageJSON("screenInfo") ) {
-    //   let filters = lib.func.getLocalStorageJSON("screenInfo").filters;
-    //   let zoom = lib.func.getLocalStorageJSON("screenInfo").zoom
-    //   let center = lib.func.getLocalStorageJSON("screenInfo").center
-    //   console.log(filters);
-    //   // googleMap.map.setCenter(center);
-    //   // googleMap.map.setZoom(zoom);
-    //   // this.setState({});
-    // }
-    //製作完整各 amenty 底下的所屬 id array    
+
   }
   componentDidUpdate() {
     // console.log("apartment componentDidUpdate");
@@ -189,9 +175,6 @@ class Apartments extends React.Component {
       let filters = lib.func.getLocalStorageJSON("screenInfo").filters;
       let zoom = lib.func.getLocalStorageJSON("screenInfo").zoom
       let center = lib.func.getLocalStorageJSON("screenInfo").center
-      console.log(filters);
-      console.log("zoom",zoom)
-      console.log("center",center)
       googleMap.map.setCenter(center);
       googleMap.map.setZoom(zoom);
       this.setState({filters: filters});
@@ -205,7 +188,7 @@ class Apartments extends React.Component {
           lib.func.get(".apartments>.loading").remove();
         }, 1000)
       } else {
-        if ( !lib.func.get(".apartments>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset") {
+        if ( !lib.func.get(".apartments>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset" ) {
           lib.func.get(".apartments>.loading").style.opacity = "0";
           setTimeout(()=>{      
           lib.func.get(".apartments>.loading").remove();
@@ -246,7 +229,7 @@ class Apartments extends React.Component {
           currentViewData={this.state.currentViewData}
           filteredData={this.state.filteredData}
           changeFilters={this.changeFilters}
-          filters={this.state.filters}
+          filters={ this.state.filters }
         />
       </div>
     );
@@ -454,17 +437,19 @@ class Apartments extends React.Component {
 	        dataForFilter = this.doFilter("room_type",filters.roomType, dataForFilter);
 	      }
 	      //District  neighbourhood_cleansed
-	      if ( filters.district.length ) {
+        if ( filters.district.length ) {
 	        // dataForFilter = this.doFilter("neighbourhood_cleansed",filters.district, dataForFilter);
-          let data = [];
-          for ( let i = 0 ; i < filters.district.length ; i ++ ) {
-            let filterOne = dataForFilter.filter((estate)=>{
-              return estate.district === filters.district[i];
-            })
-            data = [...data, ... filterOne];
-          }
-          dataForFilter = data;
+          // let data = [];
+          // for ( let i = 0 ; i < filters.district.length ; i ++ ) {
+          //   let filterOne = dataForFilter.filter((estate)=>{
+          //     return estate.district === filters.district[i];
+          //   })
+          //   data = [...data, ... filterOne];
+          // }
+          dataForFilter = this.doFilter("district", filters.district, dataForFilter);
+          // dataForFilter = data;
 	      }
+        console.log(dataForFilter);
 	      //photoRequired
 	      if ( filters.photoRequired != false ) {
 	        let dataAfterPhotoRequiredFilter = [];
@@ -523,10 +508,6 @@ class Apartments extends React.Component {
 	      }
 	      let hiddenMarker = [];
 	
-				for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
-					// console.log("該顯示顯示");
-					googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
-				}
         //10/22 拼上線 先硬加
         if ( this.state.filters.priceCeiling != 100000 || this.state.filters.priceFloor != 0 ) {
           let filters = this.state.filters;
@@ -544,11 +525,14 @@ class Apartments extends React.Component {
           //如果資料的價格介於priceCeilig以及priceFloor之間，就進行篩選
             for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
               if ( filters.priceFloor < priceArray[i] && priceArray[i] <= filters.priceCeiling ) {
-              } else {
-                googleMap.markerclusterer.removeMarker(googleMap.markers[dataForFilter[i].index]);
+                googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
               }
             }
-         } 
+         } else {
+            for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
+                googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
+            }
+         }
 
 
         // console.log("進不進去",this.state.filteredData.length !== dataForFilter.length)

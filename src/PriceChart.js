@@ -34,6 +34,17 @@ class PriceChart extends React.Component {
 		// console.log("componentDidMount");
 	}
 	componentDidUpdate() {
+		if ( (this.props.filters.priceCeiling !== this.state.priceCeiling || this.props.filters.priceFloor !== this.state.priceFloor) && this.state.priceCeiling === 100000) {
+			let width = lib.func.get(".control").offsetWidth;
+			let left = Math.round((this.props.filters.priceFloor/500)*((width-16)/200));
+			let right = lib.func.get(".control").offsetWidth-Math.round((this.props.filters.priceCeiling/500)*((width+16)/200));
+			let front = lib.func.get(".control>.front");
+			front.style.width = width - left - right + "px";
+	   		front.style.left = left + "px";
+			console.log(left)
+			console.log(right)
+			this.setState({priceFloor: this.props.filters.priceFloor,priceCeiling: this.props.filters.priceCeiling,left:left,right:right,leftMoney: this.props.filters.priceFloor, rightMoney: this.props.filters.priceCeiling});
+		}
 		// console.log("componentDidUpdate");
 	}
 	render() {
@@ -76,12 +87,12 @@ class PriceChart extends React.Component {
 					}
 				</div>
 				<div className="control">
-				    <div className="circle left" onMouseDown={this.startToMove}>
+				    <div className="circle left" style={{left: this.state.left}} onMouseDown={this.startToMove}>
 				    	<span className="money">{this.state.leftMoney}</span>
 				    </div>
 				    <div className="bottomLine front"></div>
 				    <div className="bottomLine grey"></div>
-				    <div  className="circle right" onMouseDown={this.startToMove}>
+				    <div  className="circle right" style={{right: this.state.right}} onMouseDown={this.startToMove}>
 				    	<span className="money">{this.state.rightMoney}</span>
 				    </div>
 				</div>

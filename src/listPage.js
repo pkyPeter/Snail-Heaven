@@ -25,9 +25,8 @@ class List extends React.Component {
 		this.state = {
 			resultAreaDisplayType: ["resultArea","results"],
 			toggleSimpleDetail: false,
-			currentSimpleDetail: false,
+			currentSimpleDetail: null,
 			hiddenList: lib.func.getLocalStorageJSON("hiddenList"),
-			selectedIndex: -1,
 			customArea: false,
 			showBusiness: false,
 			showRoad: false,
@@ -61,46 +60,28 @@ class List extends React.Component {
 			this.setState({leftRightWidth: leftRightWidth})
 		}
 	}
-	componentDidUpdate() {
-		// console.log(this.props.loveListStatus);
-		// console.log(this.props.selectedIndex)
+	componentDidUpdate(prevProps, prevState) {
 		//20181003：selectedIndex 預設值是－１；點擊後 marker 後，會儲存 marker 在 markers 中所在的位置，這個位置跟 completeList 的物件相對位置是一樣的
-		//20181018：props以及state會分別代表這次點擊的 marker 以及上次點擊的 marker，透過這樣的非同步關係，來更新 marker 的狀態
-		if ( this.props.selectedIndex !== this.state.selectedIndex ) {
+		if ( this.props.selectedIndex !== prevProps.selectedIndex ) {
 			if ( this.props.selectedIndex !== -1 ) {
-				for ( let i = 0 ; i < this.props.filteredData.length; i++ ) {
+				console.log("有試圖要顯示")
+				for ( let i = 0 ; i < this.props.completeList.length; i++ ) {
 					//找到點擊的 index 之後，就開啟細節
-					if ( this.props.filteredData[i].index === this.props.selectedIndex ) {
-						this.goSimpleDetail(this.props.filteredData[i].id, this.props.filteredData[i]);
+					if ( this.props.completeList[i].index === this.props.selectedIndex ) {
+						console.log(this.props.selectedIndex);
+						this.goSimpleDetail(this.props.completeList[i].id, this.props.completeList[i]);
 					}
 				}
 				//這邊主要判斷，如果客人直接點擊下一個按鈕，則會將前一次的 marker 還原
-				if ( this.state.selectedIndex !== -1 ) {
-					googleMap.markers[this.state.selectedIndex].setAnimation(null);
-					googleMap.markers[this.state.selectedIndex].setIcon(googleMap.produceMarkerStyle(false, 30));
+				if ( prevProps.selectedIndex !== -1 ) {
+					googleMap.markers[prevProps.selectedIndex].setAnimation(null);
+					googleMap.markers[prevProps.selectedIndex].setIcon(googleMap.produceMarkerStyle(false, 30));
 				} 
-				// this.state({currentSimpleDetail: this.props.completeList[this.props.selectedIndex]});
 			} 
 			else if ( this.props.selectedIndex === -1 && this.state.toggleSimpleDetail === true ) {
 				this.goSimpleDetail("back",{})
 			}
-			this.setState({selectedIndex: this.props.selectedIndex});
 		}
-		// if ( this.props.filteredData.length !== 0  ) {
-		// 	if (document.documentElement.clientWidth > 900 ) {
-		// 		lib.func.get(".apartments>section>.loading").style.opacity = "0";
-		// 		setTimeout(()=>{			
-		// 			lib.func.get(".apartments>section>.loading").style.zIndex = "0";
-		// 		}, 1000)
-		// 	} else {
-		// 		if ( !lib.func.get(".apartments>section>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset") {
-		// 			lib.func.get(".apartments>section>.loading").style.opacity = "0";
-		// 			setTimeout(()=>{			
-		// 				lib.func.get(".apartments>section>.loading").style.zIndex = "0";
-		// 			}, 1000)
-		// 		}
-		// 	}
-		// }
 	}
 	render () {
 		return (
@@ -183,7 +164,7 @@ class List extends React.Component {
 					hideList={this.hideList}
 					openEmailForm={this.props.openEmailForm}
 					removeSelectedIndex={this.props.removeSelectedIndex}
-					selectedIndex={this.state.selectedIndex}
+					selectedIndex={this.props.selectedIndex}
 					recordCurrentStatus={this.recordCurrentStatus}
 					/>
 				)}
@@ -196,22 +177,13 @@ class List extends React.Component {
 		e.stopPropagation();
     	e.nativeEvent.stopImmediatePropagation();
 	}
-	  changeToList(e) {
-	    //先移除RowBlocks的class，再把自己的放進去
-	    lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
-	    lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex"]);	
-	    lib.func.toggleClass("toggle",".resultArea>.results", ["resultsList"]);	
+	changeToList(e) {
 	    this.setState({resultAreaDisplayType: ["resultArea","results resultsList"]});
-	  }	
+	}	
 	changeToRowBlocks(e) {
-		lib.func.toggleClass("remove",".resultArea>.results", ["resultsList"]);
-		lib.func.toggleClass("toggle",".resultArea", ["resultAreaFlex"]);
-		lib.func.toggleClass("toggle",".resultArea>.results", ["resultsFlex"]);
 		this.setState({resultAreaDisplayType: ["resultArea resultAreaFlex","results resultsFlex"]});	
 	}	
 	changeToBlocks(e) {
-		lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
-		lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex", "resultsList"]);	
 		this.setState({resultAreaDisplayType: ["resultArea","results"]});
 	} 
 	changeAreaSize(e) {
@@ -219,12 +191,6 @@ class List extends React.Component {
 		let right = document.querySelector(".apartments>section>.right");
 		let resizer = document.querySelector(".apartments>section>.right>.areaSizer ");
 		let leftRightWidth = this.state.leftRightWidth;
-		if ( e.type === "drag" && e.clientX != 0 && window.innerWidth - e.clientX >= 600) {
-				// left.style.width = e.clientX;
-				// right.style.width = window.innerWidth - e.clientX;
-				e.preventDefault();
-				resizer.style.right = window.innerWidth - e.clientX;	
-		}
 		if ( e.type === "dragend") {
 			if (( window.innerWidth - e.clientX ) >= 600 ) {
 				left.style.width = e.clientX;
@@ -262,12 +228,10 @@ class List extends React.Component {
 				let currentDetail = detail[objectKey];
 				this.setState({currentSimpleDetail: currentDetail})
 				if ( this.props.selectedIndex === -1 ) {
-					this.setState({toggleSimpleDetail: false});		
+					this.setState({toggleSimpleDetail: false, goLoveList: false});		
 				} else {
-					this.setState({toggleSimpleDetail: true});
+					this.setState({toggleSimpleDetail: true, goLoveList: false});
 				}
-				
-				this.setState({goLoveList: false})
 			}, "id", id );
 		}
 		if (id === "back") {
@@ -276,7 +240,7 @@ class List extends React.Component {
 				right.style.display = "none";
 			}
 			console.log("back");
-			this.setState({currentSimpleDetail: false})
+			this.setState({currentSimpleDetail: null})
 			this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
 		}
 	}
@@ -317,7 +281,6 @@ class List extends React.Component {
 	}
 
 	openMapMarker(target) {
-		
 		console.log("openBusinessMarker")
 		if ( target === "business" ) {
 			if ( !this.state.showBusiness ) {

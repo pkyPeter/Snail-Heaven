@@ -136,7 +136,7 @@
     font-weight: 100;
     margin-left: 25%;
 }	
-/**/
+/* loading 頁面 */
 .apartments>.loading {
 	background-image: linear-gradient(to top, #37ecba 0%, #72afd3 100%);
     width: 100%;
@@ -176,6 +176,11 @@
     font-family: 'Noto Sans';
     font-weight: 400;
     font-size: 24px;
+}
+
+.apartments>.fadeOut {
+	opacity: 0;
+	z-index: 0;
 }
 /*.apartments>section>.loading {
 	background-image: linear-gradient(to top, #37ecba 0%, #72afd3 100%);
@@ -451,8 +456,27 @@
 			width: 100%;
 			margin-top: 20px;
 			cursor: pointer;
+			position: relative;
 		}
 
+		.apartments>section>.right>.resultArea>.results>.airbnbContainer {
+			position: absolute;   
+			font-size: 10px;
+			padding: 0px 6px; 
+			left: 10px;
+			top: 10px; 
+			border-radius: 5px; 
+			background-color: rgb(255, 90, 96); 
+			color: white;
+			display: flex;
+    		align-items: center;
+		}
+		.apartments>section>.right>.resultArea>.results>.airbnbContainer>.airbnb {
+			width: 12px;
+		    height: 12px;
+		    margin-right: 2px;
+		    margin-bottom: 1px;
+		} 
 
 		.apartments>section>.right>.resultArea>.results>.img {
 			width: 100%;
@@ -479,13 +503,12 @@
 
 		.apartments>section>.right>.resultArea>.results>.description>.absolute {
 			position: absolute;
-			top: -55px;
+			top: -58px;
 			left: 0px;
-			padding: 0px 0px 0px 4px;
+			padding: 0px 5px 0px 15px;
 		}
-
 		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.price {
-			font-size: 2em;
+			font-size: 2.3em;
 			align-self: flex-start;
 			color: white;
 			font-family: Microsoft JhengHe;
@@ -493,11 +516,6 @@
 			letter-spacing: 1.3px;
 			text-shadow: 1px 1px 10px black;
 		}
-
-		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture {
-			
-		}
-
 		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.gesture>.icon {
 			color: white;
 			height: 30px;
@@ -533,6 +551,20 @@
 		.apartments>section>.right>.resultArea>.resultsFlex {
 			width: 48%;
 			margin-top: 20px;
+		}
+		.apartments>section>.right>.resultArea>.resultsFlex>.description>.absolute {
+			top: -47px !important;
+		}
+		.apartments>section>.right>.resultArea>.resultsFlex>.description>.absolute {
+			padding: 0px 0px 0px 4px !important;
+		}
+		.apartments>section>.right>.resultArea>.resultsFlex>.description>.priceGesture>.price {
+			font-size: 2em !important;
+		}
+		.apartments>section>.right>.resultArea>.resultsFlex>.description>.priceGesture>.gesture>.icon {
+			height: 29px !important;
+			width: 29px !important;
+			margin-right: 8px !important;
 		}
 	/* 『條列式』排列方式，這邊只需要把resultList設定在results那層，就會套用以下這些效果拉*/
 		.apartments>section>.right>.resultArea>.resultsList {
@@ -685,7 +717,7 @@
 			padding: 0px 0px 0px 0px;
 		}
 		.apartments>section>.right>.resultArea>.results>.description>.priceGesture>.price {
-			font-size: 1.3em;
+			font-size: 1.2em;
 			color: black;
 			letter-spacing: 1.3px;
 			text-shadow: none;

@@ -466,6 +466,7 @@ googleMap.evt.drawCustomArea = ( deletion ) => {
                   if (googleMap.customArea) {
                     googleMap.customArea.setMap(null);
                     googleMap.customArea = null;
+                    googleMap.map.setZoom(googleMap.map.getZoom());
                     // googleMap.map.panTo({lat:25.0484402,lng:121.5278391});
                     // googleMap.map.setZoom(12); 
                   }
@@ -517,7 +518,6 @@ googleMap.initAutocomplete = (DomElement, sitePosition) => {
   if (map) {
     autocomplete.bindTo('bounds', googleMap.map);  
   }
-  
   autocomplete.setFields(['geometry']);
   autocomplete.setComponentRestrictions({'country': ['tw']});
 }

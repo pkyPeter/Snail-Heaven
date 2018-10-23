@@ -28,6 +28,13 @@ library.add(faHotTub,faSnowflake);
 
 
 class SimpleDetail extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      shareButtons: { buttonStyle: {}, isShown: false }
+    }
+    this.toggleShareButtons = this.toggleShareButtons.bind(this);
+  }
   componentDidMount() {
     let lat = parseFloat(this.props.currentSimpleDetail.lat); let lng = parseFloat(this.props.currentSimpleDetail.lng);
     let panorama = new google.maps.StreetViewPanorama(
@@ -61,25 +68,36 @@ class SimpleDetail extends React.Component {
                 (e)=>{
                   this.props.goSimpleDetail("back",{}); 
                   this.props.selectedIndex !== -1 &&
-              this.props.removeSelectedIndex(this.props.selectedIndex);}}
+                  this.props.removeSelectedIndex(this.props.selectedIndex);}}
             >             
               <FontAwesomeIcon className="icon" icon={["fas","long-arrow-alt-left"]}/>
               <div>回到搜尋結果</div>
             </div>
             <div className="sdRight">
-              <div className="button share" style={{marginRight: "5px", border: "none"}}>
-                <img src={line_share} style={{width: "28px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`); }}>
-                </img>
-                <img style={{width: "28px"}}
-                  onClick={()=>{FB.ui({
-                      method: "share",
-                      mobile_iframe: true,
-                      href: `https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`,
-                  }, function(response){});}}
-                  src={facebook}
-                >
-                </img>
-            
+              <div className="button share" style={this.state.shareButtons.buttonStyle} onMouseEnter={ this.toggleShareButtons } onMouseLeave={ this.toggleShareButtons }>
+                {
+                  this.state.shareButtons.isShown 
+                  ? 
+                  (  
+                    <div>
+                      <img src={line_share} style={{width: "28px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`); }}>
+                      </img>
+                      <img style={{width: "28px"}}
+                        onClick={()=>{FB.ui({
+                            method: "share",
+                            mobile_iframe: true,
+                            href: `https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`,
+                        }, function(response){});}}
+                        src={facebook}
+                      >
+                      </img>
+                    </div>
+                  )
+                  :(
+                    <FontAwesomeIcon className="icon" icon={["fas","share-alt"]} />
+                  )
+                }
+                { !this.state.shareButtons.isShown && <div>分享</div>}
               </div>            
               { 
                 this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true 
@@ -207,6 +225,15 @@ class SimpleDetail extends React.Component {
 
   }
 
+  toggleShareButtons() {
+    if (this.state.shareButtons.isShown) {
+      this.setState({shareButtons:{ buttonStyle: {}, isShown: false }})
+    } else {
+      this.setState({shareButtons:{ buttonStyle: {marginRight:"5px", border:"none"}, isShown: true }})
+    }
+  }
+
+    
 };
 
 function stopPropagation(e) {
@@ -263,25 +290,6 @@ function changePhoto(e, target) {
         dotArray[order+1].classList.toggle("focus");
       }
     }
-    // for (let i = 0 ; i < photoArray.length; i++) {
-    // 	let left = parseInt( lib.func.getStyle(photoArray[i],"left") );
-    // 	if ( target === "leftSelector" ) {
-    // 		if ( left === 0 && i > 0 ) {
-    // 			photoArray[i].style.left = "100%";
-    // 			photoArray[i-1].style.left = "0%";
-    // 			dotArray[i].classList.toggle("focus");
-    // 			dotArray[i-1].classList.toggle("focus");
-    // 		}
-    // 	}
-    // 	if ( target === "rightSelector" ) {
-    // 		if ( left === 0 && i < photoArray.length-1 ) {
-    // 			photoArray[i].style.left = "-100%";
-    // 			photoArray[i+1].style.left = "0%";
-    // 			dotArray[i].classList.toggle("focus");
-    // 			dotArray[i+1].classList.toggle("focus");
-    // 		}
-    // 	}
-    // }
   }
 }
 

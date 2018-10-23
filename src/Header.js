@@ -37,10 +37,7 @@ class Header extends React.Component {
 					<div className="mobileClose" onClick={this.toggleRight}>
 						<FontAwesomeIcon className="icon" icon={['fas','times']}/>
 					</div>
-					<div className="searchFav" style={{display: "none"}}>
-						<FontAwesomeIcon className="icon" icon={["far","bookmark"]}/>
-						<p>儲存搜尋條件</p>
-					</div>
+
 					<div className="searchFav" onClick={this.props.goLoveListPage}>
 						{ this.props.goLoveList === true 
 						    ?<FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }}/>
@@ -48,11 +45,7 @@ class Header extends React.Component {
 						 }
 						<p>我的最愛</p>
 					</div>
-					<div className="postHouse" style={{display: "none"}}>
-						<FontAwesomeIcon className="icon" icon={['far','building']}/>
-						<p>提供租屋</p>
-						<div className="signButton">登入</div>
-					</div>
+
 				</div>
 			</header>
 		)
@@ -60,13 +53,14 @@ class Header extends React.Component {
 	toggleRight(e) {
 		let right = lib.func.get("header>.right");
 		let searchFav = lib.func.getAll("header>.right>.searchFav"); 
-		let postHouse = lib.func.get("header>.right>.postHouse");
+		// let postHouse = lib.func.get("header>.right>.postHouse");
 		console.log(right);
 		if (right.style.display === "flex") {
 			for ( let i = 0 ; i < searchFav.length ; i ++ ) {
 				searchFav[i].style.display = "none";
+				searchFav[i].style.color = "white";
 			}
-			postHouse.style.display = "none";
+			// postHouse.style.display = "none";
 			right.style.width = "0%";
 			setTimeout(()=>{right.style.display = "none";}, 300)
 			

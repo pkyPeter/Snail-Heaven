@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import lib from "./lib.js";
 import PriceChart from "./PriceChart.js";
 import googleMap from "./GoogleMap.js";
+import airbnb from "./imgs/airbnb.png";
 //FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
 //FontAwesome主程式
@@ -97,7 +98,7 @@ class SearchResult extends React.Component {
       let filters = this.props.filters;
       // console.log(filters.priceCeiling)
       // console.log(filters.priceFloor)
-      
+
       if ( filters.priceCeiling != 100000 || filters.priceFloor != 0 ) {
         let priceArray = [];
         let dataAfterPriceFilter =[];
@@ -111,19 +112,11 @@ class SearchResult extends React.Component {
           }
         });
         //如果資料的價格介於priceCeilig以及priceFloor之間，就進行篩選
-        // console.log(this.props.filters.priceFloor != this.state.filters.priceFloor,this.props.filters.priceCeiling != this.state.filters.priceCeiling,this.props.filteredData.length != this.state.filteredDataLength)
-        // console.log(dataForFilter)
-
           googleMap.markerclusterer.clearMarkers();
           for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
             if ( filters.priceFloor < priceArray[i] && priceArray[i] <= filters.priceCeiling ) {
               dataAfterPriceFilter.push(dataForFilter[i]);
-              // googleMap.markers[dataForFilter[i].index].setVisible(true);
-              googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
-            } else {
-              // googleMap.markers[dataForFilter[i].index].setVisible(false);
-              // googleMap.markerclusterer.removeMarker(googleMap.markers[dataForFilter[i].index]);
-            }
+            } 
           }
           if (this.props.filteredData.length !== dataAfterPriceFilter.length ) {    
             console.log(dataAfterPriceFilter)
@@ -149,7 +142,7 @@ class SearchResult extends React.Component {
       		case "default":
 		    	break;
 		    	case "lowest":
-		    	options[2].selected = "selected";
+		    	options[1].selected = "selected";
 		    	dataAfterSort.sort((a,b)=>{
 		    		let priceA;
 		    		let priceB;
@@ -171,7 +164,7 @@ class SearchResult extends React.Component {
 		    	})
 		    	break;
 		    	case "highest":
-		    	options[3].selected = "selected";
+		    	options[2].selected = "selected";
 		    	dataAfterSort.sort((a,b)=>{
 		    		let priceA;
 		    		let priceB;
@@ -222,7 +215,7 @@ class SearchResult extends React.Component {
     // console.log(this.props.filteredData);
     return (
       <div className="right" style={{width: this.props.leftRightWidth.rightWidth}} onScroll={(e)=>{this.scrollToBottom(e);}}>
-        <div className="areaSizer" draggable="true" onDrag={this.props.changeAreaSize} onDragEnd={this.props.changeAreaSize} style={{right: this.props.leftRightWidth.resizerRight}}></div>
+        <div className="areaSizer" draggable="true"  onDragEnd={this.props.changeAreaSize} style={{right: this.props.leftRightWidth.resizerRight}}></div>
         <div className="title">
           <div>台北市</div>
           <div> > </div>
@@ -235,6 +228,7 @@ class SearchResult extends React.Component {
               currentViewData={this.props.currentViewData} 
               changeFilters={this.props.changeFilters} 
               filteredData={this.props.filteredData}
+              filters={this.props.filters}
             />
           </div>
           <div className="filterType">
@@ -345,6 +339,10 @@ class SearchResult extends React.Component {
                   } } onMouseEnter={(e)=>{
                     this.getMarkerBounce(e, realEstate.index);
                   }} onMouseLeave={(e)=>{this.stopMarkerBounce(e, realEstate.index);}}>
+                    <div className="airbnbContainer">
+                    <img className="airbnb" src={airbnb}></img>
+                    Airbnb
+                    </div>
                     <div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
                     <div className="description">
                       <div className="priceGesture absolute">
