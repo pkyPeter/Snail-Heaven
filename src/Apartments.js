@@ -56,7 +56,6 @@ class Apartments extends React.Component {
       this.setState({ amenitiesList: amenitiesList})
     })
 
-    firebaseApp.fBaseDB.getListing(dataFromFB => {
 
 
 
@@ -64,8 +63,9 @@ class Apartments extends React.Component {
   }
   componentDidMount() {
     // console.log("componentDidMount");
+    firebaseApp.fBaseDB.getDataNew("latLng").then( data => { console.log(data) })
     firebaseApp.fBaseDB.getDataNew("listings")
-    .then(dataFromFB=>{
+    .then(dataFromFB => {
       for ( let i = 0 ; i<dataFromFB.length ; i++ ) { dataFromFB[i].index = i; }
       //製作給marker使用的經緯度資料檔
       let location = firebaseApp.sortLatLng(dataFromFB);
@@ -73,19 +73,16 @@ class Apartments extends React.Component {
       this.setState({ completeList: dataFromFB, loveListStatus: this.createLoveListStatus(dataFromFB) ,latLng: location});
       //等google map相關程序完成，再進行後續動作
       googleMap.load
-        .then(()=>{
+      .then(()=>{
           let queryLocation = [ false , false ];
           let zoom;
-          if ( lib.func.getQueryStringAndSearch("location") ) {
+          if ( lib.func.getQueryStringAndSearch("location") || lib.func.getQueryStringAndSearch("search") ) {
             let latLng= window.location.search.split("&")[0].split("=")[1].split(",");
-            queryLocation[0] = parseFloat(latLng[0]);
-            queryLocation[1] = parseFloat(latLng[1]);
+            queryLocation = [ parseFloat(latLng[0]), parseFloat(latLng[1]) ]
             zoom = 15;
-          } else if (lib.func.getQueryStringAndSearch("search")) {
-            let latLng= window.location.search.split("&")[0].split("=")[1].split(",");
-            queryLocation[0] = parseFloat(latLng[0]);
-            queryLocation[1] = parseFloat(latLng[1]);
-            zoom = 17;
+            if ( lib.func.getQueryStringAndSearch("search") ) {
+              zoom = 17;
+            }
           } else {
             zoom = 12;
           }
@@ -110,7 +107,6 @@ class Apartments extends React.Component {
                 });
                 google.maps.event.addListener(marker, "visible_changed", function(){
                   if ( marker.getVisible() ) {
-                    // console.log(i, marker.getVisible())
                     googleMap.markerclusterer.addMarker(marker, false);
                   } else {
                     googleMap.markerclusterer.removeMarker(marker, false);
@@ -118,7 +114,7 @@ class Apartments extends React.Component {
                 });
               });
               //如果點擊地圖的其他地方，則將原本focus的點釋放
-              google.maps.event.addListener( googleMap.map,"click", ()=>{
+              google.maps.event.addListener( googleMap.map, "click", ()=>{
                 console.log("click");
                 let Index = this.state.selectedIndex;
                 if ( Index != -1 ) {
@@ -129,7 +125,6 @@ class Apartments extends React.Component {
 
               //隨時偵測地圖的動態
               google.maps.event.addListener( googleMap.map, "idle", ()=>{
-                // console.log("bounds_changed");
                 googleMap.markerclusterer.clearMarkers();
                 console.log("idle");
                 let completeList = this.state.completeList;
@@ -146,14 +141,11 @@ class Apartments extends React.Component {
                   }
                   if ( inside ) {
                     currentViewData.push(completeList[i]);
-                    // googleMap.markerclusterer.addMarker(googleMap.markers[i], false);
                     currentViewMarkers.push(googleMap.markers[i]);
                   }
                 }
-                // googleMap.markerclusterer.addMarkers(currentViewMarkers, false);
                 googleMap.enableCluster(googleMap.map, currentViewMarkers);
 
-                // this.setState({currentViewData: currentViewData });
                 if ( this.state.goLoveList ) {
                   this.showLoveListOnly();
                   this.setState({filteredData: this.state.loveListDetail});
@@ -170,7 +162,7 @@ class Apartments extends React.Component {
     })
 
   }
-  componentDidUpdate() {
+  componentDidUpdate(prevState) {
     // console.log("apartment componentDidUpdate");
     if ( this.state.loveListStatus && lib.func.getQueryStringAndSearch("loveList") === true ) {
       this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
@@ -178,10 +170,10 @@ class Apartments extends React.Component {
       window.history.replaceState({}, document.title, "/apartments");
     }
     //偵測如果都 load 完，並且 currentViewData 內已經沒有東西了，就可以執行這邊的程式碼
-    if ( lib.func.getLocalStorageJSON("screenInfo") && this.state.amenitiesList && this.state.currentViewData != prevState.currentViewData ) {
+    if ( lib.func.getLocalStorageJSON("screenInfo") && this.state.amenitiesList && this.state.currentViewData.length ) {
       let filters = lib.func.getLocalStorageJSON("screenInfo").filters;
-      let zoom = lib.func.getLocalStorageJSON("screenInfo").zoom
-      let center = lib.func.getLocalStorageJSON("screenInfo").center
+      let zoom = lib.func.getLocalStorageJSON("screenInfo").zoom;
+      let center = lib.func.getLocalStorageJSON("screenInfo").center;
       googleMap.map.setCenter(center);
       googleMap.map.setZoom(zoom);
       this.setState({filters: filters});
@@ -482,7 +474,6 @@ class Apartments extends React.Component {
 	      let filters = this.state.filters;
 	      // console.log(filters);
 	      let dataForFilter = this.state.currentViewData;
-                console.log(dataForFilter);
 	      //roomAmount
 	      if ( filters.roomAmount.length  ) {
 	        dataForFilter = this.doFilter("roomAmount",filters.roomAmount, dataForFilter);

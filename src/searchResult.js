@@ -267,10 +267,13 @@ class SearchResult extends React.Component {
               switch(realEstate.room_type) {
                 case "EHA":
                 roomType = "整層住家";
+                break;
                 case "PR":
                 roomType = "獨立套房";
+                break;
                 case "SR":
                 roomType = "分租套房";
+                break;
               }
               if ( this.props.hiddenList != null ) {
                 for (let i = 0 ; i< this.props.hiddenList.length; i++) {

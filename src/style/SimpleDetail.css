@@ -19,7 +19,8 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	border: 1px solid #BBBBBB;
+	border: 1px solid #00A99D;
+	color: #002A27;
 	border-radius: 3px;
 	padding: 5px 10px;
 	margin-right: 5px;
@@ -27,7 +28,8 @@
 }
 
 .right>.sdTitle>.button:hover, .right>.sdTitle>.sdRight>.button:hover {
-	background-color: #626567;
+	/*background-color: #626567;*/
+	background-color: #60C9C2;
 	border: 1px solid #626567;
 	color:white;
 	font-weight: 100;

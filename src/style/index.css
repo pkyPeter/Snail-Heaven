@@ -144,7 +144,7 @@
 .index>.formContainer>.form>.districtContainer>.district:nth-child(5n)>.background{
 	background-image: url(../imgs/city8_R.jpg);
 }
-.index>.formContainer>.form>.districtContainer>.district>.background:hover {
+.index>.formContainer>.form>.districtContainer>.district:hover>.background {
 	filter: blur(0px);
 }
 
@@ -157,6 +157,7 @@
     font-weight: 200;
     color: white;
     font-size: 2em;
+
 }
 .index>.formContainer>.form>.districtContainer>.district>h4 {
 	z-index: 150;
@@ -166,6 +167,7 @@
     font-weight: 200;
     font-size: 13px;
     color: white;
+
 }
 
 @media (min-width: 280px) and (max-width: 800px) {

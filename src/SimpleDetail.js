@@ -78,9 +78,9 @@ class SimpleDetail extends React.Component {
                   ? 
                   (  
                     <div>
-                      <img src={line_share} style={{width: "28px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`); }}>
+                      <img src={line_share} style={{width: "24px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`); }}>
                       </img>
-                      <img style={{width: "28px"}}
+                      <img style={{width: "24px"}}
                         onClick={()=>{FB.ui({
                             method: "share",
                             mobile_iframe: true,

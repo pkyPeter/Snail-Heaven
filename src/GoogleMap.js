@@ -63,9 +63,9 @@ googleMap.init.initMapNew = ( zoom, lat, lng, targetID ) => {
 //創造地圖的promise
 googleMap.init.initMapPromise = ( zoom, lat, lng, targetID) => { 
   return new Promise((resolve,reject)=>{
-    let map = googleMap.init.initMapNew( zoom, lat, lng, targetID );
-    if ( map.zoom != undefined ) {
-      resolve(map);
+    googleMap.map = googleMap.init.initMapNew( zoom, lat, lng, targetID );
+    if ( googleMap.map != null ) {
+      resolve(googleMap.map);
     } else {
       reject("error");
     }
@@ -509,8 +509,11 @@ googleMap.initAutocomplete = (DomElement, sitePosition) => {
   } else if (sitePosition === "apartments") {
     googleMap.autocomplete.apartments = new google.maps.places.Autocomplete(input);
     autocomplete = googleMap.autocomplete.apartments;
+  } else if (sitePosition === "property") {
+    googleMap.autocomplete.property = new google.maps.places.Autocomplete(input);
+    autocomplete = googleMap.autocomplete.property; 
   }
-  if (map) {
+  if (map && sitePosition !== "property") {
     autocomplete.bindTo('bounds', googleMap.map);  
   }
   autocomplete.setFields(['geometry']);
@@ -527,7 +530,7 @@ googleMap.addAutocompleteListener = (autocomplete, callback) => {
       window.alert("No details available for input: '" + place.name + "'");
       return;
     }
-    if (googleMap.map) {
+    if (googleMap.map && window.location.pathname !== "/property" ) {
       // If the place has a geometry, then present it on a map.
       if (place.geometry.viewport) {
         map.fitBounds(place.geometry.viewport);

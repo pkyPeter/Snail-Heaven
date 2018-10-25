@@ -6,13 +6,13 @@ import "./style/common.css";
 import "./style/header.css";
 import "./style/Property.css";
 import "./style/loading.css";
-import data from "./result_export.json";
 import Email from "./Email.js";
 import { firebaseApp } from "./firebaseApp.js";
 import racing from "./imgs/racing.svg";
 import snail_face from "./imgs/snail_face.png";
 import line_share from "./imgs/line_share.png";
 import facebook from "./imgs/facebook.png";
+import image from "./imgs/image.png"
 //FontAwesome主程式
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -33,7 +33,6 @@ class Property extends React.Component {
 	    	toggleSimpleDetail: false,
 	    	// loveListStatus: this.createLoveListStatus(data),
 	    	loveListDetail: lib.func.getLocalStorageJSON("loveList"),
-	    	completeList: data,
 	    	currentList: {},
 	    	currentAddress: null,
         toggleEmail: {open: false, currentDetail: null},
@@ -41,6 +40,8 @@ class Property extends React.Component {
 	    this.goIndex = this.goIndex.bind(this);
       this.switchTab = this.switchTab.bind(this);
       this.openEmailForm = this.openEmailForm.bind(this);
+      this.stopPropagation = this.stopPropagation.bind(this);
+      this.changePhoto = this.changePhoto.bind(this);
   }
   componentDidMount() { 
     this.getQueryStringID((outputArray)=>{
@@ -49,7 +50,13 @@ class Property extends React.Component {
         console.log(data)
         let objectKey = parseInt(Object.keys(data)[0]);
         let currentList = data[objectKey];
-        console.log(currentList);
+        if (currentList.monthly_price != "") {
+          let monthly_price = parseInt(currentList.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+          currentList.monthly_price = monthly_price;
+        } else {
+          let daily_price_to_month = parseInt(currentList.price.split(".")[0].split("$")[1].replace(",",""))*30;
+          currentList.monthly_price = daily_price_to_month;
+        }
         this.setState({currentList: currentList});
         let zoom = 18;
         let lat = parseFloat(currentList.lat);
@@ -57,6 +64,14 @@ class Property extends React.Component {
         console.log(lat,lng)
         googleMap.init.initMapPromise( zoom, lat, lng ,"googleMap")
           .then((map)=>{
+            let initAutocomplete = googleMap.initAutocomplete(lib.func.get("header>.left>input"), "property");
+            let autocompleteListener = googleMap.addAutocompleteListener(googleMap.autocomplete.property, (place)=>{
+              this.props.history.push({
+                pathname:"/apartments",
+                search: `?search=${place.geometry.location.lat()},${place.geometry.location.lng()}`,
+                state: {lat: place.geometry.location.lat(), lng: place.geometry.location.lng()}
+              }); 
+            });
             googleMap.style[5].stylers[0].visibility = "simplified";
             googleMap.style[9].stylers[0].visibility = "simplified";
             googleMap.map.setOptions({styles: googleMap.style});  
@@ -80,26 +95,25 @@ class Property extends React.Component {
         // });
       });
     });
-    this.getQueryStringID((outputArray)=>{
-      console.log(outputArray);
-      let targetID = outputArray[0];
-      let completeList = this.state.completeList;
-      for (let i = 0; i< completeList.length; i++) {
-        if (completeList[i].id === targetID) {
-          this.setState({currentList: completeList[i]});
-          console.log(completeList[i]);
-        }
-      }
-    });
+
+
+    // this.getQueryStringID((outputArray)=>{
+    //   console.log(outputArray);
+    //   let targetID = outputArray[0];
+    //   let completeList = this.state.completeList;
+    //   for (let i = 0; i< completeList.length; i++) {
+    //     if (completeList[i].id === targetID) {
+    //       this.setState({currentList: completeList[i]});
+    //       console.log(completeList[i]);
+    //     }
+    //   }
+    // });
 
   }
   render() {
     console.log(this.state.currentList);
     if (Object.keys(this.state.currentList).length ) {
-
-      let monthly_price = this.state.currentList.monthly_price.split(".")[0];
-      let daily_price = parseInt(this.state.currentList.price.split(".")[0].split("$")[1].replace(",",""))*30;
-      let daily_price_pureN = daily_price.toLocaleString("en");
+      let monthly_price = this.state.currentList.monthly_price.toLocaleString("en");
       let amenities = this.sortOutAmenities(this.state.currentList.amenities,[/Internet/ig, /Hot water/ig, /A\/C/ig, /Refrigerator/ig,/Laptop friendly workspace/ig,  /washer/ig, /Pets allowed/ig]);
       let otherAmenities = this.sortOutAmenities(this.state.currentList.amenities,[/Kitchen/ig,/Paid parking off premises/ig, /Free street parking/ig, /Elevator/ig, /Gym/ig]);
       let TV = this.sortOutAmenities(this.state.currentList.amenities, [/TV/ig]).length === 2 ? ["TV", "Cable TV"] : ["TV"];//因為電視無法拆
@@ -150,7 +164,7 @@ class Property extends React.Component {
             </div>
             <div className="propContent">
               <div className="left">
-                <div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
+                <div className="price">{"$" + monthly_price }</div>
                 <div className="name">{this.state.currentList.name}</div>
                 <div className="address">{this.state.currentAddress}</div>
                 <div className="checkAvailable" onClick={()=>{this.openEmailForm(this.state.currentList)}}>立即詢問</div>
@@ -164,24 +178,25 @@ class Property extends React.Component {
                     <div className="photoGallery">
                       <div className="gallery">
                         <div className="photos">
-                          <div className="photo" style={{backgroundImage: `url(${this.state.currentList.picture_url})`}}></div>
+                          <div className="photo" style={{backgroundImage: `url(${this.state.currentList.picture_url})` ,backgroundSize: "cover"}}></div>
+                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
+                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
+                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
+                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
                         </div>
-                        <div className="leftSelector">
-                          <FontAwesomeIcon className="icon" icon={["fas","caret-left"]}/>
+                        <div className="leftSelector" onClick={(e)=>{this.changePhoto(e, "leftSelector");}}>
+                          <FontAwesomeIcon className="icon" icon={["fas","caret-left"]} onClick={(e)=>{this.changePhoto(e, "leftSelector"); this.stopPropagation(e);}}/>
                         </div>
-                        <div className="rightSelector">
-                          <FontAwesomeIcon className="icon" icon={["fas","caret-right"]}/>
+                        <div className="rightSelector" onClick={(e)=>{this.changePhoto(e , "rightSelector");}}>
+                          <FontAwesomeIcon className="icon" icon={["fas","caret-right"]} onClick={(e)=>{this.changePhoto(e , "rightSelector"); this.stopPropagation(e);}}/>
                         </div>
-                      </div>
+                        </div>
                       <div className="photoSelector">
-                        <div className="selector focus"></div>
-                        <div className="selector"></div>
-                        <div className="selector"></div>
-                        <div className="selector"></div>
-                        <div className="selector"></div>
-                        <div className="selector"></div>
-                        <div className="selector"></div>
-                        <div className="selector"></div>
+                        <div className="selector focus" data-order="0" style={{backgroundImage: `url(${this.state.currentList.picture_url})`, backgroundSize: "100%"}} onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
+                        <div className="selector" data-order="1" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
+                        <div className="selector" data-order="2" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
+                        <div className="selector" data-order="3" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
+                        <div className="selector" data-order="4" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
                       </div>
                     </div>
                     <div className="map" id="googleMap"></div>
@@ -221,11 +236,11 @@ class Property extends React.Component {
                   <h1>詳細資訊</h1>
                   <div className="detail">
                     <h3>月租金</h3>
-                    <p>{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</p>
+                    <p>{ "$" + monthly_price }</p>
                   </div>
                   <div className="detail">
                     <h3>押金</h3>
-                    <p>{this.state.currentList.security_deposit}</p>
+                    <p>{this.state.currentList.security_deposit ? this.state.currentList.security_deposit : "-"}</p>
                   </div>
                   <div className="detail">
                     <h3>房屋種類</h3>
@@ -252,7 +267,6 @@ class Property extends React.Component {
                   </div>
                 </div>
                 <div className="checkAvailable" onClick={()=>{this.openEmailForm(this.state.currentList)}}>立即詢問</div>
-                <div className="flag">檢舉這個物件</div>
               </div>
             </div>
             <div className="footer">
@@ -337,7 +351,6 @@ class Property extends React.Component {
     }
     
   }
-
   createLoveListStatus(ObjectArray) {
     let loveListStatus = [];
 
@@ -420,6 +433,49 @@ class Property extends React.Component {
       map.style.zIndex = 1;
       streetView.style.zIndex = 2;
     }		
+  }
+  stopPropagation(e) {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+  }
+  changePhoto(e, target) {
+    let photoArray = lib.func.getAll(".photos>.photo");
+    let dotArray = lib.func.getAll(".photoSelector>.selector");
+    let dotFocus = lib.func.get(".photoSelector>.focus");
+    console.log(dotFocus);
+    console.log(dotFocus.dataset.order);
+    // 這邊做的是
+    if ( target === "dot" ) {
+      let dotFocusOrder = parseInt(dotFocus.dataset.order);
+      let eTargetOrder = parseInt(e.target.dataset.order);
+      for ( let j = eTargetOrder ; j< dotArray.length; j++) {
+        photoArray[j].style.left = "100%";
+      }
+      for ( let j = eTargetOrder ; j> -1; j--) {
+        photoArray[j].style.left = "-100%";
+      }
+      photoArray[eTargetOrder].style.left = "0";
+      e.target.classList.toggle("focus");
+      dotFocus.classList.toggle("focus");
+    } else {
+      let order = parseInt(dotFocus.dataset.order);
+      if (target === "leftSelector") {
+        if ( order > 0 ) {
+          photoArray[order].style.left = "100%";
+          photoArray[order-1].style.left = "0%";
+          dotArray[order].classList.toggle("focus");
+          dotArray[order-1].classList.toggle("focus");
+        }
+      }
+      if (target === "rightSelector") {
+        if ( order < photoArray.length-1 ) {
+          photoArray[order].style.left = "-100%";
+          photoArray[order+1].style.left = "0%";
+          dotArray[order].classList.toggle("focus");
+          dotArray[order+1].classList.toggle("focus");
+        }
+      }
+    }
   }
 }
 
