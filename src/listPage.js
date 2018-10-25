@@ -38,6 +38,7 @@ class List extends React.Component {
 		this.openMapMarker = this.openMapMarker.bind(this);
 		this.changeAreaSize = this.changeAreaSize.bind(this);
 		this.goSimpleDetail = this.goSimpleDetail.bind(this);
+		this.switchDisplayMode = this.switchDisplayMode.bind(this);
 		this.changeToList = this.changeToList.bind(this);
     	this.changeToRowBlocks = this.changeToRowBlocks.bind(this);
     	this.changeToBlocks = this.changeToBlocks.bind(this);
@@ -82,6 +83,9 @@ class List extends React.Component {
 				this.goSimpleDetail("back",{})
 			}
 		}
+		if ( prevProps.goLoveList === false && this.props.goLoveList && this.state.toggleSimpleDetail ) {
+				this.goSimpleDetail("back",{})
+		}
 	}
 	render () {
 		return (
@@ -123,7 +127,7 @@ class List extends React.Component {
 					putIntoLoveList={this.props.putIntoLoveList}
 					openEmailForm={this.props.openEmailForm}
 					hideList={this.hideList}
-					addSelectedIndex={this.props.addSelectedIndex}
+					changeSelecteIndex={this.props.changeSelecteIndex}
 					removeSelectedIndex={this.props.removeSelectedIndex}
 					currentViewData={this.props.currentViewData}
 					filteredData={this.props.filteredData}
@@ -132,16 +136,15 @@ class List extends React.Component {
 					readyForSort = {this.state.readyForSort}
 					sort = {this.state.sort}
 					getSelect={this.getSelect}
-					changeToList = {this.changeToList}
-					changeToRowBlocks = {this.changeToRowBlocks}
-					changeToBlocks = {this.changeToBlocks}
+					switchDisplayMode = {this.switchDisplayMode}
 					/>
 				)} 
 				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (
 					<LoveList 	leftRightWidth = {this.state.leftRightWidth}
-					resultAreaDisplayType={this.state.resultAreaDisplayType} 
-					goLoveListPage={this.props.goLoveListPage} 
-					addSelectedIndex={this.props.addSelectedIndex}
+					resultAreaDisplayType={this.state.resultAreaDisplayType}
+					switchDisplayMode={this.switchDisplayMode} 
+					goLoveListPage={this.props.goLoveListPage}
+					changeSelecteIndex={this.props.changeSelecteIndex}
 					goSimpleDetail={this.goSimpleDetail} 
 					stopPropagation={this.stopPropagation}
 					loveListDetail={this.props.loveListDetail}
@@ -163,7 +166,7 @@ class List extends React.Component {
 					removeFromLoveList={this.props.removeFromLoveList}
 					hideList={this.hideList}
 					openEmailForm={this.props.openEmailForm}
-					removeSelectedIndex={this.props.removeSelectedIndex}
+					changeSelecteIndex={this.props.changeSelecteIndex}
 					selectedIndex={this.props.selectedIndex}
 					recordCurrentStatus={this.recordCurrentStatus}
 					/>
@@ -177,13 +180,19 @@ class List extends React.Component {
 		e.stopPropagation();
     	e.nativeEvent.stopImmediatePropagation();
 	}
-	changeToList(e) {
+	switchDisplayMode ( displayMode ) {
+		console.log(displayMode)
+		if ( displayMode === "list" ) this.changeToList();
+		else if ( displayMode === "rowBlocks" ) this.changeToRowBlocks();
+		else if ( displayMode === "blocks" ) this.changeToBlocks();
+	}
+	changeToList() {
 	    this.setState({resultAreaDisplayType: ["resultArea","results resultsList"]});
 	}	
-	changeToRowBlocks(e) {
+	changeToRowBlocks() {
 		this.setState({resultAreaDisplayType: ["resultArea resultAreaFlex","results resultsFlex"]});	
 	}	
-	changeToBlocks(e) {
+	changeToBlocks() {
 		this.setState({resultAreaDisplayType: ["resultArea","results"]});
 	} 
 	changeAreaSize(e) {
@@ -220,12 +229,19 @@ class List extends React.Component {
 				let latLng = new google.maps.LatLng(parseFloat(realEstate.lat),parseFloat(realEstate.lng));
 				if ( !googleMap.map.getBounds().contains(latLng) ) {
 					googleMap.map.setCenter(latLng);
-					googleMap.map.setZoom(googleMap.map.getZoom());	
+					googleMap.map.setZoom(20);	
 				}
 			}
 			firebaseApp.fBaseDB.getData("details",(detail)=>{
 				let objectKey = parseInt(Object.keys(detail)[0]);
 				let currentDetail = detail[objectKey];
+				if (currentDetail.monthly_price != "") {
+					let monthly_price = parseInt(currentDetail.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
+					currentDetail.monthly_price = monthly_price;
+				} else {
+					let daily_price_to_month = parseInt(currentDetail.price.split(".")[0].split("$")[1].replace(",",""))*30;
+					currentDetail.monthly_price = daily_price_to_month;
+				}
 				this.setState({currentSimpleDetail: currentDetail})
 				if ( this.props.selectedIndex === -1 ) {
 					this.setState({toggleSimpleDetail: false, goLoveList: false});		

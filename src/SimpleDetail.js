@@ -52,10 +52,8 @@ class SimpleDetail extends React.Component {
     console.log(this.props.currentSimpleDetail);
     console.log(this.props.selectedIndex);
     if ( this.props.currentSimpleDetail != null ) {
-      let monthly_price = this.props.currentSimpleDetail.monthly_price.split(".")[0];
-      let daily_price = parseInt(this.props.currentSimpleDetail.price.split(".")[0].split("$")[1].replace(",",""))*30;
-      let daily_price_pureN = daily_price.toLocaleString("en");
-      let amenities = sortOutAmenities(this.props.currentSimpleDetail.amenities,[/Internet/ig, /Hot water/ig, /Air conditioning/ig, /Refrigerator/ig,/Laptop friendly workspace/ig,  /washer/ig, /Pets allowed/ig]);
+      let monthly_price = this.props.currentSimpleDetail.monthly_price.toLocaleString("en");
+      let amenities = sortOutAmenities(this.props.currentSimpleDetail.amenities,[/Internet/ig, /Hot water/ig, /A\/C/ig, /Refrigerator/ig,/Laptop friendly workspace/ig,  /washer/ig, /Pets allowed/ig]);
       let otherAmenities = sortOutAmenities(this.props.currentSimpleDetail.amenities,[/Kitchen/ig,/Paid parking off premises/ig, /Free street parking/ig, /Elevator/ig, /Gym/ig]);
       let TV = sortOutAmenities(this.props.currentSimpleDetail.amenities, [/TV/ig]).length === 2 ? ["TV", "Cable TV"] : ["TV"];//因為電視無法拆解
       let loveListStatusIndex = this.props.getloveListStatusIndex(this.props.currentSimpleDetail.id, this.props.loveListStatus);
@@ -68,7 +66,7 @@ class SimpleDetail extends React.Component {
                 (e)=>{
                   this.props.goSimpleDetail("back",{}); 
                   this.props.selectedIndex !== -1 &&
-                  this.props.removeSelectedIndex(this.props.selectedIndex);}}
+                  this.props.changeSelecteIndex("remove",this.props.selectedIndex);}}
             >             
               <FontAwesomeIcon className="icon" icon={["fas","long-arrow-alt-left"]}/>
               <div>回到搜尋結果</div>
@@ -144,7 +142,7 @@ class SimpleDetail extends React.Component {
             </div>
           </div>
           <div className="priceAddress">
-            <div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
+            <div className="price">{"$" + monthly_price }</div>
             <span></span>
             <div className="address">
               <div className="cityDist">台北市{this.props.currentSimpleDetail.neighbourhood_cleansed}</div>
@@ -183,7 +181,7 @@ class SimpleDetail extends React.Component {
                   switch (amenity) {
                   case "Internet": amenity = "網路"; break;
                   case "Hot water": amenity = "熱水器"; break;
-                  case "Air conditioning": amenity = "冷氣"; break;
+                  case "A/C": amenity = "冷氣"; break;
                   case "Refrigerator": amenity = "冰箱"; break;
                   case "Laptop friendly workspace": amenity = "書桌/工作區"; break;
                   case "Washer": amenity = "洗衣機"; break;

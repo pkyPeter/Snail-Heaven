@@ -23,7 +23,7 @@ class SearchResult extends React.Component {
       filters: {priceFloor:0 , priceCeiling: 100000},
       readyForSort: false,
       filteredDataLength: 0, //這個完全是流程控制，因為只要 filterdata 數量一樣，價格篩選都應該只要執行一次，主要是因為需要在 componentDidUpdate 的時候去做，但是因為不是每次 update 都有變動 filterdata 的數量
-      originData: [],
+      completeDataForRender: [],
       currentLoadAmount: 3,
       currentLoad: [],
       shouldStartRenew : true
@@ -42,7 +42,7 @@ class SearchResult extends React.Component {
     // ("search Result componentDidMount")
     // console.log(this.props.filteredData);
     //剛進來第一次要初始化Origin data，並且進行初步印製
-    this.setState({originData: this.props.filteredData});
+    this.setState({completeDataForRender: this.props.filteredData});
     if (this.props.filteredData < 3) {
       this.setState({currentLoad: this.props.filteredData});  
     } else {
@@ -96,105 +96,51 @@ class SearchResult extends React.Component {
     if ( this.props.filteredData.length >= 0 ) {
       let dataForFilter = this.props.filteredData;
       let filters = this.props.filters;
-      // console.log(filters.priceCeiling)
-      // console.log(filters.priceFloor)
-
       if ( filters.priceCeiling != 100000 || filters.priceFloor != 0 ) {
-        let priceArray = [];
         let dataAfterPriceFilter =[];
-        dataForFilter.map((realEstate, index)=>{
-          if (realEstate.monthly_price != "") {
-            let monthly_price = parseInt(realEstate.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
-            priceArray.push(monthly_price);
-          } else {
-            let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
-            priceArray.push(daily_price);
-          }
-        });
         //如果資料的價格介於priceCeilig以及priceFloor之間，就進行篩選
-          googleMap.markerclusterer.clearMarkers();
           for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
-            if ( filters.priceFloor < priceArray[i] && priceArray[i] <= filters.priceCeiling ) {
+            if ( filters.priceFloor < dataForFilter[i].monthly_price && dataForFilter[i].monthly_price <= filters.priceCeiling ) {
               dataAfterPriceFilter.push(dataForFilter[i]);
             } 
           }
           if (this.props.filteredData.length !== dataAfterPriceFilter.length ) {    
-            console.log(dataAfterPriceFilter)
             dataForFilter = dataAfterPriceFilter;
           }
         
       } 
       if ( this.props.sort ) {
       	// console.log("篩選")
-      	let priceArray = [];
       	let dataAfterSort = dataForFilter;
       	let options = lib.func.getAll("select>option");
-        dataForFilter.map((realEstate, index)=>{
-          if (realEstate.monthly_price != "") {
-            let monthly_price = parseInt(realEstate.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
-            priceArray.push(monthly_price);
-          } else {
-            let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
-            priceArray.push(daily_price);
-          }
-        });
       	switch (this.props.sort) {
       		case "default":
 		    	break;
 		    	case "lowest":
 		    	options[1].selected = "selected";
 		    	dataAfterSort.sort((a,b)=>{
-		    		let priceA;
-		    		let priceB;
-		    		if (a.monthly_price != "") {
-	            let monthly_price = parseInt(a.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
-	            priceA = monthly_price;
-	          } else {
-	            let daily_price = parseInt(a.price.split(".")[0].split("$")[1].replace(",",""))*30;
-	            priceA = daily_price;
-	          }
-	          if (b.monthly_price != "") {
-	            let monthly_price = parseInt(b.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
-	            priceB = monthly_price;
-	          } else {
-	            let daily_price = parseInt(b.price.split(".")[0].split("$")[1].replace(",",""))*30;
-	            priceB = daily_price;
-	          }
+		    		let priceA = a.monthly_price;
+		    		let priceB = b.monthly_price;
 	          return priceA - priceB ;
 		    	})
 		    	break;
 		    	case "highest":
 		    	options[2].selected = "selected";
 		    	dataAfterSort.sort((a,b)=>{
-		    		let priceA;
-		    		let priceB;
-		    		if (a.monthly_price != "") {
-	            let monthly_price = parseInt(a.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
-	            priceA = monthly_price;
-	          } else {
-	            let daily_price = parseInt(a.price.split(".")[0].split("$")[1].replace(",",""))*30;
-	            priceA = daily_price;
-	          }
-	          if (b.monthly_price != "") {
-	            let monthly_price = parseInt(b.monthly_price.split(".")[0].split("$")[1].replace(/\,/g,""));
-	            priceB = monthly_price;
-	          } else {
-	            let daily_price = parseInt(b.price.split(".")[0].split("$")[1].replace(",",""))*30;
-	            priceB = daily_price;
-	          }
+		    		let priceA = a.monthly_price;
+            let priceB = b.monthly_price;
 	          return priceB - priceA ;
 		    	})
 		    	break;
       	}
-      	// console.log(dataAfterSort);
       	dataForFilter = dataAfterSort;
       }
-      // console.log(132,"是否為真",dataForFilter !== this.state.originData)
-      //首次資料進入會不同，已經在componentDidMount中，將originData設為dataForFilter，並呼叫recursive來印製畫面。
-      //originData將作為比較值讓當次的render不會重新呼叫recursive，但當資料有更新時，還是會執行一次
+      // console.log(132,"是否為真",dataForFilter !== this.state.completeDataForRender)
+      //首次資料進入會不同，已經在componentDidMount中，將completeDataForRender設為dataForFilter，並呼叫recursive來印製畫面。
+      //completeDataForRender將作為比較值讓當次的render不會重新呼叫recursive，但當資料有更新時，還是會執行一次
       // console.log(114, "currentLoadAmount", this.state.currentLoadAmount)
-      if ( dataForFilter.length !== this.state.originData.length || this.props.readyForSort ) { 
-        this.setState({originData: dataForFilter});
+      if ( dataForFilter.length !== this.state.completeDataForRender.length || this.props.readyForSort ) { 
+        this.setState({completeDataForRender: dataForFilter});
         this.props.getSelect("","disable");
         this.recursive(dataForFilter, this.state.currentLoadAmount);
       }
@@ -301,19 +247,20 @@ class SearchResult extends React.Component {
               <option value="highest">最高價優先</option>
             </select>
           </div>
-          <p>{ this.state.originData.length }筆結果</p>
+          <p>{ this.state.completeDataForRender.length }筆結果</p>
           <div className="displayLogic">
-            <div className="displayType" onClick={this.props.changeToList}><FontAwesomeIcon icon={["fas","list-ul"]}/></div>
-            <div className="displayType" onClick={this.props.changeToRowBlocks}><FontAwesomeIcon icon={["fas","th-large"]}/></div>
-            <div className="displayType" onClick={this.props.changeToBlocks}><FontAwesomeIcon icon={["fas","square"]}/></div>
+            <div className="displayType" onClick={()=>{this.props.switchDisplayMode("list")}}><FontAwesomeIcon icon={["fas","list-ul"]}/></div>
+            <div className="displayType" onClick={()=>{this.props.switchDisplayMode("rowBlocks")}}><FontAwesomeIcon icon={["fas","th-large"]}/></div>
+            <div className="displayType" onClick={()=>{this.props.switchDisplayMode("blocks")}}><FontAwesomeIcon icon={["fas","square"]}/></div>
           </div>
         </div>
         <div className={this.props.resultAreaDisplayType[0]}>
           {
             this.state.currentLoad.map((realEstate, index)=>{
-              let monthly_price = realEstate.monthly_price.split(".")[0];
-              let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
-              let daily_price_pureN = daily_price.toLocaleString("en");
+              // let monthly_price = realEstate.monthly_price.split(".")[0];
+              // let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
+              // let daily_price_pureN = daily_price.toLocaleString("en");
+              let monthly_price = realEstate.monthly_price.toLocaleString("en");
               let loveListStatusIndex = this.props.loveListStatus != null && this.props.getloveListStatusIndex(realEstate.id, this.props.loveListStatus);
               let hidden = false;
               let roomType;
@@ -335,7 +282,7 @@ class SearchResult extends React.Component {
                 return (
                   <div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { 
                     // this.props.goSimpleDetail(realEstate.id, realEstate); 
-                    this.props.addSelectedIndex(realEstate.index); 
+                    this.props.changeSelecteIndex("add",realEstate.index); 
                   } } onMouseEnter={(e)=>{
                     this.getMarkerBounce(e, realEstate.index);
                   }} onMouseLeave={(e)=>{this.stopMarkerBounce(e, realEstate.index);}}>
@@ -346,7 +293,7 @@ class SearchResult extends React.Component {
                     <div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
                     <div className="description">
                       <div className="priceGesture absolute">
-                        <div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
+                        <div className="price">{monthly_price != "" ? "$"+monthly_price : "$"+daily_price_pureN }</div>
                         <div className="gesture" onClick={this.stopPropagation}>
                           { 
                             this.props.loveListStatus != null &&this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true 
@@ -455,18 +402,17 @@ class SearchResult extends React.Component {
     let scrollTop = e.currentTarget.scrollTop; 
     let clientHeight = e.currentTarget.clientHeight;
     // console.log(scrollHeight,scrollTop,clientHeight)
-
-    if (scrollHeight - scrollTop === clientHeight) {
+    if ( scrollHeight - scrollTop < (clientHeight + 600) ) {
       // console.log("是不是這裡在leak?")
       // console.log(true,true,true,true,true)
       // this.setState((prev) => ({ currentLoadAmount: prev.currentLoadAmount + 2 }))
-      if (this.state.originData.length<3) {
+      if (this.state.completeDataForRender.length<3) {
         setTimeout(()=>{
-        this.recursive(this.state.originData, 1);
+        this.recursive(this.state.completeDataForRender, 1);
         }, 0)
       } else {
         setTimeout(()=>{
-        this.recursive(this.state.originData, this.state.currentLoadAmount);
+        this.recursive(this.state.completeDataForRender, this.state.currentLoadAmount);
       }, 0)
       }
       ;	

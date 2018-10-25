@@ -460,16 +460,17 @@
 		}
 
 		.apartments>section>.right>.resultArea>.results>.airbnbContainer {
-			position: absolute;   
-			font-size: 10px;
-			padding: 0px 6px; 
-			left: 10px;
-			top: 10px; 
-			border-radius: 5px; 
-			background-color: rgb(255, 90, 96); 
-			color: white;
-			display: flex;
-    		align-items: center;
+		    position: absolute;
+		    font-size: 10px;
+		    padding: 0px 6px;
+		    left: 14px;
+		    top: 13px;
+		    border-radius: 5px;
+		    background-color: rgb(255, 90, 96);
+		    color: white;
+		    display: flex;
+		    align-items: center;
+		    /*box-shadow: 0.5px 0.5px 1px #424242;*/
 		}
 		.apartments>section>.right>.resultArea>.results>.airbnbContainer>.airbnb {
 			width: 12px;
@@ -690,6 +691,11 @@
 
 		.apartments>section>.right>.resultArea {
 			order: 3;
+		}
+
+		.apartments>section>.right>.resultArea>.results>.airbnbContainer {
+		    left: 3px;
+		    top: 5px;
 		}
 
 		.apartments>section>.right>.resultArea>.results {

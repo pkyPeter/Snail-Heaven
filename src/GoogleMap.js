@@ -285,9 +285,9 @@ googleMap.produceMarkerStyle = ( newStuff , scale) => {
 googleMap.enableCluster = (map, markers) => {
    let markerclusterer = new MarkerClusterer(map, markers, googleMap.makeClusterOpstions());
    googleMap.markerclusterer = markerclusterer;
-   console.log(googleMap.markerclusterer)
+   // console.log(googleMap.markerclusterer)
    google.maps.event.trigger(googleMap.markerclusterer,"clusterclick", (e)=>{
-    console.log(e.target);
+    // console.log(e.target);
 
    })
    return markerclusterer;
@@ -425,6 +425,7 @@ googleMap.contain = ( bounds,lat,Lng) => {
 googleMap.evt.drawCustomArea = ( deletion ) => {
      let mouseMove;
      let mouseUp;
+     googleMap.markerclusterer.clearMarkers();
      let mouseDown = google.maps.event.addDomListener( googleMap.map,'mousedown', (e) => {
             googleMap.map.setOptions({draggable: false})
              //the polygon
@@ -453,23 +454,17 @@ googleMap.evt.drawCustomArea = ( deletion ) => {
     if ( deletion ) {
                   // google.maps.event.removeListener(mouseMove);
                   // google.maps.event.removeListener(mouseUp);
-                  console.log(mouseDown)
                   // google.maps.event.removeListener(mouseDown);
-                  console.log(mouseMove)
-                  console.log(mouseUp)
-                  console.log(mouseDown)
                   mouseDown.remove();
-                  console.log(mouseDown)
                   google.maps.event.clearListeners(googleMap.map, 'mousedown');
-                  console.log(mouseDown)
                   // google.maps.event.clearListeners(googleMap.map, 'mousemove');
                   if (googleMap.customArea) {
                     googleMap.customArea.setMap(null);
                     googleMap.customArea = null;
-                    googleMap.map.setZoom(googleMap.map.getZoom());
                     // googleMap.map.panTo({lat:25.0484402,lng:121.5278391});
                     // googleMap.map.setZoom(12); 
                   }
+                  googleMap.map.setZoom(googleMap.map.getZoom());
     }
     return mouseDown;
 }
@@ -482,7 +477,7 @@ googleMap.evt.drawCustomArea = ( deletion ) => {
 //   if (mode === "normal") {
 //     for ( let i = 0; i < latLngList.length ; i++ ) {
 //       let latLng = new google.maps.LatLng(parseFloat(latLngList[i].lat),parseFloat(latLngList[i].lng));
-//       let inside = currentLocation.contains(latLng);
+//       let inside = currentLocation.tains(latLng);
 //       if ( inside ) 
 //     }
 //   } else if (mode ==="polygon") {

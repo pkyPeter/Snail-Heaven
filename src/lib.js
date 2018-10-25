@@ -93,5 +93,10 @@ lib.func.fetchData = ( route ) => {
 	}).catch( result => {console.log('something went wrong')})
 }
 
+lib.func.getParameter = ( sourceUrl , target ) => {
+	let url = new URL(sourceUrl);
+	let parameter = url.searchParams.get(target);
+	return parameter;
+}
 
 export default lib;

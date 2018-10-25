@@ -6,16 +6,11 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 //FontAwesome引用圖片
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
-import { faThumbsDown } from '@fortawesome/free-regular-svg-icons';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
-library.add(faRegularHeart, faThumbsDown, faEnvelope, faSearch, faCaretLeft);
+import { faHeart as faRegularHeart, faThumbsDown, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faSearch, faCaretLeft, faListUl, faThLarge, faSquare } from "@fortawesome/free-solid-svg-icons";
+library.add(faRegularHeart, faThumbsDown, faEnvelope, faSearch, faCaretLeft, faListUl, faThLarge, faSquare);
 
 const LoveList = props => {
-	console.log(props.loveListDetail)
-	console.log(props.loveListStatus)
 	return  (
 		<div className="right" style={{width: props.leftRightWidth.rightWidth}}>
 			<div className="areaSizer" draggable="true" onDrag={props.changeAreaSize} onDragEnd={props.changeAreaSize} style={{right: props.leftRightWidth.resizerRight}}></div>
@@ -24,14 +19,22 @@ const LoveList = props => {
 					<FontAwesomeIcon className="icon" icon={['fas','long-arrow-alt-left']}/>
 					<div>回到搜尋結果</div>
 				</div>
-				<div className="title">共{props.loveListDetail.length}個喜愛標的</div>
+				<div className="title">
+					<div className="displayLogic">
+						<div className="displayType" onClick={()=>{props.switchDisplayMode("list")}}><FontAwesomeIcon icon={["fas","list-ul"]}/></div>
+						<div className="displayType" onClick={()=>{props.switchDisplayMode("rowBlocks")}}><FontAwesomeIcon icon={["fas","th-large"]}/></div>
+						<div className="displayType" onClick={()=>{props.switchDisplayMode("blocks")}}><FontAwesomeIcon icon={["fas","square"]}/></div>
+				</div>
+				<div>已收藏{props.loveListDetail.length}個</div>
+				</div>
 			</div>
 			<div className={props.resultAreaDisplayType[0]}>
 				{
 					props.loveListDetail.map((realEstate, index)=>{		
-						let monthly_price = realEstate.monthly_price.split(".")[0];
-						let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
-						let daily_price_pureN = daily_price.toLocaleString("en");
+						// let monthly_price = realEstate.monthly_price.split(".")[0];
+						// let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
+						// let daily_price_pureN = daily_price.toLocaleString("en");
+						let monthly_price = realEstate.monthly_price.toLocaleString("en");
 						let loveListStatusIndex = props.getloveListStatusIndex(realEstate.id, props.loveListStatus);
 						let roomType;
 						switch(realEstate.room_type) {
@@ -45,11 +48,11 @@ const LoveList = props => {
 						console.log(index ,loveListStatusIndex);
 						console.log(index ,props.loveListStatus)
 						return(
-								<div className={props.resultAreaDisplayType[1]} onClick={(e)=>{ props.addSelectedIndex(loveListStatusIndex); }} key={index}>
+								<div className={props.resultAreaDisplayType[1]} onClick={(e)=>{ props.changeSelecteIndex("add",loveListStatusIndex); }} key={index}>
 									<div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
 									<div className="description">
 									<div className="priceGesture absolute" onClick={props.stopPropagation}>
-										<div className="price">{monthly_price != "" ? monthly_price : "$"+daily_price_pureN }</div>
+										<div className="price">{ "$" + monthly_price }</div>
 										<div className="gesture">
 											{ props.loveListStatus != undefined && props.loveListStatus[loveListStatusIndex].inList === true ? <FontAwesomeIcon className="icon" icon={['fas','heart']} style={{ color: 'red' }} onClick={(e)=>{ props.removeFromLoveList(e, realEstate.id, realEstate) }}/>
 												: <FontAwesomeIcon className="icon" icon={['far','heart']} onClick={(e)=>{ props.putIntoLoveList(e, realEstate.id, realEstate) }}/>}

@@ -58,7 +58,6 @@ class Header extends React.Component {
 		if (right.style.display === "flex") {
 			for ( let i = 0 ; i < searchFav.length ; i ++ ) {
 				searchFav[i].style.display = "none";
-				searchFav[i].style.color = "white";
 			}
 			// postHouse.style.display = "none";
 			right.style.width = "0%";
