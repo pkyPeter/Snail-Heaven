@@ -227,6 +227,11 @@ googleMap.style =
     }
   ]
 
+// marker options
+googleMap.setMapOptions = ( zoom, center) => {
+  if ( zoom != "" ) googleMap.map.setZoom(zoom);
+  if ( center != "" ) googleMap.map.setCenter(center);
+}
 
 //放置marker在地圖上面
 googleMap.makeMarkers = (locations, visible) => {
@@ -243,18 +248,7 @@ googleMap.makeMarkers = (locations, visible) => {
  googleMap.markers = markers;
  return markers;
 }
-// //marker style的參考
-// googleMap.produceMarkerStyle = ( newStuff , scale) => {
-//   return {
-//       path: google.maps.SymbolPath.CIRCLE,
-//       fillColor: "red",
-//       fillOpacity: 1,
-//       scale: 5,
-//       strokeColor: 'black',
-//       strokeWeight: .5
-//     }
 
-// }
 //marker style的參考
 googleMap.produceMarkerStyle = ( newStuff , scale) => {
   // console.log(newStuff)
@@ -271,16 +265,7 @@ googleMap.produceMarkerStyle = ( newStuff , scale) => {
   }
 
 }
-// googleMap.produceMarkerStyle = (fillColor, scale) => {
-//   return {
-      // path: google.maps.SymbolPath.CIRCLE,
-      // fillColor: fillColor,
-      // fillOpacity: 1,
-      // scale: scale,
-      // strokeColor: 'black',
-      // strokeWeight: .5
-//     }
-// }
+
 //製造群聚效果
 googleMap.enableCluster = (map, markers) => {
    let markerclusterer = new MarkerClusterer(map, markers, googleMap.makeClusterOpstions());
@@ -466,6 +451,7 @@ googleMap.evt.drawCustomArea = ( deletion ) => {
                   }
                   googleMap.map.setZoom(googleMap.map.getZoom());
     }
+    console.log(googleMap.customArea)
     return mouseDown;
 }
 

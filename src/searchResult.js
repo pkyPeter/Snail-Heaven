@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import lib from "./lib.js";
 import PriceChart from "./PriceChart.js";
 import googleMap from "./GoogleMap.js";
+import RoomPreviewCard from "./RoomPreviewCard.js";
 import airbnb from "./imgs/airbnb.png";
+import filterCriteria from "./const.js";
 //FontAwesome專用區域
 import { bedroom } from "./imgs/bedroom.jpg";
 //FontAwesome主程式
@@ -180,10 +182,14 @@ class SearchResult extends React.Component {
           <div className="filterType">
             <p>房間數量</p>
             <div className="filterDetail">
-              <div className="roomAmount" onClick={()=>{this.props.changeFilters("roomAmount",1);}}>1</div>
-              <div className="roomAmount" onClick={()=>{this.props.changeFilters("roomAmount",2);}}>2</div>
-              <div className="roomAmount" onClick={()=>{this.props.changeFilters("roomAmount",3);}}>3</div>
-              <div className="roomAmount" onClick={()=>{this.props.changeFilters("roomAmount",4);}}>4+</div>
+              {
+                filterCriteria.roomAmount.map((criterion)=>{
+                  let roomAmountNumber = parseInt(criterion);
+                  return(
+                    <div className="roomAmount" onClick={()=>{this.props.changeFilters("roomAmount",roomAmountNumber);}}>{criterion}</div>
+                  )
+                })
+              }
             </div>
           </div>
           <div className="filterType">
@@ -197,18 +203,13 @@ class SearchResult extends React.Component {
           <div className="filterType districts hidden">
             <p>行政區</p>
             <div className="filterDetail">
-              <div className="district" onClick={()=>{this.props.changeFilters("district","中正區");}}>中正區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","大同區");}}>大同區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","中山區");}}>中山區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","松山區");}}>松山區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","大安區");}}>大安區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","萬華區");}}>萬華區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","信義區");}}>信義區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","士林區");}}>士林區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","北投區");}}>北投區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","內湖區");}}>內湖區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","南港區");}}>南港區</div>
-              <div className="district" onClick={()=>{this.props.changeFilters("district","文山區");}}>文山區</div>				
+              {
+                filterCriteria.district.map((criterion)=>{
+                  return(
+                    <div className="district" onClick={()=>{this.props.changeFilters("district",criterion);}}>{criterion}</div>
+                  )
+                })
+              }				
             </div>
           </div>
           <div className="filterType hidden">
@@ -257,62 +258,27 @@ class SearchResult extends React.Component {
         <div className={this.props.resultAreaDisplayType[0]}>
           {
             this.state.currentLoad.map((realEstate, index)=>{
-              // let monthly_price = realEstate.monthly_price.split(".")[0];
-              // let daily_price = parseInt(realEstate.price.split(".")[0].split("$")[1].replace(",",""))*30;
-              // let daily_price_pureN = daily_price.toLocaleString("en");
-              let monthly_price = realEstate.monthly_price.toLocaleString("en");
-              let loveListStatusIndex = this.props.loveListStatus != null && this.props.getloveListStatusIndex(realEstate.id, this.props.loveListStatus);
               let hidden = false;
-              let roomType;
-              switch(realEstate.room_type) {
-                case "EHA":
-                roomType = "整層住家";
-                break;
-                case "PR":
-                roomType = "獨立套房";
-                break;
-                case "SR":
-                roomType = "分租套房";
-                break;
-              }
               if ( this.props.hiddenList != null ) {
                 for (let i = 0 ; i< this.props.hiddenList.length; i++) {
                   if ( realEstate.id === this.props.hiddenList[i]) { hidden = true; }
                 }
               }
-
               if (hidden === false) {
-                return (
-                  <div key={index} className={this.props.resultAreaDisplayType[1]} onClick={(e)=> { 
-                    // this.props.goSimpleDetail(realEstate.id, realEstate); 
-                    this.props.changeSelecteIndex("add",realEstate.index); 
-                  } } onMouseEnter={(e)=>{
-                    this.getMarkerBounce(e, realEstate.index);
-                  }} onMouseLeave={(e)=>{this.stopMarkerBounce(e, realEstate.index);}}>
-                    <div className="airbnbContainer">
-                    <img className="airbnb" src={airbnb}></img>
-                    Airbnb
-                    </div>
-                    <div className="img" style={{backgroundImage: `url(${realEstate.picture_url})`}}></div>
-                    <div className="description">
-                      <div className="priceGesture absolute">
-                        <div className="price">{monthly_price != "" ? "$"+monthly_price : "$"+daily_price_pureN }</div>
-                        <div className="gesture" onClick={this.stopPropagation}>
-                          { 
-                            this.props.loveListStatus != null &&this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true 
-															  ? <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} onClick={(e)=>{ this.props.removeFromLoveList(e, realEstate.id, realEstate); }}/>
-															  : <FontAwesomeIcon className="icon" icon={["far","heart"]} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate); }}/>
-                          }
-                          <FontAwesomeIcon className="icon" icon={["far","envelope"]} onClick={()=>{this.props.openEmailForm("",realEstate.id); console.log('icon clicked')}}/>
-                          <FontAwesomeIcon className="icon" icon={["far","thumbs-down"]} onClick={(e)=>{this.props.hideList(e, realEstate.id, realEstate.index);}} />
-                        </div>
-                      </div>
-                      <p>{realEstate.bedrooms} 間房間 · {realEstate.bathrooms} 間廁所 · {roomType}</p>
-                      <p>{realEstate.district}</p>
-                      <p className="updateTime">{realEstate.updated}</p>
-                    </div>
-                  </div>
-                );
+                return(
+                  <RoomPreviewCard 
+                    key={realEstate.index}
+                    realEstate = { realEstate }
+                    resultAreaDisplayType = {this.props.resultAreaDisplayType}
+                    changeSelecteIndex = {this.props.changeSelecteIndex}
+                    removeFromLoveList = {this.props.removeFromLoveList}
+                    putIntoLoveList = {this.props.putIntoLoveList}
+                    loveListStatus = {this.props.loveListStatus}
+                    getloveListStatusIndex={this.props.getloveListStatusIndex}
+                    openEmailForm = {this.props.openEmailForm}
+                    hideList = {this.props.hideList}
+                  />
+                )
               }
 									
             })
@@ -373,8 +339,6 @@ class SearchResult extends React.Component {
     // console.log("result legnth",lib.func.getAll(".results").length)
 	  if ( dataForFilter.length>3 ) {
         setTimeout(() => {
-          // console.log("是不是這裡在leak?")
-          // let hasMore = this.state.currentLoad.length + 50 < dataForFilter.length + 50;
           let hasMore = this.state.currentLoad.length < loadingAmount;
           this.setState( (prev, props) => ({
             currentLoad: dataForFilter.slice(0, prev.currentLoad.length + loadingAmount)

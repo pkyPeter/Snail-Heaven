@@ -3,7 +3,7 @@ import React from "react";
 import "firebase/database";
 import { firebaseApp } from "./firebaseApp.js";
 import Header from "./Header.js";
-import List from "./listPage.js";
+import List from "./List.js";
 import Email from "./Email.js";
 import lib from "./lib.js";
 import googleMap from "./GoogleMap.js";
@@ -12,7 +12,6 @@ import "./style/header.css";
 import "./style/body.css";
 import "./style/LoveList.css";
 import "./style/SimpleDetail.css";
-import data from "./result_export.json";
 import snail_face from "./imgs/snail_cousin_white.png";
 
 class Apartments extends React.Component {
@@ -47,29 +46,26 @@ class Apartments extends React.Component {
     this.removeSelectedIndex=this.removeSelectedIndex.bind(this);
     this.putIntoLoveList=this.putIntoLoveList.bind(this);
     this.removeFromLoveList=this.removeFromLoveList.bind(this);
+    this.confirmLoveListIndex = this.confirmLoveListIndex.bind(this);
     this.getloveListStatusIndex=this.getloveListStatusIndex.bind(this);
     this.getFilteredData = this.getFilteredData.bind(this);
     this.sortByRoomAmount = this.sortByRoomAmount.bind(this);
     this.showLoveListOnly = this.showLoveListOnly.bind(this);
-
+    this.showPreviousView = this.showPreviousView.bind(this);
     firebaseApp.sortAmenity().then((amenitiesList)=>{
       this.setState({ amenitiesList: amenitiesList})
     })
 
-
-
-
-
   }
   componentDidMount() {
-    // console.log("componentDidMount");
-    firebaseApp.fBaseDB.getDataNew("latLng").then( data => { console.log(data) })
+    // firebaseApp.fBaseDB.getDataNew("latLng").then( data => { console.log(data) })
     firebaseApp.fBaseDB.getDataNew("listings")
     .then(dataFromFB => {
       for ( let i = 0 ; i<dataFromFB.length ; i++ ) { dataFromFB[i].index = i; }
       //製作給marker使用的經緯度資料檔
       let location = firebaseApp.sortLatLng(dataFromFB);
       this.transferPriceIntoNumber(dataFromFB);
+      this.confirmLoveListIndex(this.state.loveListDetail, dataFromFB);
       this.setState({ completeList: dataFromFB, loveListStatus: this.createLoveListStatus(dataFromFB) ,latLng: location});
       //等google map相關程序完成，再進行後續動作
       googleMap.load
@@ -105,12 +101,12 @@ class Apartments extends React.Component {
                   marker.setIcon(googleMap.produceMarkerStyle(true, 64));
                   this.setState({selectedIndex: i});
                 });
-                google.maps.event.addListener(marker, "visible_changed", function(){
+                google.maps.event.addListener(marker, "visible_changed", () => {
                   if ( marker.getVisible() ) {
                     googleMap.markerclusterer.addMarker(marker, false);
                   } else {
                     googleMap.markerclusterer.removeMarker(marker, false);
-                  }  
+                  } 
                 });
               });
               //如果點擊地圖的其他地方，則將原本focus的點釋放
@@ -171,13 +167,7 @@ class Apartments extends React.Component {
     }
     //偵測如果都 load 完，並且 currentViewData 內已經沒有東西了，就可以執行這邊的程式碼
     if ( lib.func.getLocalStorageJSON("screenInfo") && this.state.amenitiesList && this.state.currentViewData.length ) {
-      let filters = lib.func.getLocalStorageJSON("screenInfo").filters;
-      let zoom = lib.func.getLocalStorageJSON("screenInfo").zoom;
-      let center = lib.func.getLocalStorageJSON("screenInfo").center;
-      googleMap.map.setCenter(center);
-      googleMap.map.setZoom(zoom);
-      this.setState({filters: filters});
-      localStorage.removeItem("screenInfo");
+      this.showPreviousView();
     }
     if ( this.state.filteredData.length !== 0 && lib.func.get(".apartments>.loading") ) {
       if (document.documentElement.clientWidth > 900 ) {
@@ -204,14 +194,17 @@ class Apartments extends React.Component {
           <img src={snail_face}  />
           <div className="description">LOADING</div>
         </div>
-        <Header goLoveList={this.state.goLoveList} 
+        <Header 
+          goLoveList={this.state.goLoveList} 
           goLoveListPage={this.goLoveList}
           goIndex={this.goIndex}
 			 />
-        <Email toggleEmail={this.state.toggleEmail}
+        <Email 
+          toggleEmail={this.state.toggleEmail}
           openEmailForm={this.openEmailForm}
         />
-        <List goLoveList={this.state.goLoveList}
+        <List 
+          goLoveList={this.state.goLoveList}
           goLoveListPage={this.goLoveList}
           completeList={this.state.completeList}
           loveListStatus={this.state.loveListStatus}
@@ -261,7 +254,7 @@ class Apartments extends React.Component {
   }
   changeSelecteIndex ( action , currentMarkerIndex ) {
     if ( action === "add" ) this.addSelectedIndex(currentMarkerIndex);
-    else if ( action === "remove") this.addSelectedIndex( currentMarkerIndex );
+    else if ( action === "remove") this.removeSelectedIndex( currentMarkerIndex );
   }
   addSelectedIndex(currentMarkerIndex) {
     console.log(244,currentMarkerIndex);
@@ -280,13 +273,21 @@ class Apartments extends React.Component {
   }
 
   goLoveList(e) {
-    googleMap.map.setZoom(13);
-    googleMap.map.setCenter({lat:this.state.currentLocation[0],lng:this.state.currentLocation[1]});
+    googleMap.setMapOptions(13, {lat:this.state.currentLocation[0],lng:this.state.currentLocation[1]})
     googleMap.markerclusterer.setGridSize(1);
     this.setState((currentState,currentProps) => ({goLoveList: !currentState.goLoveList}));
   }
   goPropertyPage(e, id) {
     window.open(`/property?id=${id}`);
+  }
+  showPreviousView() {
+    let screenInfo = lib.func.getLocalStorageJSON("screenInfo");
+    let filters = screenInfo.filters;
+    let zoom = screenInfo.zoom;
+    let center = screenInfo.center;
+    googleMap.setMapOptions( zoom, center );
+    this.setState({filters: filters});
+    localStorage.removeItem("screenInfo");
   }
   openEmailForm(currentDetail, id, close) {
     console.log("open form");
@@ -339,6 +340,16 @@ class Apartments extends React.Component {
       }
     }
     return loveListStatus;
+  }
+  confirmLoveListIndex ( loveListData, compareDataList ) {
+    for ( let i = 0 ; i < loveListData.length ; i++ ) {
+      for ( let j = 0 ; j < compareDataList.length ; j ++ ) {
+        if ( loveListData[i].id === compareDataList[j].id ) {
+          loveListData[i].index = compareDataList[j].index;
+          continue;
+        }
+      }
+    }
   }
   putIntoLoveList(e, id, realEstate) {
     // console.log(id);
@@ -468,11 +479,8 @@ class Apartments extends React.Component {
   }
 
   getFilteredData () {
-  			// console.log(this.state.currentViewData)
-        console.log("start filter");
 	      googleMap.markerclusterer.clearMarkers();
 	      let filters = this.state.filters;
-	      // console.log(filters);
 	      let dataForFilter = this.state.currentViewData;
 	      //roomAmount
 	      if ( filters.roomAmount.length  ) {
@@ -482,7 +490,7 @@ class Apartments extends React.Component {
 	      if ( filters.roomType.length ) {
 	        dataForFilter = this.doFilter("room_type",filters.roomType, dataForFilter);
 	      }
-	      //District  neighbourhood_cleansed
+	      //District 
         if ( filters.district.length ) {
           dataForFilter = this.doFilter("district", filters.district, dataForFilter);
 	      }
@@ -496,10 +504,7 @@ class Apartments extends React.Component {
 	        }
 	        dataForFilter = dataAfterPhotoRequiredFilter;
 	      }
-        // console.log(dataForFilter)
         //amenity
-        // console.log("amenities list", this.state.amenitiesList);
-
         if (filters.amenities.length && this.state.amenitiesList ) {
           let amenitiesEN = ["Internet","Hot water","A/C","Refrigerator","Laptop friendly workspace","Washer","Pets allowed","Kitchen","Gym","Elevator","Paid parking off premises","Free street parking"]
           let dataAfterAmenity = [];
@@ -515,7 +520,6 @@ class Apartments extends React.Component {
                   shouldShow = false;
                   break;
                 }
-                // console.log("should show")
               }
               if ( !shouldShow ) {
                 continue;
@@ -525,7 +529,6 @@ class Apartments extends React.Component {
           }
           dataForFilter = dataAfterAmenity;
         }
-        // console.log(dataForFilter);
 	      //hideList 
 	      let hiddenList = lib.func.getLocalStorageJSON("hiddenList");
 	      if ( hiddenList ) {
@@ -537,37 +540,28 @@ class Apartments extends React.Component {
 	              shouldShow = false;
 	            }
 	          }
-	          if (shouldShow) { dataAfterHideList.push(dataForFilter[i]); }
+	          if ( shouldShow ) { dataAfterHideList.push(dataForFilter[i]); }
 	        }
           // console.log(dataAfterHideList,"dataAfterHideList")
 	        dataForFilter = dataAfterHideList;
 	      }
-	      let hiddenMarker = [];
-	      let start = new Date();
         let markers = [];
         if ( this.state.filters.priceCeiling != 100000 || this.state.filters.priceFloor != 0 ) {
           for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
             if ( filters.priceFloor < dataForFilter[i].monthly_price && dataForFilter[i].monthly_price <= filters.priceCeiling ) {
-              // googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
               markers.push(googleMap.markers[dataForFilter[i].index]);
             }
           }
         } else {
           for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
-              // googleMap.markerclusterer.addMarker(googleMap.markers[dataForFilter[i].index]);
               markers.push(googleMap.markers[dataForFilter[i].index]);
           }
         }
-        // googleMap.markerclusterer.addMarkers(markers, false);
+        //這邊重新 enable 而非 addMarkers，是效能上這邊用 enable 速度比較快
         googleMap.enableCluster(googleMap.map, markers);
-        // console.log("進不進去",this.state.filteredData.length !== dataForFilter.length)
 	      if ( this.state.filteredData.length !== dataForFilter.length ) {
-	      	// console.log("hiddenMarker", hiddenMarker)
 	      	this.setState({filteredData: dataForFilter});
 	      }
-			
-        let end = new Date();
-        console.log("執行時間： " + (end.getTime() - start.getTime()));
 		}
 
 

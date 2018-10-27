@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import lib from "./lib.js";
-
+import googleMap from "./GoogleMap.js";
 import line_share from "./imgs/line_share.png";
 import facebook from "./imgs/facebook.png";
 //FontAwesome主程式
@@ -31,7 +31,8 @@ class SimpleDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      shareButtons: { buttonStyle: {}, isShown: false }
+      shareButtons: { buttonStyle: {}, isShown: false },
+      currentAddress: ""
     }
     this.toggleShareButtons = this.toggleShareButtons.bind(this);
   }
@@ -47,6 +48,11 @@ class SimpleDetail extends React.Component {
       panControl: false,
       enableCloseButton: false
     });
+    //怕收費，先 comment out 
+    // googleMap.reverseGeocode(lat,lng, (results)=>{
+    //   this.setState({currentAddress: results[0].formatted_address});
+    //   console.log(results);
+    // });
   }
   render () {
     console.log(this.props.currentSimpleDetail);
@@ -146,7 +152,7 @@ class SimpleDetail extends React.Component {
             <span></span>
             <div className="address">
               <div className="cityDist">台北市{this.props.currentSimpleDetail.neighbourhood_cleansed}</div>
-              <div className="street">新光路二段三十三號</div>
+              <div className="street">{this.state.currentAddress}</div>
             </div>
           </div>
           <div className="checkAvailable" onClick={()=>{this.props.openEmailForm(this.props.currentSimpleDetail)}}>立即詢問</div>
@@ -164,7 +170,7 @@ class SimpleDetail extends React.Component {
 
           <div className="time">
             <div className="title">更新時間</div>
-            <div className="content">{this.props.currentSimpleDetail.calendar_updated}</div>
+            <div className="content">{this.props.currentSimpleDetail.updated}</div>
           </div>
           <div className="Amenities">
             <div className="title">房屋設備</div>

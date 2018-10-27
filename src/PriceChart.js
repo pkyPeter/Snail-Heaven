@@ -48,6 +48,7 @@ class PriceChart extends React.Component {
 	}
 
 	render() {
+		// console.log(this.props.filteredData)
 		let priceArray = [];
 		let rangeAmountOfPrice = [];
 		let maxLength = 0;
