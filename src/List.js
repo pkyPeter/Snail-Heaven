@@ -35,15 +35,14 @@ class List extends React.Component {
 			isDesktop: true
 		}
 		this.drawCustomArea =this.drawCustomArea.bind(this);
-		this.openMapMarker = this.openMapMarker.bind(this);
+		this.openRoadBusinessMarker = this.openRoadBusinessMarker.bind(this);
 		this.changeAreaSize = this.changeAreaSize.bind(this);
 		this.goSimpleDetail = this.goSimpleDetail.bind(this);
 		this.switchDisplayMode = this.switchDisplayMode.bind(this);
 		this.changeToList = this.changeToList.bind(this);
-    	this.changeToRowBlocks = this.changeToRowBlocks.bind(this);
-    	this.changeToBlocks = this.changeToBlocks.bind(this);
+    this.changeToRowBlocks = this.changeToRowBlocks.bind(this);
+    this.changeToBlocks = this.changeToBlocks.bind(this);
 		this.hideList = this.hideList.bind(this);
-		this.stopPropagation= this.stopPropagation.bind(this);
 		this.switchToMap = this.switchToMap.bind(this);
 		this.getSelect = this.getSelect.bind(this);
 		this.recordCurrentStatus = this.recordCurrentStatus.bind(this);
@@ -77,8 +76,8 @@ class List extends React.Component {
 				if ( prevProps.selectedIndex !== -1 ) {
 					googleMap.markers[prevProps.selectedIndex].setAnimation(null);
 					googleMap.markers[prevProps.selectedIndex].setIcon(googleMap.produceMarkerStyle(false, 30));
-				} 
-			} 
+				}
+			}
 			else if ( this.props.selectedIndex === -1 && this.state.toggleSimpleDetail === true ) {
 				this.goSimpleDetail("back",{})
 			}
@@ -93,39 +92,39 @@ class List extends React.Component {
 				<div className="left" style={{width: this.state.leftWidth}}>
 					{   this.state.isDesktop &&
 						<div className="paint" onClick={this.drawCustomArea}>
-							{	
+							{
 							this.state.customArea === false
-							? ( 
+							? (
 							<span>
 								<FontAwesomeIcon className="icon" icon={['fas','pencil-alt']} />自行繪製區域
 							</span> )
-							: ( <span>取消繪製區域</span> )							
-							}						
+							: ( <span>取消繪製區域</span> )
+							}
 						</div>
 					}
-					<div className="business" onClick={()=>{this.openMapMarker("business")}}>
-							{	!this.state.showBusiness 
+					<div className="business" onClick={()=>{this.openRoadBusinessMarker("business")}}>
+							{	!this.state.showBusiness
 								?( <span>顯示周邊商家</span> )
 								:( <span>隱藏周邊商家</span> )
 							}
 					</div>
-					<div className="road" onClick={()=>{this.openMapMarker("road")}}>
-							{	!this.state.showRoad 
+					<div className="road" onClick={()=>{this.openRoadBusinessMarker("road")}}>
+							{	!this.state.showRoad
 								?( <span>顯示道路名稱</span> )
 								:( <span>隱藏道路名稱</span> )
 							}
 					</div>
-					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>	
+					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>
 				</div>
 				{	!this.props.goLoveList && !this.state.toggleSimpleDetail && (
-					<SearchResult changeAreaSize={this.changeAreaSize}
+					< SearchResult
+					changeAreaSize={this.changeAreaSize}
 					leftRightWidth = {this.state.leftRightWidth}
 					resultAreaDisplayType={this.state.resultAreaDisplayType}
 					completeList={this.props.completeList}
 					loveListStatus={this.props.loveListStatus}
 					getloveListStatusIndex={this.props.getloveListStatusIndex}
 					hiddenList={this.state.hiddenList}
-					goSimpleDetail={this.goSimpleDetail}
 					removeFromLoveList={this.props.removeFromLoveList}
 					putIntoLoveList={this.props.putIntoLoveList}
 					openEmailForm={this.props.openEmailForm}
@@ -141,15 +140,14 @@ class List extends React.Component {
 					getSelect={this.getSelect}
 					switchDisplayMode = {this.switchDisplayMode}
 					/>
-				)} 
+				)}
 				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (
-					<LoveList 	leftRightWidth = {this.state.leftRightWidth}
+					< LoveList
+					leftRightWidth = {this.state.leftRightWidth}
 					resultAreaDisplayType={this.state.resultAreaDisplayType}
-					switchDisplayMode={this.switchDisplayMode} 
+					switchDisplayMode={this.switchDisplayMode}
 					goLoveListPage={this.props.goLoveListPage}
 					changeSelecteIndex={this.props.changeSelecteIndex}
-					goSimpleDetail={this.goSimpleDetail} 
-					stopPropagation={this.stopPropagation}
 					loveListDetail={this.props.loveListDetail}
 					loveListStatus={this.props.loveListStatus}
 					getloveListStatusIndex={this.props.getloveListStatusIndex}
@@ -159,8 +157,9 @@ class List extends React.Component {
 					/>
 				)}
 				{	this.state.toggleSimpleDetail != false && this.state.currentSimpleDetail && (
-					<SimpleDetail  leftRightWidth = {this.state.leftRightWidth}
-					goSimpleDetail={this.goSimpleDetail} 
+					< SimpleDetail
+					leftRightWidth = {this.state.leftRightWidth}
+					goSimpleDetail={this.goSimpleDetail}
 					goPropertyPage={this.props.goPropertyPage}
 					currentSimpleDetail={this.state.currentSimpleDetail}
 					loveListStatus={this.props.loveListStatus}
@@ -179,10 +178,6 @@ class List extends React.Component {
 			</section>
 		)
 	}
-	stopPropagation(e) {
-		e.stopPropagation();
-    	e.nativeEvent.stopImmediatePropagation();
-	}
 	switchDisplayMode ( displayMode ) {
 		console.log(displayMode)
 		if ( displayMode === "list" ) this.changeToList();
@@ -191,13 +186,13 @@ class List extends React.Component {
 	}
 	changeToList() {
 	    this.setState({resultAreaDisplayType: ["resultArea","results resultsList"]});
-	}	
+	}
 	changeToRowBlocks() {
-		this.setState({resultAreaDisplayType: ["resultArea resultAreaFlex","results resultsFlex"]});	
-	}	
+		this.setState({resultAreaDisplayType: ["resultArea resultAreaFlex","results resultsFlex"]});
+	}
 	changeToBlocks() {
 		this.setState({resultAreaDisplayType: ["resultArea","results"]});
-	} 
+	}
 	changeAreaSize(e) {
 		let left = document.querySelector(".apartments>section>.left");
 		let right = document.querySelector(".apartments>section>.right");
@@ -221,7 +216,7 @@ class List extends React.Component {
 				leftRightWidth.resizerRight = "600px";
 				this.setState({leftRightWidth: leftRightWidth})
 			}
-		} 
+		}
 	}
 
 	goSimpleDetail( id, realEstate ) {
@@ -232,7 +227,7 @@ class List extends React.Component {
 				let latLng = new google.maps.LatLng(parseFloat(realEstate.lat),parseFloat(realEstate.lng));
 				if ( !googleMap.map.getBounds().contains(latLng) ) {
 					googleMap.map.setCenter(latLng);
-					googleMap.map.setZoom(20);	
+					googleMap.map.setZoom(20);
 				}
 			}
 			firebaseApp.fBaseDB.getData("details",(detail)=>{
@@ -247,7 +242,7 @@ class List extends React.Component {
 				}
 				this.setState({currentSimpleDetail: currentDetail})
 				if ( this.props.selectedIndex === -1 ) {
-					this.setState({toggleSimpleDetail: false, goLoveList: false});		
+					this.setState({toggleSimpleDetail: false, goLoveList: false});
 				} else {
 					this.setState({toggleSimpleDetail: true, goLoveList: false});
 				}
@@ -276,11 +271,11 @@ class List extends React.Component {
 			let JSONforRenew = lib.func.getLocalStorageJSON("hiddenList");
 			if( JSONforRenew === null ) {
 				JSONforRenew = [];
-			} 
+			}
 			JSONforRenew.push(id);
 			localStorage.setItem("hiddenList", JSON.stringify(JSONforRenew));
 			if (this.state.toggleSimpleDetail === true) {
-				this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));		
+				this.setState((currentState,currentProps) => ({toggleSimpleDetail: !currentState.toggleSimpleDetail}));
 			}
 			console.log(index)
 			googleMap.markers[index].setVisible(false);
@@ -291,39 +286,39 @@ class List extends React.Component {
 		console.log("paint Clicked");
 		let mouseDown = googleMap.evt.drawCustomArea(false);
 		lib.func.get(".left>.paint").classList.toggle("active");
-		googleMap.map.setOptions({draggableCursor:'crosshair'}); 
+		googleMap.map.setOptions({draggableCursor:'crosshair'});
 		if (this.state.customArea) {
 			googleMap.evt.drawCustomArea(true);
-			googleMap.map.setOptions({draggableCursor:'default'}); 
+			googleMap.map.setOptions({draggableCursor:'default'});
 		}
 		this.setState( currentState=>({ customArea: !currentState.customArea}) )
 	}
 
-	openMapMarker(target) {
+	openRoadBusinessMarker(target) {
 		console.log("openBusinessMarker")
 		if ( target === "business" ) {
 			if ( !this.state.showBusiness ) {
 				googleMap.style[5].stylers[0].visibility = "simplified";
-				googleMap.map.setOptions({styles: googleMap.style});	
+				googleMap.map.setOptions({styles: googleMap.style});
 				this.setState({showBusiness: true})
 			} else {
 				googleMap.style[5].stylers[0].visibility = "off";
-				googleMap.map.setOptions({styles: googleMap.style});	
+				googleMap.map.setOptions({styles: googleMap.style});
 				this.setState({showBusiness: false})
 			}
 		}
 		if ( target === "road" ) {
 			if ( !this.state.showRoad ) {
 				googleMap.style[9].stylers[0].visibility = "simplified";
-				googleMap.map.setOptions({styles: googleMap.style});	
+				googleMap.map.setOptions({styles: googleMap.style});
 				this.setState({showRoad: true})
 			} else {
 				googleMap.style[9].stylers[0].visibility = "off";
-				googleMap.map.setOptions({styles: googleMap.style});	
+				googleMap.map.setOptions({styles: googleMap.style});
 				this.setState({showRoad: false})
 			}
 		}
-		
+
 	}
 
 	switchToMap() {

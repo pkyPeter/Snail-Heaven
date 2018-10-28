@@ -13,87 +13,36 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 //FontAwesome引用圖片
-import { faHeart as faRegularHeart, faSave, faThumbsDown, faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as faSolidHeart, faListUl, faThLarge, faSquare, faMapMarkedAlt} from "@fortawesome/free-solid-svg-icons";
-library.add(faRegularHeart, faSolidHeart, faSave, faListUl, faThLarge, faSquare, faThumbsDown
-  ,faEnvelope, faMapMarkedAlt);
+import { faSave } from "@fortawesome/free-regular-svg-icons";
+import { faListUl, faThLarge, faSquare } from "@fortawesome/free-solid-svg-icons";
+library.add( faSave, faListUl, faThLarge, faSquare );
 
 class SearchResult extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filters: {priceFloor:0 , priceCeiling: 100000},
-      readyForSort: false,
       filteredDataLength: 0, //這個完全是流程控制，因為只要 filterdata 數量一樣，價格篩選都應該只要執行一次，主要是因為需要在 componentDidUpdate 的時候去做，但是因為不是每次 update 都有變動 filterdata 的數量
       completeDataForRender: [],
       currentLoadAmount: 3,
       currentLoad: [],
-      shouldStartRenew : true
     };
     this.showMoreFilter = this.showMoreFilter.bind(this);
-    this.changeToList = this.changeToList.bind(this);
-    this.changeToRowBlocks = this.changeToRowBlocks.bind(this);
-    this.changeToBlocks = this.changeToBlocks.bind(this);
-    this.stopPropagation = this.stopPropagation.bind(this);
-    this.recursive = this.recursive.bind(this);
+    this.loadMoreCards = this.loadMoreCards.bind(this);
     this.getMarkerBounce = this.getMarkerBounce.bind(this);
     this.stopMarkerBounce = this.stopMarkerBounce.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
   }
   componentDidMount() {
-    // ("search Result componentDidMount")
-    // console.log(this.props.filteredData);
     //剛進來第一次要初始化Origin data，並且進行初步印製
     this.setState({completeDataForRender: this.props.filteredData});
     if (this.props.filteredData < 3) {
-      this.setState({currentLoad: this.props.filteredData});  
+      this.setState({currentLoad: this.props.filteredData});
     } else {
-      this.recursive(this.props.filteredData, this.state.currentLoadAmount)
+      this.loadMoreCards(this.props.filteredData, this.state.currentLoadAmount)
     }
   }
   componentDidUpdate() {
     console.log("searchResult.js component did update");
-    //檢查哪些按鈕已經被點擊過了
-    let filtersFromApartments = this.props.filters;
-    let roomAmount = lib.func.getAll(".roomAmount");
-    let roomType = lib.func.getAll(".roomType");
-    let district = lib.func.getAll(".district");
-    let amenity = lib.func.getAll(".amenity")
-    let roomTypeEN = ["SR","PR","EHA"];
-    let amenitiesEN = ["Internet","Hot water","A/C","Refrigerator","Laptop friendly workspace","Washer","Pets allowed","Kitchen","Gym","Elevator","Paid parking off premises","Free street parking"];
-    for ( let i = 0 ; i < roomAmount.length ; i++ ) {
-      if ( lib.func.searchInsideArray(filtersFromApartments.roomAmount, i+1) ) {
-        roomAmount[i].classList.add("active");
-      } else {
-        roomAmount[i].classList.remove("active");
-      }
-    }
-    for ( let i = 0 ; i < roomType.length ; i++ ) {
-      if ( lib.func.searchInsideArray(filtersFromApartments.roomType, roomTypeEN[i]) ) {
-        roomType[i].classList.add("active");
-      } else {
-        roomType[i].classList.remove("active");
-      }
-    }
-    for ( let i = 0 ; i < district.length ; i++ ) {
-      if ( lib.func.searchInsideArray(filtersFromApartments.district, district[i].textContent) ) {
-        district[i].classList.add("active");
-      } else {
-        district[i].classList.remove("active");
-      }
-    }
-    if ( filtersFromApartments.photoRequired === true ) {
-      lib.func.get(".filterDetail>.required").classList.add("active");
-    } else {
-      lib.func.get(".filterDetail>.required").classList.remove("active");
-    }
-    for ( let i = 0 ; i < amenity.length ; i++ ) {
-      if ( lib.func.searchInsideArray(filtersFromApartments.amenities, amenitiesEN[i]) ) {
-        amenity[i].classList.add("active");
-      } else {
-        amenity[i].classList.remove("active");
-      }
-    }
     //價格篩選 或 有排序條件
     if ( this.props.filteredData.length >= 0 ) {
       let dataForFilter = this.props.filteredData;
@@ -104,15 +53,13 @@ class SearchResult extends React.Component {
           for ( let i = 0 ; i < dataForFilter.length ; i++ ) {
             if ( filters.priceFloor < dataForFilter[i].monthly_price && dataForFilter[i].monthly_price <= filters.priceCeiling ) {
               dataAfterPriceFilter.push(dataForFilter[i]);
-            } 
+            }
           }
-          if (this.props.filteredData.length !== dataAfterPriceFilter.length ) {    
+          if (this.props.filteredData.length !== dataAfterPriceFilter.length ) {
             dataForFilter = dataAfterPriceFilter;
           }
-        
-      } 
+      }
       if ( this.props.sort ) {
-      	// console.log("篩選")
       	let dataAfterSort = dataForFilter;
       	let options = lib.func.getAll("select>option");
       	switch (this.props.sort) {
@@ -121,46 +68,29 @@ class SearchResult extends React.Component {
 		    	case "lowest":
 		    	options[1].selected = "selected";
 		    	dataAfterSort.sort((a,b)=>{
-		    		let priceA = a.monthly_price;
-		    		let priceB = b.monthly_price;
-	          return priceA - priceB ;
+	          return a.monthly_price - b.monthly_price ;
 		    	})
 		    	break;
 		    	case "highest":
 		    	options[2].selected = "selected";
 		    	dataAfterSort.sort((a,b)=>{
-		    		let priceA = a.monthly_price;
-            let priceB = b.monthly_price;
-	          return priceB - priceA ;
+	          return b.monthly_price - a.monthly_price ;
 		    	})
 		    	break;
       	}
       	dataForFilter = dataAfterSort;
       }
-      // console.log(132,"是否為真",dataForFilter !== this.state.completeDataForRender)
-      //首次資料進入會不同，已經在componentDidMount中，將completeDataForRender設為dataForFilter，並呼叫recursive來印製畫面。
-      //completeDataForRender將作為比較值讓當次的render不會重新呼叫recursive，但當資料有更新時，還是會執行一次
-      // console.log(114, "currentLoadAmount", this.state.currentLoadAmount)
-      if ( dataForFilter.length !== this.state.completeDataForRender.length || this.props.readyForSort ) { 
+      //首次資料進入會不同，已經在componentDidMount中，將completeDataForRender設為dataForFilter，並呼叫loadMoreCards來印製畫面。
+      //completeDataForRender將作為比較值讓當次的render不會重新呼叫loadMoreCards，但當資料有更新時，還是會執行一次
+      if ( dataForFilter.length !== this.state.completeDataForRender.length || this.props.readyForSort ) {
         this.setState({completeDataForRender: dataForFilter});
         this.props.getSelect("","disable");
-        this.recursive(dataForFilter, this.state.currentLoadAmount);
-      }
-      if ( this.props.filters.priceFloor != this.state.filters.priceFloor || this.props.filters.priceCeiling != this.state.filters.priceCeiling || this.props.filteredData.length !=  this.state.filteredDataLength) {
-        // console.log("會執行幾次")
-        let filters = this.state.filters;
-        filters.priceFloor = this.props.filters.priceFloor;
-        filters.priceCeiling = this.props.filters.priceCeiling;
-        this.setState({filters: filters, filteredDataLength: this.props.filteredData.length});
+        this.loadMoreCards(dataForFilter, this.state.currentLoadAmount);
       }
     }
   }
-  componentWillUnmount () {
-    // this.recursive = null;
-  }
   render() {
-    // console.log("render searchResult.js");
-    // console.log(this.props.filteredData);
+    let filters = this.props.filters;
     return (
       <div className="right" style={{width: this.props.leftRightWidth.rightWidth}} onScroll={(e)=>{this.scrollToBottom(e);}}>
         <div className="areaSizer" draggable="true"  onDragEnd={this.props.changeAreaSize} style={{right: this.props.leftRightWidth.resizerRight}}></div>
@@ -172,9 +102,9 @@ class SearchResult extends React.Component {
         <div className="filterArea">
           <div className="filterType">
             <p>月租金</p>
-            <PriceChart completeList={this.props.completeList} 
-              currentViewData={this.props.currentViewData} 
-              changeFilters={this.props.changeFilters} 
+            <PriceChart completeList={this.props.completeList}
+              currentViewData={this.props.currentViewData}
+              changeFilters={this.props.changeFilters}
               filteredData={this.props.filteredData}
               filters={this.props.filters}
             />
@@ -183,11 +113,10 @@ class SearchResult extends React.Component {
             <p>房間數量</p>
             <div className="filterDetail">
               {
-                filterCriteria.roomAmount.map((criterion)=>{
+                filterCriteria.roomAmount.map((criterion,index)=>{
                   let roomAmountNumber = parseInt(criterion);
-                  return(
-                    <div className="roomAmount" onClick={()=>{this.props.changeFilters("roomAmount",roomAmountNumber);}}>{criterion}</div>
-                  )
+                  let classes = lib.func.searchInsideArray(filters.roomAmount, criterion) ? "roomAmount active" : "roomAmount";
+                  return( <div key={index} className= {classes} onClick={()=>{this.props.changeFilters("roomAmount",roomAmountNumber);}}>{criterion}</div> )
                 })
               }
             </div>
@@ -195,44 +124,45 @@ class SearchResult extends React.Component {
           <div className="filterType">
             <p>房屋類型</p>
             <div className="filterDetail">
-              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","SR");}} >分租套房</div>
-              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","PR");}} >獨立套房</div>
-              <div className="roomType" onClick={()=>{this.props.changeFilters("roomType","EHA");}} >整層住家</div>
+              {
+                filterCriteria.roomType.map((criterion, index)=>{
+                let classes = lib.func.searchInsideArray(filters.roomType, criterion.roomTypeEN)
+                 ? "roomType active" : "roomType";
+                  return( <div key={index} className={classes} onClick={()=>{this.props.changeFilters("roomType",criterion.roomTypeEN);}}>{criterion.roomTypeTC}</div> )
+                })
+              }
             </div>
           </div>
           <div className="filterType districts hidden">
             <p>行政區</p>
             <div className="filterDetail">
               {
-                filterCriteria.district.map((criterion)=>{
-                  return(
-                    <div className="district" onClick={()=>{this.props.changeFilters("district",criterion);}}>{criterion}</div>
-                  )
+                filterCriteria.district.map((criterion, index)=>{
+                  let classes = lib.func.searchInsideArray(filters.district, criterion)
+                   ? "district active" : "district";
+                  return( <div key={index} className={classes} onClick={()=>{this.props.changeFilters("district",criterion);}}>{criterion}</div> )
                 })
-              }				
+              }
             </div>
           </div>
           <div className="filterType hidden">
             <p>有無房屋照片</p>
             <div className="filterDetail">
-              <div className="required" onClick={()=>{this.props.changeFilters("photoRequired",true);}}>必須有照片</div>
+              { filters.photoRequired
+                ? <div className="required active" onClick={()=>{this.props.changeFilters("photoRequired",true);}}>必須有照片</div>
+                : <div className="required" onClick={()=>{this.props.changeFilters("photoRequired",true);}}>必須有照片</div>
+              }
             </div>
           </div>
           <div className="filterType amenities hidden">
             <p>必備設備</p>
             <div className="filterDetail">
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Internet");}} >網路</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Hot water");}} >熱水器</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","A/C");}} >冷氣</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Refrigerator");}} >冰箱</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Laptop friendly workspace");}} >書桌/工作區</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Washer");}} >洗衣機</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Pets allowed");}} >可養寵物</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Kitchen");}} >廚房</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Gym");}} >健身房</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Elevator");}} >電梯</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Paid parking off premises");}} >付費停車場</div>
-              <div className="amenity" onClick={()=>{this.props.changeFilters("amenities","Free street parking");}} >路邊停車格</div>
+              {
+                filterCriteria.amenities.map((criterion, index) =>{
+                  let classes = lib.func.searchInsideArray(filters.amenities, criterion.amenityEN) ? "amenity active" : "amenity";
+                  return ( <div key={index} className={classes} onClick={()=>{this.props.changeFilters("amenities",criterion.amenityEN);}} >{criterion.amenityTC}</div> )
+                })
+              }
             </div>
           </div>
           <div className="filterType buttons">
@@ -266,7 +196,7 @@ class SearchResult extends React.Component {
               }
               if (hidden === false) {
                 return(
-                  <RoomPreviewCard 
+                  <RoomPreviewCard
                     key={realEstate.index}
                     realEstate = { realEstate }
                     resultAreaDisplayType = {this.props.resultAreaDisplayType}
@@ -280,63 +210,38 @@ class SearchResult extends React.Component {
                   />
                 )
               }
-									
+
             })
           }
         </div>
       </div>
     );
   }
-  stopPropagation(e) {
-    e.stopPropagation();
-    	e.nativeEvent.stopImmediatePropagation();
-  }
-
   showMoreFilter(e) {
-    let filterTypes = lib.func.getAll(".filterType"); 
-    let filterbutton = lib.func.getAll(".buttons>.button");	
+    let filterTypes = lib.func.getAll(".filterType");
+    let filterbutton = lib.func.getAll(".buttons>.button");
     if ( document.body.clientWidth > 900 ) {
       filterTypes[3].classList.toggle("hidden");
       filterTypes[4].classList.toggle("hidden");
-      filterTypes[5].classList.toggle("hidden");  	
+      filterTypes[5].classList.toggle("hidden");
       filterbutton[0].classList.toggle("hidden");
       filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "收合條件" : filterbutton[1].textContent = "更多條件";
     } else {
       filterTypes[3].classList.remove("hidden");
       filterTypes[4].classList.remove("hidden");
-      filterTypes[5].classList.remove("hidden");    
+      filterTypes[5].classList.remove("hidden");
       for ( let i = 0 ; i< filterTypes.length-1 ; i++ ) {
         if ( filterTypes[i].style.display ==="" || filterTypes[i].style.display ==="none" ){
           filterTypes[i].style.display = "flex";
-        } else { 
-          filterTypes[i].style.display = "none"; 
+        } else {
+          filterTypes[i].style.display = "none";
         }
       }
       filterbutton[0].classList.toggle("hidden");
       filterbutton[1].textContent === "更多條件" ? filterbutton[1].textContent = "收合條件" : filterbutton[1].textContent = "更多條件";
     }
   }
-  changeToList(e) {
-    //先移除RowBlocks的class，再把自己的放進去
-    lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
-    lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex"]);	
-    lib.func.toggleClass("toggle",".resultArea>.results", ["resultsList"]);	
-    this.setState({resultAreaDisplayType: ["resultArea","results resultsList"]});
-  }	
-  changeToRowBlocks(e) {
-    lib.func.toggleClass("remove",".resultArea>.results", ["resultsList"]);
-    lib.func.toggleClass("toggle",".resultArea", ["resultAreaFlex"]);
-    lib.func.toggleClass("toggle",".resultArea>.results", ["resultsFlex"]);
-    this.setState({resultAreaDisplayType: ["resultArea resultAreaFlex","results resultsFlex"]});	
-  }	
-  changeToBlocks(e) {
-    lib.func.toggleClass("remove",".resultArea", ["resultAreaFlex"]);
-    lib.func.toggleClass("remove",".resultArea>.results", ["resultsFlex", "resultsList"]);	
-    this.setState({resultAreaDisplayType: ["resultArea","results"]});
-  } 
-  recursive(dataForFilter, loadingAmount) {
-    // console.log(301, "loadingAmount:", loadingAmount)
-    // console.log("result legnth",lib.func.getAll(".results").length)
+  loadMoreCards(dataForFilter, loadingAmount) {
 	  if ( dataForFilter.length>3 ) {
         setTimeout(() => {
           let hasMore = this.state.currentLoad.length < loadingAmount;
@@ -344,8 +249,8 @@ class SearchResult extends React.Component {
             currentLoad: dataForFilter.slice(0, prev.currentLoad.length + loadingAmount)
           }));
           if (hasMore) {
-            this.recursive(dataForFilter, loadingAmount); 
-          } 
+            this.loadMoreCards(dataForFilter, loadingAmount);
+          }
         }, 10);
     } else {
       this.setState( (prev, props) => ({
@@ -356,7 +261,6 @@ class SearchResult extends React.Component {
   }
   getMarkerBounce(e, index) {
     e.stopPropagation();
-    // console.log("mouseenter");
     let currentIndex = parseInt(index);
     googleMap.markers[currentIndex].setAnimation(google.maps.Animation.BOUNCE);
   }
@@ -366,23 +270,19 @@ class SearchResult extends React.Component {
   }
   scrollToBottom(e) {
     let scrollHeight = e.currentTarget.scrollHeight;
-    let scrollTop = e.currentTarget.scrollTop; 
+    let scrollTop = e.currentTarget.scrollTop;
     let clientHeight = e.currentTarget.clientHeight;
-    // console.log(scrollHeight,scrollTop,clientHeight)
     if ( scrollHeight - scrollTop < (clientHeight + 600) ) {
-      // console.log("是不是這裡在leak?")
-      // console.log(true,true,true,true,true)
-      // this.setState((prev) => ({ currentLoadAmount: prev.currentLoadAmount + 2 }))
       if (this.state.completeDataForRender.length<3) {
         setTimeout(()=>{
-        this.recursive(this.state.completeDataForRender, 1);
+        this.loadMoreCards(this.state.completeDataForRender, 1);
         }, 0)
       } else {
         setTimeout(()=>{
-        this.recursive(this.state.completeDataForRender, this.state.currentLoadAmount);
+        this.loadMoreCards(this.state.completeDataForRender, this.state.currentLoadAmount);
       }, 0)
       }
-      ;	
+      ;
     }
   }
 

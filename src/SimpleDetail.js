@@ -48,7 +48,7 @@ class SimpleDetail extends React.Component {
       panControl: false,
       enableCloseButton: false
     });
-    //怕收費，先 comment out 
+    //怕收費，先 comment out
     // googleMap.reverseGeocode(lat,lng, (results)=>{
     //   this.setState({currentAddress: results[0].formatted_address});
     //   console.log(results);
@@ -67,26 +67,26 @@ class SimpleDetail extends React.Component {
         <div className="right" style={{width: this.props.leftRightWidth.rightWidth}}>
           <div className="areaSizer" draggable="true" onDrag={this.props.changeAreaSize} onDragEnd={this.props.changeAreaSize} style={{right: this.props.leftRightWidth.resizerRight}}></div>
           <div className="sdTitle">
-            <div className="button return" 
+            <div className="button return"
               onClick={
                 (e)=>{
-                  this.props.goSimpleDetail("back",{}); 
+                  this.props.goSimpleDetail("back",{});
                   this.props.selectedIndex !== -1 &&
                   this.props.changeSelecteIndex("remove",this.props.selectedIndex);}}
-            >             
+            >
               <FontAwesomeIcon className="icon" icon={["fas","long-arrow-alt-left"]}/>
               <div>回到搜尋結果</div>
             </div>
             <div className="sdRight">
               <div className="button share" style={this.state.shareButtons.buttonStyle} onMouseEnter={ this.toggleShareButtons } onMouseLeave={ this.toggleShareButtons }>
                 {
-                  this.state.shareButtons.isShown 
-                  ? 
-                  (  
+                  this.state.shareButtons.isShown
+                  ?
+                  (
                     <div>
-                      <img src={line_share} style={{width: "24px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`); }}>
+                      <img src={line_share} style={{width: "22px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.props.currentSimpleDetail.id}`); }}>
                       </img>
-                      <img style={{width: "24px"}}
+                      <img style={{width: "22px"}}
                         onClick={()=>{FB.ui({
                             method: "share",
                             mobile_iframe: true,
@@ -102,9 +102,9 @@ class SimpleDetail extends React.Component {
                   )
                 }
                 { !this.state.shareButtons.isShown && <div>分享</div>}
-              </div>            
-              { 
-                this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true 
+              </div>
+              {
+                this.props.loveListStatus != undefined && this.props.loveListStatus[loveListStatusIndex].inList === true
                   ? (
                     <div className="button" onClick={(e)=>{ this.props.removeFromLoveList(e, this.props.currentSimpleDetail.id, this.props.currentSimpleDetail);}}>
                       <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} />
@@ -120,7 +120,7 @@ class SimpleDetail extends React.Component {
               }
               <div className="button" onClick={(e)=>{
                 console.log("hidden");
-                this.props.hideList(e, this.props.currentSimpleDetail.id, this.props.selectedIndex);}}>              
+                this.props.hideList(e, this.props.currentSimpleDetail.id, this.props.selectedIndex);}}>
                 <FontAwesomeIcon className="icon" icon={["far","thumbs-down"]}/>
                 <div>不想再見</div>
               </div>
@@ -151,7 +151,7 @@ class SimpleDetail extends React.Component {
             <div className="price">{"$" + monthly_price }</div>
             <span></span>
             <div className="address">
-              <div className="cityDist">台北市{this.props.currentSimpleDetail.neighbourhood_cleansed}</div>
+              <div className="cityDist">台北市{this.props.currentSimpleDetail.district}</div>
               <div className="street">{this.state.currentAddress}</div>
             </div>
           </div>
@@ -212,12 +212,12 @@ class SimpleDetail extends React.Component {
                   return(<div className="amenity" key={index}>{amenity}</div>);
                 })
               }
-                
+
             </div>
           </div>
           <div style={{width:`100%`, marginTop: "20px",paddingBottom: `65%`} } className="streetViewMap" id="streetViewMap">
           </div>
-          <div className="moreInfo" onClick={ (e)=>{ 
+          <div className="moreInfo" onClick={ (e)=>{
             this.props.goPropertyPage(e, this.props.currentSimpleDetail.id);  this.props.recordCurrentStatus();
           } }>更多詳細資訊</div>
         </div>
@@ -237,7 +237,7 @@ class SimpleDetail extends React.Component {
     }
   }
 
-    
+
 };
 
 function stopPropagation(e) {
@@ -251,7 +251,7 @@ function sortOutAmenities ( data, ruleArray) {
     let amenity = data.match(ruleArray[i]);
     if (amenity != null) {
       amenities = [...amenities, ...amenity];
-    }	
+    }
   }
   return amenities;
 }

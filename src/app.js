@@ -14,12 +14,12 @@ import "./imgs/close.png";
 
 let firebaseDB = firebaseApp.fBase.database();
 const RouterComponent = () => (
-  <Router>	
+  <Router>
   	<div>
       <Route exact path="/" component={App} />
       <Route path="/apartments" component={Apartments} />
       <Route path="/property" component={Property} />
-    </div>		
+    </div>
   </Router>
 );
 
@@ -27,7 +27,7 @@ const RouterComponent = () => (
 
 class App extends React.Component {
   constructor() {
-    super();	
+    super();
     this.state = {
       search: "",
       location: [],
@@ -40,13 +40,13 @@ class App extends React.Component {
           pathname:"/apartments",
           search: `?search=${place.geometry.location.lat()},${place.geometry.location.lng()}`,
           state: {lat: place.geometry.location.lat(), lng: place.geometry.location.lng()}
-        }); 
+        });
       });
 
     });
   }
   componentDidMount() {
- 	    let districts = ["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"]; 
+ 	    let districts = ["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"];
     let districtsAmount = [0,0,0,0,0,0,0,0,0,0,0,0];
     let districtLatLng = [
       {lat: 25.0421407,lng: 121.51987159999999},
@@ -101,7 +101,7 @@ class App extends React.Component {
           			</div>
           			<div className="formItem close"><Link to="/apartments"></Link></div>
           		</div>
-          	</div>     	
+          	</div>
       </div>
     );
 
@@ -125,10 +125,10 @@ class App extends React.Component {
       pathname:"/apartments",
       search: `?location=${lat},${lng}`,
       state: {lat: lat, lng: lng}
-    }); 
-    
+    });
+
   }
 
-} 
+}
 
 ReactDOM.render(<RouterComponent />, document.querySelector("#RAPP"));

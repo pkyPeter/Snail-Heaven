@@ -162,7 +162,7 @@
 	.right>.priceAddress>.price {
 		font-size: 3em;
 		font-weight: 100;
-		font-family: Microsoft JhengHe;
+		font-family: "Noto Sans" ,Microsoft JhengHei;
 	}
 	.right>.priceAddress>span {
 		width: 1px;
@@ -231,7 +231,7 @@
 	}
 	.right>.description>.content {
 		font-weight: 200;
-    	font-family: Microsoft JhengHe;
+    	font-family: Microsoft JhengHei;
 	}
 
 /*房屋設備區域*/
@@ -245,7 +245,7 @@
 		border-bottom: 1px rgba(0, 0, 0, 0.1) solid;
     	padding-bottom: 3px;
 	}
-	.right>.Amenities>.content { 
+	.right>.Amenities>.content {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;

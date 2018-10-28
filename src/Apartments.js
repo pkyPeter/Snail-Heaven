@@ -16,23 +16,20 @@ import snail_face from "./imgs/snail_cousin_white.png";
 
 class Apartments extends React.Component {
   constructor() {
-    super();	
+    super();
     this.state = {
       goLoveList: false,
       loveListStatus: null,
       loveListDetail: lib.func.getLocalStorageJSON("loveList") !== null ?  lib.func.getLocalStorageJSON("loveList") : [],
       completeList: [],
-      completeListSortedByRoomAmount: [],
       currentViewData: [],
       filteredData:[],
       filters: { priceFloor:0 , priceCeiling: 100000, roomAmount: [], roomType:[], district:[], photoRequired: false, amenities: []},
       amenitiesList: null,
       currentLocation: [25.0484402,121.5278391],
-      currentDistrict: null,
       latLng: [],
       toggleEmail: {open: false, currentDetail: null},
       selectedIndex: -1,
-      hiddenMarkerIndex: []
     };
     this.transferPriceIntoNumber = this.transferPriceIntoNumber.bind(this);
     this.goIndex = this.goIndex.bind(this);
@@ -49,7 +46,6 @@ class Apartments extends React.Component {
     this.confirmLoveListIndex = this.confirmLoveListIndex.bind(this);
     this.getloveListStatusIndex=this.getloveListStatusIndex.bind(this);
     this.getFilteredData = this.getFilteredData.bind(this);
-    this.sortByRoomAmount = this.sortByRoomAmount.bind(this);
     this.showLoveListOnly = this.showLoveListOnly.bind(this);
     this.showPreviousView = this.showPreviousView.bind(this);
     firebaseApp.sortAmenity().then((amenitiesList)=>{
@@ -106,7 +102,7 @@ class Apartments extends React.Component {
                     googleMap.markerclusterer.addMarker(marker, false);
                   } else {
                     googleMap.markerclusterer.removeMarker(marker, false);
-                  } 
+                  }
                 });
               });
               //如果點擊地圖的其他地方，則將原本focus的點釋放
@@ -130,7 +126,7 @@ class Apartments extends React.Component {
                 for ( let i = 0 ; i< this.state.latLng.length ; i++ ) {
                   let latLng = new google.maps.LatLng(parseFloat(this.state.latLng[i].lat),parseFloat(this.state.latLng[i].lng));
                   let inside = false;
-                  if ( googleMap.customArea ) { 
+                  if ( googleMap.customArea ) {
                     inside = google.maps.geometry.poly.containsLocation(latLng, currentLocation);
                   } else {
                     inside = currentLocation.contains(latLng);
@@ -172,14 +168,14 @@ class Apartments extends React.Component {
     if ( this.state.filteredData.length !== 0 && lib.func.get(".apartments>.loading") ) {
       if (document.documentElement.clientWidth > 900 ) {
         lib.func.get(".apartments>.loading").style.opacity = "0";
-        setTimeout(()=>{      
+        setTimeout(()=>{
           lib.func.get(".apartments>.loading").style.zIndex = "0";
           lib.func.get(".apartments>.loading").remove();
         }, 1000)
       } else {
         if ( !lib.func.get(".apartments>.loading").style.opacity || lib.func.get(".apartments>section>.right").style.display === "unset" ) {
           lib.func.get(".apartments>.loading").style.opacity = "0";
-          setTimeout(()=>{      
+          setTimeout(()=>{
           lib.func.get(".apartments>.loading").remove();
           }, 1000)
         }
@@ -194,16 +190,16 @@ class Apartments extends React.Component {
           <img src={snail_face}  />
           <div className="description">LOADING</div>
         </div>
-        <Header 
-          goLoveList={this.state.goLoveList} 
+        <Header
+          goLoveList={this.state.goLoveList}
           goLoveListPage={this.goLoveList}
           goIndex={this.goIndex}
 			 />
-        <Email 
+        <Email
           toggleEmail={this.state.toggleEmail}
           openEmailForm={this.openEmailForm}
         />
-        <List 
+        <List
           goLoveList={this.state.goLoveList}
           goLoveListPage={this.goLoveList}
           completeList={this.state.completeList}
@@ -225,21 +221,6 @@ class Apartments extends React.Component {
         />
       </div>
     );
-  }
-  sortByRoomAmount ( list ) {
-    let oneRoom = [];
-    let twoRoom = [];
-    let threeRoom = [];
-    let fourRoomAndMore = [];
-    for (let i = 0 ; i < list.length ; i ++  ) {
-      let bedroom = parseInt(list[i].bedrooms);
-      if ( bedroom === 1 ) oneRoom.push(list[i]);
-      else if ( bedroom === 2 ) twoRoom.push(list[i]);
-      else if ( bedroom === 3 ) threeRoom.push(list[i]);
-      else if ( bedroom > 3 ) fourRoomAndMore.push(list[i]);
-    }
-    let roomObject = {one: oneRoom, two: twoRoom, three: threeRoom, fourOrMore: fourRoomAndMore};
-    return roomObject;
   }
   transferPriceIntoNumber ( list ) {
     list.forEach((realEstate)=>{
@@ -307,7 +288,7 @@ class Apartments extends React.Component {
           toggleEmail.open = !toggleEmail.open;
           toggleEmail.currentDetail = currentDetail;
           this.setState({toggleEmail: toggleEmail});
-        }, "id", id );  
+        }, "id", id );
       } else {
         console.log("使用currentDetail")
         let toggleEmail = this.state.toggleEmail;
@@ -351,6 +332,10 @@ class Apartments extends React.Component {
       }
     }
   }
+  updateLocalStorageLoveList (e, id, realEstate, action) {
+    if ( action === "add" ) { this.putIntoLoveList(e, id, realEstate) }
+    else if ( action === "remove" ) { this.removeFromLoveList(e, id, realEstate) }
+  }
   putIntoLoveList(e, id, realEstate) {
     // console.log(id);
     let currentLoveList = this.state.loveListStatus;
@@ -364,13 +349,13 @@ class Apartments extends React.Component {
     let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
     if( JSONforRenew === null ) {
       JSONforRenew = [];
-    } 
+    }
+    if ( this.state.selectedIndex !== -1 ) { realEstate.index = this.state.selectedIndex; }
     JSONforRenew.push(realEstate);
     localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
     this.setState({loveListDetail: JSONforRenew});
   }
   removeFromLoveList(e, id, realEstate) {
-    // console.log(id);
     let currentLoveList = this.state.loveListStatus;
     for (let i = 0 ; i < currentLoveList.length ; i++ ) {
       if (currentLoveList[i].id === id) {
@@ -378,16 +363,16 @@ class Apartments extends React.Component {
       }
     }
     this.setState({ loveListStatus: currentLoveList});
-
     let JSONforRenew = lib.func.getLocalStorageJSON("loveList");
-
     for ( let i = 0 ; i < JSONforRenew.length ; i++ ) {
       if ( JSONforRenew[i].id === realEstate.id ) {
         JSONforRenew.splice(i,1);
       }
     }
     localStorage.setItem("loveList", JSON.stringify(JSONforRenew));
-    this.setState({loveListDetail: JSONforRenew});		
+    this.setState({loveListDetail: JSONforRenew});
+    if ( this.state.goLoveList ) {          googleMap.markerclusterer.removeMarker(googleMap.markers[realEstate.index])
+    }
   }
   getloveListStatusIndex( targetID, source ) {
     let targetIDPositionIndex;
@@ -428,10 +413,10 @@ class Apartments extends React.Component {
         if (existed) {
           currentState[filter].splice(currentIndex,1);
         } else if (!existed) {
-          currentState[filter].push(value);	
+          currentState[filter].push(value);
         }
       } else {
-        currentState[filter].push(value);	
+        currentState[filter].push(value);
       }
       this.setState({filters: currentState});
     }
@@ -447,12 +432,12 @@ class Apartments extends React.Component {
           if ( parseInt(dataForFilter[i].bedrooms) === filter[j] ) {
             data.push(dataForFilter[i]);
             break;
-          } 
+          }
         } else {
           if ( dataForFilter[i][type] === filter[j] ) {
             data.push(dataForFilter[i]);
             break;
-          } 
+          }
         }
       }
     }
@@ -485,12 +470,12 @@ class Apartments extends React.Component {
 	      //roomAmount
 	      if ( filters.roomAmount.length  ) {
 	        dataForFilter = this.doFilter("roomAmount",filters.roomAmount, dataForFilter);
-	      } 
+	      }
 	      //roomType
 	      if ( filters.roomType.length ) {
 	        dataForFilter = this.doFilter("room_type",filters.roomType, dataForFilter);
 	      }
-	      //District 
+	      //District
         if ( filters.district.length ) {
           dataForFilter = this.doFilter("district", filters.district, dataForFilter);
 	      }
@@ -500,7 +485,7 @@ class Apartments extends React.Component {
 	        for ( let i = 0 ; i < dataForFilter.length ; i ++ ) {
 	          if ( dataForFilter[i].picture_url != "" ) {
 	            dataAfterPhotoRequiredFilter.push(dataForFilter[i]);
-	          }  
+	          }
 	        }
 	        dataForFilter = dataAfterPhotoRequiredFilter;
 	      }
@@ -529,7 +514,7 @@ class Apartments extends React.Component {
           }
           dataForFilter = dataAfterAmenity;
         }
-	      //hideList 
+	      //hideList
 	      let hiddenList = lib.func.getLocalStorageJSON("hiddenList");
 	      if ( hiddenList ) {
 	        let dataAfterHideList = [];
@@ -569,4 +554,3 @@ class Apartments extends React.Component {
 
 
 export default Apartments;
-

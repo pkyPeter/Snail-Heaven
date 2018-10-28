@@ -71,13 +71,13 @@
 	background-color: #40BEB6;
     color: white;
     font-weight: 100;
-}	
+}
 .apartments>section>.left>.active {
 	background-color: #40BEB6;
     color: white;
     font-weight: 100;
     margin-left: 25%;
-}	
+}
 /*打開商家*/
 .apartments>section>.left>.business {
 	position: absolute;
@@ -100,13 +100,13 @@
 	background-color: #40BEB6;
     color: white;
     font-weight: 100;
-}	
+}
 .apartments>section>.left>.active {
 	background-color: #40BEB6;
     color: white;
     font-weight: 100;
     margin-left: 25%;
-}	
+}
 /*打開道路名稱*/
 .apartments>section>.left>.road {
 	position: absolute;
@@ -129,13 +129,13 @@
 	background-color: #40BEB6;
     color: white;
     font-weight: 100;
-}	
+}
 .apartments>section>.left>.active {
 	background-color: #40BEB6;
     color: white;
     font-weight: 100;
     margin-left: 25%;
-}	
+}
 /* loading 頁面 */
 .apartments>.loading {
 	background-image: linear-gradient(to top, #37ecba 0%, #72afd3 100%);
@@ -477,7 +477,7 @@
 		    height: 12px;
 		    margin-right: 2px;
 		    margin-bottom: 1px;
-		} 
+		}
 
 		.apartments>section>.right>.resultArea>.results>.img {
 			width: 100%;
@@ -512,7 +512,7 @@
 			font-size: 2.3em;
 			align-self: flex-start;
 			color: white;
-			font-family: Microsoft JhengHe;
+			font-family: "Noto Sans",Microsoft JhengHe;
 			font-weight: 200;
 			letter-spacing: 1.3px;
 			text-shadow: 1px 1px 10px black;
@@ -665,7 +665,7 @@
 
 		.apartments>section>.right>.filterArea>.filterType>.priceChart {
 			width: 65% !important;
-			
+
 		}
 		.apartments>section>.right>.filterArea>.filterType>.filterDetail>.roomType {
 			padding: 2px 0px ;
@@ -680,8 +680,8 @@
 
 		.apartments>section>.right>.filterArea>.buttons>.button {
 			width: 49%;
-		    margin-right: 0px; 
-		    margin-left: 0px; 
+		    margin-right: 0px;
+		    margin-left: 0px;
 		    text-align: center;
 		}
 
@@ -760,5 +760,5 @@
 }
 
 .hidden {
-	display:none !important; 
+	display:none !important;
 }

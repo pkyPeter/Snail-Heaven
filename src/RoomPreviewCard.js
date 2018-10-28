@@ -9,8 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 //FontAwesome引用圖片
 import { faHeart as faRegularHeart, faSave, faThumbsDown, faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as faSolidHeart, faListUl, faThLarge, faSquare, faMapMarkedAlt} from "@fortawesome/free-solid-svg-icons";
-library.add(faRegularHeart, faSolidHeart, faSave, faListUl, faThLarge, faSquare, faThumbsDown
+import { faHeart as faSolidHeart, faMapMarkedAlt} from "@fortawesome/free-solid-svg-icons";
+library.add(faRegularHeart, faSolidHeart, faSave, faThumbsDown
   ,faEnvelope, faMapMarkedAlt);
 
 class RoomPreviewCard extends React.Component {
@@ -26,7 +26,7 @@ class RoomPreviewCard extends React.Component {
 
   }
   componentDidUpdate() {
-  
+
   }
   render() {
     let realEstate = this.props.realEstate;
@@ -45,11 +45,11 @@ class RoomPreviewCard extends React.Component {
       break;
     }
     return (
-      <div 
-      key={this.props.index} 
-      className={this.props.resultAreaDisplayType[1]} 
-      onClick={(e)=> { this.props.changeSelecteIndex("add",realEstate.index) } } 
-      onMouseEnter={(e)=>{ this.getMarkerBounce(e, loveListStatusIndex) }} 
+      <div
+      key={this.props.index}
+      className={this.props.resultAreaDisplayType[1]}
+      onClick={(e)=> { this.props.changeSelecteIndex("add",realEstate.index) } }
+      onMouseEnter={(e)=>{ this.getMarkerBounce(e, loveListStatusIndex) }}
       onMouseLeave={(e)=>{ this.stopMarkerBounce(e, loveListStatusIndex) }}
       >
         <div className="airbnbContainer">
@@ -61,8 +61,8 @@ class RoomPreviewCard extends React.Component {
           <div className="priceGesture absolute">
             <div className="price">{"$" + monthly_price}</div>
             <div className="gesture" onClick={this.stopPropagation}>
-              { 
-              this.props.loveListStatus[loveListStatusIndex].inList === true 
+              {
+              this.props.loveListStatus[loveListStatusIndex].inList === true
               ? <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} onClick={(e)=>{ this.props.removeFromLoveList(e, realEstate.id, realEstate); }}/>
               : <FontAwesomeIcon className="icon" icon={["far","heart"]} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate); }}/>
               }
