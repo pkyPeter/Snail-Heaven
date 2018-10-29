@@ -38,21 +38,16 @@ class SimpleDetail extends React.Component {
   }
   componentDidMount() {
     let lat = parseFloat(this.props.currentSimpleDetail.lat); let lng = parseFloat(this.props.currentSimpleDetail.lng);
-    let panorama = new google.maps.StreetViewPanorama(
-      lib.func.get("#streetViewMap"), {
-      position: {lat: lat, lng: lng},
-      addressControlOptions: {
-        position: google.maps.ControlPosition.BOTTOM_CENTER
-      },
-      linksControl: false,
-      panControl: false,
-      enableCloseButton: false
-    });
-    //怕收費，先 comment out
+    googleMap.init.setPanorama("#streetViewMap", {lat: lat, lng: lng});
+    // // 怕收費，先 comment out
     // googleMap.reverseGeocode(lat,lng, (results)=>{
     //   this.setState({currentAddress: results[0].formatted_address});
     //   console.log(results);
     // });
+  }
+  componentDidUpdate() {
+    let lat = parseFloat(this.props.currentSimpleDetail.lat); let lng = parseFloat(this.props.currentSimpleDetail.lng);
+    googleMap.panorama.setPosition({lat: lat, lng: lng});
   }
   render () {
     console.log(this.props.currentSimpleDetail);

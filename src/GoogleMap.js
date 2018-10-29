@@ -227,6 +227,19 @@ googleMap.style =
     }
   ]
 
+googleMap.init.setPanorama = (targetDOM, position) => {
+  googleMap.panorama = new google.maps.StreetViewPanorama(
+      document.querySelector(targetDOM), {
+      position: position,
+      addressControlOptions: {
+        position: google.maps.ControlPosition.BOTTOM_CENTER
+      },
+      linksControl: false,
+      panControl: false,
+      enableCloseButton: false
+    });
+}
+
 // marker options
 googleMap.setMapOptions = ( zoom, center) => {
   if ( zoom != "" ) googleMap.map.setZoom(zoom);
