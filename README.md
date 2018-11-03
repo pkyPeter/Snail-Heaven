@@ -1,5 +1,5 @@
 # Snail Heaven: Easy Search,  Perfect Match
-Try it Right Away: http://bit.ly/Snail_Heaven
+A house rental website relieves your searching pain, Try it Right Away: http://bit.ly/Snail_Heaven
 ## Features
 ### Map Interaction
 Draw Custom Area Directly on Map：Dectect Mouse Events to create customized search area, and update lists accordingly
@@ -29,5 +29,4 @@ Dislike List: hide the house if your no longer want it in th list
 - Third Party API: Google Map API, Firebase (Database, Functions)
 - Unit Test: Jest, Enzyme 
 - Module Bundler Tool:  Webpack
-
 
