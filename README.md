@@ -1,21 +1,22 @@
 # Snail Heaven: Easy Search,  Perfect Match
-## Try it Right Away: http://bit.ly/Snail_Heaven
+Try it Right Away: http://bit.ly/Snail_Heaven
 ## Features
 ### Map Interaction
-**Draw custom area directly on Map**：Dectect Mouse Events to create customized search area, and update lists accordingly
+Draw Custom Area Directly on Map：Dectect Mouse Events to create customized search area, and update lists accordingly
 
-**marker cluster for visibility** : Cluster markers on different level
+Marker Cluster for visibility: Cluster markers on different level
+
 ![Image of drawMap](https://github.com/pkyPeter/Snail_Heaven/blob/develop/snapshot/drawMap.gif)
 ### User Friendly Features
-**Responsive Price Chart**: change as the user add filter or move the map
+Responsive Price Chart: change as the user add filter or move the map
 
-**Filters**: diversified filters that fit your need
+Filters: diversified filters that fit your need
 
-**Custom Map Information** : show only simple map information at the beginning, and adjustable according to user perference
+Custom Map Information: show only simple map information at the beginning, and adjustable according to user perference
 
-**Favorite List**: put your prefered house into it
+Favorite List: put your prefered house into it
 
-**Dislike List**: hide the house if your no longer want it in th list 
+Dislike List: hide the house if your no longer want it in th list 
 
   ![Image of UserFriendly](https://github.com/pkyPeter/Snail_Heaven/blob/develop/snapshot/user-friendly.gif)
   
