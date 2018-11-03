@@ -1,22 +1,13 @@
 import React from "react";
-// import MarkerClusterer from "@google/markerclusterer";
 import MarkerClusterer from "./markerclusterer.js";
 import snail from "./imgs/snail_32.png";
-// import snail_happy from "./imgs/snail_happy_64.png";
-// import snail_happy from "./imgs/snail_cousin.png";
-// import snail_happy from "./imgs/placeholder_light.png";
 import snail_happy from "./imgs/house_icon.png";
-// import shell from "./imgs/shell.png";
-// import shell from "./imgs/snail_cousin_shell.png";
-// import shell from "./imgs/placeholder_seen.png";
 import shell from "./imgs/house_icon_seen.png";
 
 //marker cluster
-import m3 from "./imgs/icon_green.png";
+import clusterIcon from "./imgs/icon_green.png";
 
-// import "./markerclusterer.js";
 const script = "https://maps.googleapis.com/maps/api/js?region=TW&language=zh-TW&key=AIzaSyDxFq8QlAbDRIiQvSGD_a2C1Vwru0Q69rE&libraries=places,drawing,geometry"
-// const script2 = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -299,61 +290,22 @@ googleMap.makeClusterOpstions = () => {
   return options;
 }
 
-// googleMap.clusterStyles = [{
-//         url: m1,
-//         height: 53,
-//         width: 53,
-//         // anchor: [16, 0],
-//         textColor: 'black',
-//         textSize: 10
-//       }, {
-//         url: m2,
-//         height: 56,
-//         width: 56,
-//         // anchor: [24, 0],
-//         textColor: 'black',
-//         textSize: 11
-//       }, {
-//         url: m3,
-//         height: 65,
-//         width: 48,
-//         // height: 66,
-//         // width: 66,
-//         anchor: [17, 0],
-//         textColor: '#FFFFFF',
-//         textSize: 12,
-//         backgroundPosition: "40% 40%"
-//       }, {
-//         url: m4,
-//         height: 78,
-//         width: 78,
-//         // anchor: [24, 24],
-//         textColor: 'black',
-//         textSize: 12
-//       }, {
-//         url: m5,
-//         height: 90,
-//         width: 90,
-//         // anchor: [24, 24],
-//         textColor: 'black',
-//         textSize: 12
-//       }];
 googleMap.clusterStyles = [{
-        url: m3,
+        url: clusterIcon,
         height: 36,
         width: 36,
         // anchor: [16, 0],
         textColor: 'white',
         textSize: 10
       }, {
-        url: m3,
+        url: clusterIcon,
         height: 48,
         width: 48,
         // anchor: [24, 0],
         textColor: 'white',
         textSize: 10
       }, {
-        url: m3,
+        url: clusterIcon,
         height: 56,
         width: 56,
         // height: 66,
@@ -361,14 +313,14 @@ googleMap.clusterStyles = [{
         textColor: '#FFFFFF',
         textSize: 12
       }, {
-        url: m3,
+        url: clusterIcon,
         height: 78,
         width: 78,
         // anchor: [24, 24],
         textColor: 'white',
         textSize: 12
       }, {
-        url: m3,
+        url: clusterIcon,
         height: 90,
         width: 90,
         // anchor: [24, 24],
@@ -467,22 +419,6 @@ googleMap.evt.drawCustomArea = ( deletion ) => {
     console.log(googleMap.customArea)
     return mouseDown;
 }
-
-// googleMap.filterLocation = (mode, filterList, latLngList, currentLocation) => {
-//   let completeList = filterList;
-//   let latLngList = latLngList;
-//   let currentLocation = currentLocation;
-//   let LocationsWithinArea = [];
-//   if (mode === "normal") {
-//     for ( let i = 0; i < latLngList.length ; i++ ) {
-//       let latLng = new google.maps.LatLng(parseFloat(latLngList[i].lat),parseFloat(latLngList[i].lng));
-//       let inside = currentLocation.tains(latLng);
-//       if ( inside ) 
-//     }
-//   } else if (mode ==="polygon") {
-
-//   }
-// }
 
 googleMap.polygonOptions = (path) => {
   let options = {

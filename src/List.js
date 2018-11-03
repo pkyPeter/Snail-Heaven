@@ -117,7 +117,7 @@ class List extends React.Component {
 					<div id="googleMap" style={{height: "100%", width: "100%"}}></div>
 				</div>
 				{	!this.props.goLoveList && !this.state.toggleSimpleDetail && (
-					< SearchResult
+					<SearchResult
 					changeAreaSize={this.changeAreaSize}
 					leftRightWidth = {this.state.leftRightWidth}
 					resultAreaDisplayType={this.state.resultAreaDisplayType}
@@ -142,7 +142,7 @@ class List extends React.Component {
 					/>
 				)}
 				{	this.props.goLoveList && !this.state.toggleSimpleDetail && (
-					< LoveList
+					<LoveList
 					leftRightWidth = {this.state.leftRightWidth}
 					resultAreaDisplayType={this.state.resultAreaDisplayType}
 					switchDisplayMode={this.switchDisplayMode}
@@ -157,7 +157,7 @@ class List extends React.Component {
 					/>
 				)}
 				{	this.state.toggleSimpleDetail != false && this.state.currentSimpleDetail && (
-					< SimpleDetail
+					<SimpleDetail
 					leftRightWidth = {this.state.leftRightWidth}
 					goSimpleDetail={this.goSimpleDetail}
 					goPropertyPage={this.props.goPropertyPage}

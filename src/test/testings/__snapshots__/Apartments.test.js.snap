@@ -1,0 +1,1361 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Apartments relevant tests Apartments is rendered correctly 1`] = `
+<div
+  className="apartments"
+>
+  <div
+    className="loading"
+  >
+    <img
+      src="airbnb.png"
+    />
+    <div
+      className="description"
+    >
+      LOADING
+    </div>
+  </div>
+  <header>
+    <div
+      className="left"
+    >
+      <div
+        className="burger"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-bars fa-w-14 icon"
+          data-icon="bars"
+          data-prefix="fas"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 448 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+      </div>
+      <div
+        className="logo"
+        onClick={[Function]}
+      >
+        <div
+          className="snail"
+        />
+        <h2>
+          SNAIL HEAVEN
+        </h2>
+      </div>
+      <input
+        placeholder="小蝸牛想住哪？"
+        type="text"
+      />
+    </div>
+    <div
+      className="right"
+    >
+      <div
+        className="mobileClose"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-times fa-w-11 icon"
+          data-icon="times"
+          data-prefix="fas"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 352 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+      </div>
+      <div
+        className="searchFav"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-heart fa-w-16 icon"
+          data-icon="heart"
+          data-prefix="far"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M458.4 64.3C400.6 15.7 311.3 23 256 79.3 200.7 23 111.4 15.6 53.6 64.3-21.6 127.6-10.6 230.8 43 285.5l175.4 178.7c10 10.2 23.4 15.9 37.6 15.9 14.3 0 27.6-5.6 37.6-15.8L469 285.6c53.5-54.7 64.7-157.9-10.6-221.3zm-23.6 187.5L259.4 430.5c-2.4 2.4-4.4 2.4-6.8 0L77.2 251.8c-36.5-37.2-43.9-107.6 7.3-150.7 38.9-32.7 98.9-27.8 136.5 10.5l35 35.7 35-35.7c37.8-38.5 97.8-43.2 136.5-10.6 51.1 43.1 43.5 113.9 7.3 150.8z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+        <p>
+          我的最愛
+        </p>
+      </div>
+    </div>
+  </header>
+  <div />
+  <section>
+    <div
+      className="left"
+      style={
+        Object {
+          "width": undefined,
+        }
+      }
+    >
+      <div
+        className="business"
+        onClick={[Function]}
+      >
+        <span>
+          顯示周邊商家
+        </span>
+      </div>
+      <div
+        className="road"
+        onClick={[Function]}
+      >
+        <span>
+          顯示道路名稱
+        </span>
+      </div>
+      <div
+        id="googleMap"
+        style={
+          Object {
+            "height": "100%",
+            "width": "100%",
+          }
+        }
+      />
+    </div>
+    <div
+      className="right"
+      onScroll={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="areaSizer"
+        draggable="true"
+        onDragEnd={[Function]}
+        style={
+          Object {
+            "right": "600px",
+          }
+        }
+      />
+      <div
+        className="title"
+      >
+        <div>
+          台北市
+        </div>
+        <div>
+           &gt; 
+        </div>
+        <div>
+          行政區
+        </div>
+      </div>
+      <div
+        className="filterArea"
+      >
+        <div
+          className="filterType"
+        >
+          <p>
+            月租金
+          </p>
+          <div
+            className="filterDetail priceChart"
+          >
+            <div
+              className="bars"
+            />
+            <div
+              className="control"
+            >
+              <div
+                className="circle left"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "left": 0,
+                  }
+                }
+              >
+                <span
+                  className="money"
+                >
+                  0
+                </span>
+              </div>
+              <div
+                className="bottomLine front"
+              />
+              <div
+                className="bottomLine grey"
+              />
+              <div
+                className="circle right"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "right": 0,
+                  }
+                }
+              >
+                <span
+                  className="money"
+                >
+                  100000
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="filterType"
+        >
+          <p>
+            房間數量
+          </p>
+          <div
+            className="filterDetail"
+          >
+            <div
+              className="roomAmount"
+              key="0"
+              onClick={[Function]}
+            >
+              1
+            </div>
+            <div
+              className="roomAmount"
+              key="1"
+              onClick={[Function]}
+            >
+              2
+            </div>
+            <div
+              className="roomAmount"
+              key="2"
+              onClick={[Function]}
+            >
+              3
+            </div>
+            <div
+              className="roomAmount"
+              key="3"
+              onClick={[Function]}
+            >
+              4
+            </div>
+          </div>
+        </div>
+        <div
+          className="filterType"
+        >
+          <p>
+            房屋類型
+          </p>
+          <div
+            className="filterDetail"
+          >
+            <div
+              className="roomType"
+              key="0"
+              onClick={[Function]}
+            >
+              分租套房
+            </div>
+            <div
+              className="roomType"
+              key="1"
+              onClick={[Function]}
+            >
+              獨立套房
+            </div>
+            <div
+              className="roomType"
+              key="2"
+              onClick={[Function]}
+            >
+              整層住家
+            </div>
+          </div>
+        </div>
+        <div
+          className="filterType districts hidden"
+        >
+          <p>
+            行政區
+          </p>
+          <div
+            className="filterDetail"
+          >
+            <div
+              className="district"
+              key="0"
+              onClick={[Function]}
+            >
+              中正區
+            </div>
+            <div
+              className="district"
+              key="1"
+              onClick={[Function]}
+            >
+              大同區
+            </div>
+            <div
+              className="district"
+              key="2"
+              onClick={[Function]}
+            >
+              中山區
+            </div>
+            <div
+              className="district"
+              key="3"
+              onClick={[Function]}
+            >
+              松山區
+            </div>
+            <div
+              className="district"
+              key="4"
+              onClick={[Function]}
+            >
+              大安區
+            </div>
+            <div
+              className="district"
+              key="5"
+              onClick={[Function]}
+            >
+              萬華區
+            </div>
+            <div
+              className="district"
+              key="6"
+              onClick={[Function]}
+            >
+              信義區
+            </div>
+            <div
+              className="district"
+              key="7"
+              onClick={[Function]}
+            >
+              士林區
+            </div>
+            <div
+              className="district"
+              key="8"
+              onClick={[Function]}
+            >
+              北投區
+            </div>
+            <div
+              className="district"
+              key="9"
+              onClick={[Function]}
+            >
+              內湖區
+            </div>
+            <div
+              className="district"
+              key="10"
+              onClick={[Function]}
+            >
+              南港區
+            </div>
+            <div
+              className="district"
+              key="11"
+              onClick={[Function]}
+            >
+              文山區
+            </div>
+          </div>
+        </div>
+        <div
+          className="filterType hidden"
+        >
+          <p>
+            有無房屋照片
+          </p>
+          <div
+            className="filterDetail"
+          >
+            <div
+              className="required"
+              onClick={[Function]}
+            >
+              必須有照片
+            </div>
+          </div>
+        </div>
+        <div
+          className="filterType amenities hidden"
+        >
+          <p>
+            必備設備
+          </p>
+          <div
+            className="filterDetail"
+          >
+            <div
+              className="amenity"
+              key="0"
+              onClick={[Function]}
+            >
+              網路
+            </div>
+            <div
+              className="amenity"
+              key="1"
+              onClick={[Function]}
+            >
+              熱水器
+            </div>
+            <div
+              className="amenity"
+              key="2"
+              onClick={[Function]}
+            >
+              冷氣
+            </div>
+            <div
+              className="amenity"
+              key="3"
+              onClick={[Function]}
+            >
+              冰箱
+            </div>
+            <div
+              className="amenity"
+              key="4"
+              onClick={[Function]}
+            >
+              書桌/工作區
+            </div>
+            <div
+              className="amenity"
+              key="5"
+              onClick={[Function]}
+            >
+              洗衣機
+            </div>
+            <div
+              className="amenity"
+              key="6"
+              onClick={[Function]}
+            >
+              可養寵物
+            </div>
+            <div
+              className="amenity"
+              key="7"
+              onClick={[Function]}
+            >
+              廚房
+            </div>
+            <div
+              className="amenity"
+              key="8"
+              onClick={[Function]}
+            >
+              健身房
+            </div>
+            <div
+              className="amenity"
+              key="9"
+              onClick={[Function]}
+            >
+              電梯
+            </div>
+            <div
+              className="amenity"
+              key="10"
+              onClick={[Function]}
+            >
+              付費停車場
+            </div>
+            <div
+              className="amenity"
+              key="11"
+              onClick={[Function]}
+            >
+              路邊停車格
+            </div>
+          </div>
+        </div>
+        <div
+          className="filterType buttons"
+        >
+          <div
+            className="button"
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+          >
+            <svg
+              aria-hidden="true"
+              className="svg-inline--fa fa-save fa-w-14 icon"
+              data-icon="save"
+              data-prefix="far"
+              role="img"
+              style={Object {}}
+              viewBox="0 0 448 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM272 80v80H144V80h128zm122 352H54a6 6 0 0 1-6-6V86a6 6 0 0 1 6-6h42v104c0 13.255 10.745 24 24 24h176c13.255 0 24-10.745 24-24V83.882l78.243 78.243a6 6 0 0 1 1.757 4.243V426a6 6 0 0 1-6 6zM224 232c-48.523 0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-88zm0 128c-22.056 0-40-17.944-40-40s17.944-40 40-40 40 17.944 40 40-17.944 40-40 40z"
+                fill="currentColor"
+                style={Object {}}
+              />
+            </svg>
+            儲存篩選組合
+          </div>
+          <div
+            className="button"
+            onClick={[Function]}
+          >
+            更多條件
+          </div>
+        </div>
+      </div>
+      <div
+        className="resultTitle"
+      >
+        <div
+          className="showLogic"
+        >
+          <select
+            onChange={[Function]}
+          >
+            <option
+              value="default"
+            >
+              預設排序
+            </option>
+            <option
+              value="lowest"
+            >
+              最低價優先
+            </option>
+            <option
+              value="highest"
+            >
+              最高價優先
+            </option>
+          </select>
+        </div>
+        <p>
+          0
+          筆結果
+        </p>
+        <div
+          className="displayLogic"
+        >
+          <div
+            className="displayType"
+            onClick={[Function]}
+          >
+            <svg
+              aria-hidden="true"
+              className="svg-inline--fa fa-list-ul fa-w-16 "
+              data-icon="list-ul"
+              data-prefix="fas"
+              role="img"
+              style={Object {}}
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M96 96c0 26.51-21.49 48-48 48S0 122.51 0 96s21.49-48 48-48 48 21.49 48 48zM48 208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm0 160c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm96-236h352c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+                fill="currentColor"
+                style={Object {}}
+              />
+            </svg>
+          </div>
+          <div
+            className="displayType"
+            onClick={[Function]}
+          >
+            <svg
+              aria-hidden="true"
+              className="svg-inline--fa fa-th-large fa-w-16 "
+              data-icon="th-large"
+              data-prefix="fas"
+              role="img"
+              style={Object {}}
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M296 32h192c13.255 0 24 10.745 24 24v160c0 13.255-10.745 24-24 24H296c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24zm-80 0H24C10.745 32 0 42.745 0 56v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24zM0 296v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm296 184h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H296c-13.255 0-24 10.745-24 24v160c0 13.255 10.745 24 24 24z"
+                fill="currentColor"
+                style={Object {}}
+              />
+            </svg>
+          </div>
+          <div
+            className="displayType"
+            onClick={[Function]}
+          >
+            <svg
+              aria-hidden="true"
+              className="svg-inline--fa fa-square fa-w-14 "
+              data-icon="square"
+              data-prefix="fas"
+              role="img"
+              style={Object {}}
+              viewBox="0 0 448 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"
+                fill="currentColor"
+                style={Object {}}
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        className="resultArea"
+      />
+    </div>
+    <div
+      className="mapMode"
+      onClick={[Function]}
+    >
+      <svg
+        aria-hidden="true"
+        className="svg-inline--fa fa-map-marked-alt fa-w-18 icon"
+        data-icon="map-marked-alt"
+        data-prefix="fas"
+        role="img"
+        style={Object {}}
+        viewBox="0 0 576 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z"
+          fill="currentColor"
+          style={Object {}}
+        />
+      </svg>
+    </div>
+    <div
+      className="listMode"
+    />
+  </section>
+</div>
+`;
+
+exports[`Apartments relevant tests Open Email Form 1`] = `
+<div
+  className="apartments"
+>
+  <div
+    className="loading"
+  >
+    <img
+      src="airbnb.png"
+    />
+    <div
+      className="description"
+    >
+      LOADING
+    </div>
+  </div>
+  <header>
+    <div
+      className="left"
+    >
+      <div
+        className="burger"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-bars fa-w-14 icon"
+          data-icon="bars"
+          data-prefix="fas"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 448 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+      </div>
+      <div
+        className="logo"
+        onClick={[Function]}
+      >
+        <div
+          className="snail"
+        />
+        <h2>
+          SNAIL HEAVEN
+        </h2>
+      </div>
+      <input
+        placeholder="小蝸牛想住哪？"
+        type="text"
+      />
+    </div>
+    <div
+      className="right"
+    >
+      <div
+        className="mobileClose"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-times fa-w-11 icon"
+          data-icon="times"
+          data-prefix="fas"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 352 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+      </div>
+      <div
+        className="searchFav"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-heart fa-w-16 icon"
+          data-icon="heart"
+          data-prefix="fas"
+          role="img"
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+        <p>
+          我的最愛
+        </p>
+      </div>
+    </div>
+  </header>
+  <div
+    className="email"
+  >
+    <div
+      className="background"
+    >
+      <div
+        className="form"
+      >
+        <div
+          className="close"
+          onClick={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-times fa-w-11 icon"
+            data-icon="times"
+            data-prefix="fas"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 352 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+        </div>
+        <div
+          className="title"
+        >
+          寄信給 
+        </div>
+        <form
+          id="checkAvailability"
+        >
+          <input
+            className="name formChild"
+            placeholder="請輸入姓名"
+            required={true}
+            type="text"
+          />
+          <input
+            className="senderEmail formChild"
+            placeholder="Email"
+            required={true}
+            type="email"
+          />
+          <input
+            className="phone formChild"
+            placeholder="電話"
+            type="tel"
+          />
+          <input
+            className="date formChild"
+            placeholder="預計起租日期："
+            type="date"
+          />
+          <input
+            className="visitTime formChild"
+            placeholder="希望拜訪時間"
+          />
+          <textarea
+            className="message formChild"
+            form="checkAvailability"
+            placeholder="簡易打招呼訊息"
+          />
+          <div
+            className="remind"
+          />
+          <input
+            className="submit"
+            onClick={[Function]}
+            type="submit"
+            value="寄送email"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+  <section>
+    <div
+      className="left"
+      style={
+        Object {
+          "width": undefined,
+        }
+      }
+    >
+      <div
+        className="business"
+        onClick={[Function]}
+      >
+        <span>
+          顯示周邊商家
+        </span>
+      </div>
+      <div
+        className="road"
+        onClick={[Function]}
+      >
+        <span>
+          顯示道路名稱
+        </span>
+      </div>
+      <div
+        id="googleMap"
+        style={
+          Object {
+            "height": "100%",
+            "width": "100%",
+          }
+        }
+      />
+    </div>
+    <div
+      className="right"
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="areaSizer"
+        draggable="true"
+        style={
+          Object {
+            "right": "600px",
+          }
+        }
+      />
+      <div
+        className="favTitle"
+      >
+        <div
+          className="return"
+          onClick={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-long-arrow-alt-left fa-w-14 icon"
+            data-icon="long-arrow-alt-left"
+            data-prefix="fas"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 448 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          <div>
+            回到搜尋結果
+          </div>
+        </div>
+        <div
+          className="title"
+        >
+          <div
+            className="displayLogic"
+          >
+            <div
+              className="displayType"
+              onClick={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="svg-inline--fa fa-list-ul fa-w-16 "
+                data-icon="list-ul"
+                data-prefix="fas"
+                role="img"
+                style={Object {}}
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M96 96c0 26.51-21.49 48-48 48S0 122.51 0 96s21.49-48 48-48 48 21.49 48 48zM48 208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm0 160c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm96-236h352c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+                  fill="currentColor"
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+            <div
+              className="displayType"
+              onClick={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="svg-inline--fa fa-th-large fa-w-16 "
+                data-icon="th-large"
+                data-prefix="fas"
+                role="img"
+                style={Object {}}
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M296 32h192c13.255 0 24 10.745 24 24v160c0 13.255-10.745 24-24 24H296c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24zm-80 0H24C10.745 32 0 42.745 0 56v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24zM0 296v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm296 184h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H296c-13.255 0-24 10.745-24 24v160c0 13.255 10.745 24 24 24z"
+                  fill="currentColor"
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+            <div
+              className="displayType"
+              onClick={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="svg-inline--fa fa-square fa-w-14 "
+                data-icon="square"
+                data-prefix="fas"
+                role="img"
+                style={Object {}}
+                viewBox="0 0 448 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"
+                  fill="currentColor"
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+          </div>
+          <div>
+            已收藏
+            0
+            個
+          </div>
+        </div>
+      </div>
+      <div
+        className="resultArea"
+      />
+    </div>
+    <div
+      className="mapMode"
+      onClick={[Function]}
+    >
+      <svg
+        aria-hidden="true"
+        className="svg-inline--fa fa-map-marked-alt fa-w-18 icon"
+        data-icon="map-marked-alt"
+        data-prefix="fas"
+        role="img"
+        style={Object {}}
+        viewBox="0 0 576 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z"
+          fill="currentColor"
+          style={Object {}}
+        />
+      </svg>
+    </div>
+    <div
+      className="listMode"
+    />
+  </section>
+</div>
+`;
+
+exports[`Apartments relevant tests Open Love List, goLoveList will open 1`] = `
+<div
+  className="apartments"
+>
+  <div
+    className="loading"
+  >
+    <img
+      src="airbnb.png"
+    />
+    <div
+      className="description"
+    >
+      LOADING
+    </div>
+  </div>
+  <header>
+    <div
+      className="left"
+    >
+      <div
+        className="burger"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-bars fa-w-14 icon"
+          data-icon="bars"
+          data-prefix="fas"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 448 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+      </div>
+      <div
+        className="logo"
+        onClick={[Function]}
+      >
+        <div
+          className="snail"
+        />
+        <h2>
+          SNAIL HEAVEN
+        </h2>
+      </div>
+      <input
+        placeholder="小蝸牛想住哪？"
+        type="text"
+      />
+    </div>
+    <div
+      className="right"
+    >
+      <div
+        className="mobileClose"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-times fa-w-11 icon"
+          data-icon="times"
+          data-prefix="fas"
+          role="img"
+          style={Object {}}
+          viewBox="0 0 352 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+      </div>
+      <div
+        className="searchFav"
+        onClick={[Function]}
+      >
+        <svg
+          aria-hidden="true"
+          className="svg-inline--fa fa-heart fa-w-16 icon"
+          data-icon="heart"
+          data-prefix="fas"
+          role="img"
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
+            fill="currentColor"
+            style={Object {}}
+          />
+        </svg>
+        <p>
+          我的最愛
+        </p>
+      </div>
+    </div>
+  </header>
+  <div />
+  <section>
+    <div
+      className="left"
+      style={
+        Object {
+          "width": undefined,
+        }
+      }
+    >
+      <div
+        className="business"
+        onClick={[Function]}
+      >
+        <span>
+          顯示周邊商家
+        </span>
+      </div>
+      <div
+        className="road"
+        onClick={[Function]}
+      >
+        <span>
+          顯示道路名稱
+        </span>
+      </div>
+      <div
+        id="googleMap"
+        style={
+          Object {
+            "height": "100%",
+            "width": "100%",
+          }
+        }
+      />
+    </div>
+    <div
+      className="right"
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="areaSizer"
+        draggable="true"
+        style={
+          Object {
+            "right": "600px",
+          }
+        }
+      />
+      <div
+        className="favTitle"
+      >
+        <div
+          className="return"
+          onClick={[Function]}
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-long-arrow-alt-left fa-w-14 icon"
+            data-icon="long-arrow-alt-left"
+            data-prefix="fas"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 448 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          <div>
+            回到搜尋結果
+          </div>
+        </div>
+        <div
+          className="title"
+        >
+          <div
+            className="displayLogic"
+          >
+            <div
+              className="displayType"
+              onClick={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="svg-inline--fa fa-list-ul fa-w-16 "
+                data-icon="list-ul"
+                data-prefix="fas"
+                role="img"
+                style={Object {}}
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M96 96c0 26.51-21.49 48-48 48S0 122.51 0 96s21.49-48 48-48 48 21.49 48 48zM48 208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm0 160c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm96-236h352c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+                  fill="currentColor"
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+            <div
+              className="displayType"
+              onClick={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="svg-inline--fa fa-th-large fa-w-16 "
+                data-icon="th-large"
+                data-prefix="fas"
+                role="img"
+                style={Object {}}
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M296 32h192c13.255 0 24 10.745 24 24v160c0 13.255-10.745 24-24 24H296c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24zm-80 0H24C10.745 32 0 42.745 0 56v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24zM0 296v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm296 184h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H296c-13.255 0-24 10.745-24 24v160c0 13.255 10.745 24 24 24z"
+                  fill="currentColor"
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+            <div
+              className="displayType"
+              onClick={[Function]}
+            >
+              <svg
+                aria-hidden="true"
+                className="svg-inline--fa fa-square fa-w-14 "
+                data-icon="square"
+                data-prefix="fas"
+                role="img"
+                style={Object {}}
+                viewBox="0 0 448 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"
+                  fill="currentColor"
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+          </div>
+          <div>
+            已收藏
+            0
+            個
+          </div>
+        </div>
+      </div>
+      <div
+        className="resultArea"
+      />
+    </div>
+    <div
+      className="mapMode"
+      onClick={[Function]}
+    >
+      <svg
+        aria-hidden="true"
+        className="svg-inline--fa fa-map-marked-alt fa-w-18 icon"
+        data-icon="map-marked-alt"
+        data-prefix="fas"
+        role="img"
+        style={Object {}}
+        viewBox="0 0 576 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z"
+          fill="currentColor"
+          style={Object {}}
+        />
+      </svg>
+    </div>
+    <div
+      className="listMode"
+    />
+  </section>
+</div>
+`;

@@ -40,10 +40,10 @@ class SimpleDetail extends React.Component {
     let lat = parseFloat(this.props.currentSimpleDetail.lat); let lng = parseFloat(this.props.currentSimpleDetail.lng);
     googleMap.init.setPanorama("#streetViewMap", {lat: lat, lng: lng});
     // // 怕收費，先 comment out
-    // googleMap.reverseGeocode(lat,lng, (results)=>{
-    //   this.setState({currentAddress: results[0].formatted_address});
-    //   console.log(results);
-    // });
+    googleMap.reverseGeocode(lat,lng, (results)=>{
+      this.setState({currentAddress: results[0].formatted_address});
+      console.log(results);
+    });
   }
   componentDidUpdate() {
     let lat = parseFloat(this.props.currentSimpleDetail.lat); let lng = parseFloat(this.props.currentSimpleDetail.lng);

@@ -1,4 +1,4 @@
-import favicon from "./imgs/favicon.ico"
+import favicon from "./imgs/favicon.ico";
 
 const lib = {
 	init: {},
@@ -25,7 +25,8 @@ lib.init.loadLine = (src) => {
   });
 }
 
-document.addEventListener('load', lib.init.getFavicon());
+window.addEventListener('load',lib.init.getFavicon)
+// lib.init.getFavicon();
 // document.addEventListener('load', lib.init.loadLine("https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js"));
 
 lib.func.get = (selector) => {

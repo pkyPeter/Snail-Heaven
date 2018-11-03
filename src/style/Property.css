@@ -95,7 +95,9 @@
   	/*地址*/
   	.property>.propContent>.left>.address {
   		font-size: 1em;
-  		margin: 5px 0px;
+	    margin: 5px 0px;
+	    font-weight: 100;
+	    font-family: Microsoft Jhenghei;
   	}
   	/*立即聯繫*/
   	.property>.propContent>.left>.checkAvailable {

@@ -89,26 +89,12 @@ class Property extends React.Component {
 				    panControl: false,
 				    enableCloseButton: false
           });
-        // googleMap.reverseGeocode(lat,lng, (results)=>{
-        //   this.setState({currentAddress: results[0].formatted_address});
-        //   console.log(results);
-        // });
+        googleMap.reverseGeocode(lat,lng, (results)=>{
+          this.setState({currentAddress: results[0].formatted_address});
+          console.log(results);
+        });
       });
     });
-
-
-    // this.getQueryStringID((outputArray)=>{
-    //   console.log(outputArray);
-    //   let targetID = outputArray[0];
-    //   let completeList = this.state.completeList;
-    //   for (let i = 0; i< completeList.length; i++) {
-    //     if (completeList[i].id === targetID) {
-    //       this.setState({currentList: completeList[i]});
-    //       console.log(completeList[i]);
-    //     }
-    //   }
-    // });
-
   }
   render() {
     console.log(this.state.currentList);

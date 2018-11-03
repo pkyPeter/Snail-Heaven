@@ -60,6 +60,12 @@ firebaseApp.fBaseDB.getDetailByID = ( ID ,callback ) => {
 	})
 }
 
+firebaseApp.fBaseDB.getDetailByIDWithPromise = ( ID ) => {
+	return firebaseDB.ref("details").orderByChild("id").equalTo(ID).once("value").then(snapshot => {
+		return snapshot.val();
+	})
+}
+
 
 firebaseApp.fBaseDB.getListingByID = ( ID ,callback) => {
 	firebaseDB.ref("listings").orderByChild("id").equalTo(ID).once("value").then(snapshot => {
