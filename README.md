@@ -6,13 +6,13 @@ Draw Custom Area Directly on Map：Dectect Mouse Events to create customized sea
 
 Marker Cluster for visibility: Cluster markers on different level
 
+Custom Map Information: show only simple map information at the beginning, and adjustable according to user perference
+
 ![Image of drawMap](https://github.com/pkyPeter/Snail_Heaven/blob/develop/snapshot/drawMap.gif)
 ### User Friendly Features
 Responsive Price Chart: change as the user add filter or move the map
 
 Filters: diversified filters that fit your need
-
-Custom Map Information: show only simple map information at the beginning, and adjustable according to user perference
 
 Favorite List: put your prefered house into it
 
