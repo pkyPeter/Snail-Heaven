@@ -1,5 +1,5 @@
 # Snail Heaven: Easy Search,  Perfect Match
-A house rental website relieves your searching pain, Try it Right Away: http://bit.ly/Snail_Heaven
+A house rental website aim to relieve your searching pain, Try it Right Away: http://bit.ly/Snail_Heaven
 ## Features
 ### Map Interaction
 Draw Custom Area Directly on Map：Dectect Mouse Events to create customized search area, and update lists accordingly
