@@ -14,43 +14,36 @@ library.add(faRegularHeart, faSolidHeart, faSave, faThumbsDown
   ,faEnvelope, faMapMarkedAlt);
 
 class RoomPreviewCard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
+  constructor() {
+    super();
     this.stopPropagation = this.stopPropagation.bind(this);
     this.getMarkerBounce = this.getMarkerBounce.bind(this);
     this.stopMarkerBounce = this.stopMarkerBounce.bind(this);
   }
-  componentDidMount() {
 
-  }
-  componentDidUpdate() {
-
-  }
   render() {
     let realEstate = this.props.realEstate;
     let monthly_price = realEstate.monthly_price.toLocaleString("en");
     let loveListStatusIndex = this.props.loveListStatus != null && this.props.getloveListStatusIndex(realEstate.id, this.props.loveListStatus);
     let roomType;
     switch(realEstate.room_type) {
-      case "EHA":
+    case "EHA":
       roomType = "整層住家";
       break;
-      case "PR":
+    case "PR":
       roomType = "獨立套房";
       break;
-      case "SR":
+    case "SR":
       roomType = "分租套房";
       break;
     }
     return (
       <div
-      key={this.props.index}
-      className={this.props.resultAreaDisplayType[1]}
-      onClick={(e)=> { this.props.changeSelecteIndex("add",realEstate.index) } }
-      onMouseEnter={(e)=>{ this.getMarkerBounce(e, loveListStatusIndex) }}
-      onMouseLeave={(e)=>{ this.stopMarkerBounce(e, loveListStatusIndex) }}
+        key={this.props.index}
+        className={this.props.resultAreaDisplayType[1]}
+        onClick={(e)=> { this.props.changeSelecteIndex("add",realEstate.index); } }
+        onMouseEnter={(e)=>{ this.getMarkerBounce(e, loveListStatusIndex); }}
+        onMouseLeave={(e)=>{ this.stopMarkerBounce(e, loveListStatusIndex); }}
       >
         <div className="airbnbContainer">
           <img className="airbnb" src={airbnb}></img>
@@ -62,11 +55,11 @@ class RoomPreviewCard extends React.Component {
             <div className="price">{"$" + monthly_price}</div>
             <div className="gesture" onClick={this.stopPropagation}>
               {
-              this.props.loveListStatus[loveListStatusIndex].inList === true
-              ? <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} onClick={(e)=>{ this.props.removeFromLoveList(e, realEstate.id, realEstate); }}/>
-              : <FontAwesomeIcon className="icon" icon={["far","heart"]} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate); }}/>
+                this.props.loveListStatus[loveListStatusIndex].inList === true
+                  ? <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} onClick={(e)=>{ this.props.removeFromLoveList(e, realEstate.id, realEstate); }}/>
+                  : <FontAwesomeIcon className="icon" icon={["far","heart"]} onClick={(e)=>{ this.props.putIntoLoveList(e, realEstate.id, realEstate); }}/>
               }
-              <FontAwesomeIcon className="icon" icon={["far","envelope"]} onClick={()=>{this.props.openEmailForm("",realEstate.id) }}/>
+              <FontAwesomeIcon className="icon" icon={["far","envelope"]} onClick={()=>{this.props.openEmailForm("",realEstate.id); }}/>
               <FontAwesomeIcon className="icon" icon={["far","thumbs-down"]} onClick={(e)=>{this.props.hideList(e, realEstate.id, realEstate.index);}} />
             </div>
           </div>

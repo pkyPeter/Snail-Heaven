@@ -560,12 +560,12 @@
 			padding: 0px 0px 0px 4px !important;
 		}
 		.apartments>section>.right>.resultArea>.resultsFlex>.description>.priceGesture>.price {
-			font-size: 2em !important;
+			font-size: 1.8em !important;
 		}
 		.apartments>section>.right>.resultArea>.resultsFlex>.description>.priceGesture>.gesture>.icon {
 			height: 29px !important;
 			width: 29px !important;
-			margin-right: 8px !important;
+			margin-right: 6px !important;
 		}
 	/* 『條列式』排列方式，這邊只需要把resultList設定在results那層，就會套用以下這些效果拉*/
 		.apartments>section>.right>.resultArea>.resultsList {

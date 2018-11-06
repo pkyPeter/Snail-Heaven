@@ -30,6 +30,18 @@
         "semi": [
             "warn",
             "always"
+        ],
+        "max-len": [
+            "warn",
+            { "code": 80 }
+        ],
+        "no-unused-vars": [
+            "warn",
+             { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
+        ],
+        "no-undef": [
+            "warn", 
+            { "typeof": true }
         ]
     }
 }
