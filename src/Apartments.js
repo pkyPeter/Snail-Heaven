@@ -50,13 +50,19 @@ class Apartments extends React.Component {
     this.getFilteredData = this.getFilteredData.bind(this);
     this.showLoveListOnly = this.showLoveListOnly.bind(this);
     this.showPreviousView = this.showPreviousView.bind(this);
-    firebaseApp.sortAmenity().then((amenitiesList) => {
-      this.setState({ amenitiesList: amenitiesList });
-    });
+
   }
   componentDidMount() {
     // firebaseApp.fBaseDB.getDataNew("latLng").then( data => { console.log(data) })
-    firebaseApp.fBaseDB.getDataNew("listings")
+    Promise.all([firebaseApp.sortAmenity(), firebaseApp.fBaseDB.getDataNew
+      ("listings")]).then((amenityAndCompleteList)=>{
+        this.setState({ amenitiesList: amenityAndCompleteList[0]})
+        return amenityAndCompleteList[1];
+      })
+    // firebaseApp.sortAmenity().then((amenitiesList) => {
+    //   this.setState({ amenitiesList: amenitiesList });
+    // });
+    // firebaseApp.fBaseDB.getDataNew("listings")
       .then(dataFromFB => {
         for (let i = 0; i < dataFromFB.length; i++) { dataFromFB[i].index =
             i; }
@@ -65,7 +71,7 @@ class Apartments extends React.Component {
         this.transferPriceIntoNumber(dataFromFB);
         this.confirmLoveListIndex(this.state.loveListDetail, dataFromFB);
         this.setState({ completeList: dataFromFB, loveListStatus: this.createLoveListStatus(
-            dataFromFB), latLng: location });
+          dataFromFB), latLng: location });
         //等google map相關程序完成，再進行後續動作
         googleMap.load
           .then(() => {
@@ -181,9 +187,9 @@ class Apartments extends React.Component {
   }
   componentDidUpdate(prevState) {
     if (this.state.loveListStatus && lib.func.getQueryStringAndSearch(
-        "loveList") === true) {
+      "loveList") === true) {
       this.setState((currentState, currentProps) => ({ goLoveList: !
-          currentState.goLoveList }));
+      currentState.goLoveList }));
       this.setState({ toggleSimpleDetail: false });
       window.history.replaceState({}, document.title, "/apartments");
     }
@@ -193,7 +199,7 @@ class Apartments extends React.Component {
       this.showPreviousView();
     }
     if (this.state.filteredData.length !== 0 && lib.func.get(
-        ".apartments>.loading")) {
+      ".apartments>.loading")) {
       if (document.documentElement.clientWidth > 900) {
         lib.func.get(".apartments>.loading").style.opacity = "0";
         setTimeout(() => {
@@ -288,11 +294,11 @@ class Apartments extends React.Component {
   goLoveList(e) {
     if (googleMap.map) {
       googleMap.setMapOptions(13, { lat: this.state.currentLocation[0], lng: this
-          .state.currentLocation[1] });
+        .state.currentLocation[1] });
       googleMap.markerclusterer.setGridSize(1);
     }
     this.setState((currentState, currentProps) => ({ goLoveList: !
-        currentState.goLoveList }));
+    currentState.goLoveList }));
   }
   goPropertyPage(e, id) {
     window.open(`/property?id=${id}`);
@@ -330,8 +336,6 @@ class Apartments extends React.Component {
         this.setState({ toggleEmail: toggleEmail });
       }
     }
-
-
   }
   createLoveListStatus(ObjectArray) {
     let loveListStatus = [];
@@ -367,8 +371,8 @@ class Apartments extends React.Component {
     }
   }
   updateLocalStorageLoveList(e, id, realEstate, action) {
-    if (action === "add") { this.putIntoLoveList(e, id, realEstate); } else if (
-      action === "remove") { this.removeFromLoveList(e, id, realEstate); }
+    if (action === "add") { this.putIntoLoveList(e, id, realEstate); } 
+    else if (action === "remove") { this.removeFromLoveList(e, id, realEstate); }
   }
   putIntoLoveList(e, id, realEstate) {
     let currentLoveList = this.state.loveListStatus;
@@ -422,13 +426,13 @@ class Apartments extends React.Component {
     if (filter === "photoRequired") {
       let currentState = this.state.filters;
       if (currentState["photoRequired"] === true) { currentState[
-          "photoRequired"] = false; } else { currentState["photoRequired"] =
+        "photoRequired"] = false; } else { currentState["photoRequired"] =
           true; }
       this.setState({ filters: currentState });
     } else if (filter === "priceFloor" || filter === "priceCeiling") {
       let currentState = this.state.filters;
       if (filter === "priceFloor") { currentState["priceFloor"] = value; } else { currentState
-          ["priceCeiling"] = value; }
+        ["priceCeiling"] = value; }
       this.setState({ filters: currentState });
     } else {
       let currentState = this.state.filters;
