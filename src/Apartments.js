@@ -40,7 +40,8 @@ class Apartments extends React.Component {
       currentLocation: [25.0484402, 121.5278391],
       latLng: [],
       toggleEmail: { open: false, currentDetail: null },
-      selectedIndex: -1
+      selectedIndex: -1,
+      loading: {show:true, opacity: 1}
     };
     this.transferPriceIntoNumber = this.transferPriceIntoNumber.bind(this);
     this.goIndex = this.goIndex.bind(this);
@@ -65,7 +66,8 @@ class Apartments extends React.Component {
     // map after all data is loaded
     Promise.all([
       firebaseApp.sortAmenity(),
-      firebaseApp.fBaseDB.getDataNew("listings")
+      firebaseApp.fBaseDB.getDataNew("listings"),
+      googleMap.load
     ])
       .then(amenityAndCompleteList => {
         this.setState({ amenitiesList: amenityAndCompleteList[0] });
@@ -85,121 +87,117 @@ class Apartments extends React.Component {
           latLng: location
         });
         //等google map相關程序完成，再進行後續動作
-        googleMap.load.then(() => {
-          let queryLocation = [false, false];
-          let zoom;
-          if (
-            lib.func.getQueryStringAndSearch("location") ||
-            lib.func.getQueryStringAndSearch("search")
-          ) {
-            let latLng = window.location.search
-              .split("&")[0]
-              .split("=")[1]
-              .split(",");
-            queryLocation = [parseFloat(latLng[0]), parseFloat(latLng[1])];
-            zoom = 15;
-            if (lib.func.getQueryStringAndSearch("search")) {
-              zoom = 17;
-            }
-          } else {
-            zoom = 12;
-          }
-          let lat = queryLocation[0] || this.state.currentLocation[0];
-          let lng = queryLocation[1] || this.state.currentLocation[1];
-          //製作地圖的promise，以及接連進行的一系列動作
-          googleMap.init
-            .initMapPromise(zoom, lat, lng, "googleMap")
-            .then(map => {
-              let markers = googleMap.makeMarkers(this.state.latLng, true);
-              let initAutocomplete = googleMap.initAutocomplete(
-                lib.func.get("header>.left>input"),
-                "apartments"
-              );
-              let autocompleteListener = googleMap.addAutocompleteListener(
-                googleMap.autocomplete.apartments
-              );
-              googleMap.enableCluster(map, []);
-              return markers;
-            })
-            .then(markers => {
-              //點擊marker，就改變state，這個state會連動影響，把state改成index是因completeList相對應的資料就是在同一個位置
-              markers.map((marker, i) => {
-                google.maps.event.addListener(marker, "click", () => {
-                  marker.setIcon(googleMap.produceMarkerStyle(true, 64));
-                  this.setState({ selectedIndex: i });
-                });
-                google.maps.event.addListener(marker, "visible_changed", () => {
-                  if (marker.getVisible()) {
-                    googleMap.markerclusterer.addMarker(marker, false);
-                  } else {
-                    googleMap.markerclusterer.removeMarker(marker, false);
-                  }
-                });
-              });
-              //如果點擊地圖的其他地方，則將原本focus的點釋放
-              google.maps.event.addListener(googleMap.map, "click", () => {
-                let Index = this.state.selectedIndex;
-                if (Index != -1) {
-                  googleMap.markers[Index].setIcon(
-                    googleMap.produceMarkerStyle("rgb(240, 243, 244)", 38)
-                  );
-                  this.removeSelectedIndex(Index);
-                }
-              });
 
-              //隨時偵測地圖的動態
-              google.maps.event.addListener(googleMap.map, "idle", () => {
-                googleMap.markerclusterer.clearMarkers();
-                let completeList = this.state.completeList;
-                let currentLocation = googleMap.customArea
-                  ? googleMap.customArea
-                  : googleMap.map.getBounds();
-                let currentViewData = [];
-                let currentViewMarkers = [];
-                for (let i = 0; i < this.state.latLng.length; i++) {
-                  let latLng = new google.maps.LatLng(
-                    parseFloat(this.state.latLng[i].lat),
-                    parseFloat(this.state.latLng[i].lng)
-                  );
-                  let inside = false;
-                  if (googleMap.customArea) {
-                    inside = google.maps.geometry.poly.containsLocation(
-                      latLng,
-                      currentLocation
-                    );
-                  } else {
-                    inside = currentLocation.contains(latLng);
-                  }
-                  if (inside) {
-                    currentViewData.push(completeList[i]);
-                    currentViewMarkers.push(googleMap.markers[i]);
-                  }
-                }
-                googleMap.enableCluster(googleMap.map, currentViewMarkers);
-
-                if (this.state.goLoveList) {
-                  this.showLoveListOnly();
-                  this.setState({ filteredData: this.state.loveListDetail });
-                } else if (
-                  (this.state.currentViewData.length &&
-                    (this.state.filters.roomAmount.length ||
-                      this.state.filters.roomType.length ||
-                      this.state.filters.district.length ||
-                      this.state.filters.amenities.length)) ||
-                  (this.state.filters.priceCeiling != 100000 ||
-                    this.state.filters.priceFloor != 0)
-                ) {
-                  this.setState({ currentViewData: currentViewData });
-                  this.getFilteredData();
+        let queryLocation = [false, false];
+        let zoom;
+        if (
+          lib.func.getQueryStringAndSearch("location") ||
+          lib.func.getQueryStringAndSearch("search")
+        ) {
+          let latLng = window.location.search
+            .split("&")[0]
+            .split("=")[1]
+            .split(",");
+          queryLocation = [parseFloat(latLng[0]), parseFloat(latLng[1])];
+          zoom = lib.func.getQueryStringAndSearch("search") ? 17 : 15;
+        } else {
+          zoom = 12;
+        }
+        let lat = queryLocation[0] || this.state.currentLocation[0];
+        let lng = queryLocation[1] || this.state.currentLocation[1];
+        //製作地圖的promise，以及接連進行的一系列動作
+        googleMap.init
+          .initMapPromise(zoom, lat, lng, "googleMap")
+          .then(map => {
+            let markers = googleMap.makeMarkers(this.state.latLng, true);
+            let initAutocomplete = googleMap.initAutocomplete(
+              lib.func.get("header>.left>input"),
+              "apartments"
+            );
+            let autocompleteListener = googleMap.addAutocompleteListener(
+              googleMap.autocomplete.apartments
+            );
+            googleMap.enableCluster(map, []);
+            return markers;
+          })
+          .then( markers => {
+            //點擊marker，就改變state，這個state會連動影響，把state改成index是因completeList相對應的資料就是在同一個位置
+            markers.map((marker, i) => {
+              google.maps.event.addListener(marker, "click", () => {
+                marker.setIcon(googleMap.produceMarkerStyle(true, 64));
+                this.setState({ selectedIndex: i });
+              });
+              google.maps.event.addListener(marker, "visible_changed", () => {
+                if (marker.getVisible()) {
+                  googleMap.markerclusterer.addMarker(marker, false);
                 } else {
-                  this.setState({
-                    currentViewData: currentViewData,
-                    filteredData: currentViewData
-                  });
+                  googleMap.markerclusterer.removeMarker(marker, false);
                 }
               });
             });
-        });
+            //如果點擊地圖的其他地方，則將原本focus的點釋放
+            google.maps.event.addListener(googleMap.map, "click", () => {
+              let Index = this.state.selectedIndex;
+              if (Index != -1) {
+                googleMap.markers[Index].setIcon(
+                  googleMap.produceMarkerStyle("rgb(240, 243, 244)", 38)
+                );
+                this.removeSelectedIndex(Index);
+              }
+            });
+
+            //隨時偵測地圖的動態
+            google.maps.event.addListener(googleMap.map, "idle", () => {
+              googleMap.markerclusterer.clearMarkers();
+              let completeList = this.state.completeList;
+              let currentLocation = googleMap.customArea
+                ? googleMap.customArea
+                : googleMap.map.getBounds();
+              let currentViewData = [];
+              let currentViewMarkers = [];
+              for (let i = 0; i < this.state.latLng.length; i++) {
+                let latLng = new google.maps.LatLng(
+                  parseFloat(this.state.latLng[i].lat),
+                  parseFloat(this.state.latLng[i].lng)
+                );
+                let inside = false;
+                if (googleMap.customArea) {
+                  inside = google.maps.geometry.poly.containsLocation(
+                    latLng,
+                    currentLocation
+                  );
+                } else {
+                  inside = currentLocation.contains(latLng);
+                }
+                if (inside) {
+                  currentViewData.push(completeList[i]);
+                  currentViewMarkers.push(googleMap.markers[i]);
+                }
+              }
+              googleMap.enableCluster(googleMap.map, currentViewMarkers);
+
+              if (this.state.goLoveList) {
+                this.showLoveListOnly();
+                this.setState({ filteredData: this.state.loveListDetail });
+              } else if (
+                (this.state.currentViewData.length &&
+                  (this.state.filters.roomAmount.length ||
+                    this.state.filters.roomType.length ||
+                    this.state.filters.district.length ||
+                    this.state.filters.amenities.length)) ||
+                (this.state.filters.priceCeiling != 100000 ||
+                  this.state.filters.priceFloor != 0)
+              ) {
+                this.setState({ currentViewData: currentViewData });
+                this.getFilteredData();
+              } else {
+                this.setState({
+                  currentViewData: currentViewData,
+                  filteredData: currentViewData
+                });
+              }
+            });
+          });
       });
   }
   componentDidUpdate(prevState) {
@@ -222,63 +220,53 @@ class Apartments extends React.Component {
       this.showPreviousView();
     }
     if (
-      this.state.filteredData.length !== 0 &&
-      lib.func.get(".apartments>.loading")
-    ) {
-      if (document.documentElement.clientWidth > 900) {
-        lib.func.get(".apartments>.loading").style.opacity = "0";
-        setTimeout(() => {
-          lib.func.get(".apartments>.loading").style.zIndex = "0";
-          lib.func.get(".apartments>.loading").remove();
-        }, 1000);
-      } else {
-        if (
-          !lib.func.get(".apartments>.loading").style.opacity ||
-          lib.func.get(".apartments>section>.right").style.display === "unset"
-        ) {
-          lib.func.get(".apartments>.loading").style.opacity = "0";
-          setTimeout(() => {
-            lib.func.get(".apartments>.loading").remove();
-          }, 1000);
-        }
-      }
+      this.state.filteredData.length !== 0 && this.state.loading.opacity === 1
+    ) { 
+        this.setState({loading:{ opacity: 0, show: true }})
+        setTimeout(()=>{
+          this.setState({loading:{ opacity: 0, show: false }})
+        },1000)
     }
   }
   render() {
     return (
       <div className="apartments">
-        <div className="loading">
-          <img src={snail_face} />
-          <div className="description">LOADING</div>
-        </div>
+        {
+          this.state.loading.show && (
+            <div className="loading" style={{opacity: this.state.loading.opacity}}>
+              <img src={snail_face} />
+              <div className="description">LOADING</div>
+            </div>
+          )
+        }
         <Header
-          goLoveList={this.state.goLoveList}
-          goLoveListPage={this.goLoveList}
-          goIndex={this.goIndex}
+          goLoveList = {this.state.goLoveList}
+          goLoveListPage = {this.goLoveList}
+          goIndex = {this.goIndex}
         />
         <Email
-          toggleEmail={this.state.toggleEmail}
-          openEmailForm={this.openEmailForm}
+          toggleEmail = {this.state.toggleEmail}
+          openEmailForm = {this.openEmailForm}
         />
         <List
-          goLoveList={this.state.goLoveList}
-          goLoveListPage={this.goLoveList}
-          completeList={this.state.completeList}
-          loveListStatus={this.state.loveListStatus}
-          loveListDetail={this.state.loveListDetail}
-          openEmailForm={this.openEmailForm}
-          selectedIndex={this.state.selectedIndex}
-          goPropertyPage={this.goPropertyPage}
-          changeSelecteIndex={this.changeSelecteIndex}
-          addSelectedIndex={this.addSelectedIndex}
-          removeSelectedIndex={this.removeSelectedIndex}
-          putIntoLoveList={this.putIntoLoveList}
-          removeFromLoveList={this.removeFromLoveList}
-          getloveListStatusIndex={this.getloveListStatusIndex}
-          currentViewData={this.state.currentViewData}
-          filteredData={this.state.filteredData}
-          changeFilters={this.changeFilters}
-          filters={this.state.filters}
+          goLoveList = {this.state.goLoveList}
+          goLoveListPage = {this.goLoveList}
+          completeList = {this.state.completeList}
+          loveListStatus = {this.state.loveListStatus}
+          loveListDetail = {this.state.loveListDetail}
+          openEmailForm = {this.openEmailForm}
+          selectedIndex = {this.state.selectedIndex}
+          goPropertyPage = {this.goPropertyPage}
+          changeSelecteIndex = {this.changeSelecteIndex}
+          addSelectedIndex = {this.addSelectedIndex}
+          removeSelectedIndex = {this.removeSelectedIndex}
+          putIntoLoveList = {this.putIntoLoveList}
+          removeFromLoveList = {this.removeFromLoveList}
+          getloveListStatusIndex = {this.getloveListStatusIndex}
+          currentViewData = {this.state.currentViewData}
+          filteredData = {this.state.filteredData}
+          changeFilters = {this.changeFilters}
+          filters = {this.state.filters}
         />
       </div>
     );

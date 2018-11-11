@@ -455,7 +455,7 @@ googleMap.addAutocompleteListener = (autocomplete, callback) => {
       window.alert("No details available for input: '" + place.name + "'");
       return;
     }
-    if (googleMap.map && window.location.pathname !== "/property" ) {
+    if ( window.location.pathname === "/apartments" ) {
       if (place.geometry.viewport) {
         map.fitBounds(place.geometry.viewport);
       } else {

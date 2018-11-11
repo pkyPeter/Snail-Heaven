@@ -120,59 +120,59 @@ class List extends React.Component {
         </div>
         { !this.props.goLoveList && !this.state.toggleSimpleDetail && (
           <SearchResult
-            changeAreaSize={this.changeAreaSize}
+            changeAreaSize = {this.changeAreaSize}
             leftRightWidth = {this.state.leftRightWidth}
             resultAreaDisplayType={this.state.resultAreaDisplayType}
-            completeList={this.props.completeList}
-            loveListStatus={this.props.loveListStatus}
-            getloveListStatusIndex={this.props.getloveListStatusIndex}
-            hiddenList={this.state.hiddenList}
-            removeFromLoveList={this.props.removeFromLoveList}
-            putIntoLoveList={this.props.putIntoLoveList}
-            openEmailForm={this.props.openEmailForm}
-            hideList={this.hideList}
-            changeSelecteIndex={this.props.changeSelecteIndex}
-            removeSelectedIndex={this.props.removeSelectedIndex}
-            currentViewData={this.props.currentViewData}
-            filteredData={this.props.filteredData}
-            changeFilters={this.props.changeFilters}
-            filters={this.props.filters}
+            completeList = {this.props.completeList}
+            loveListStatus = {this.props.loveListStatus}
+            getloveListStatusIndex = {this.props.getloveListStatusIndex}
+            hiddenList = {this.state.hiddenList}
+            removeFromLoveList = {this.props.removeFromLoveList}
+            putIntoLoveList = {this.props.putIntoLoveList}
+            openEmailForm = {this.props.openEmailForm}
+            hideList = {this.hideList}
+            changeSelecteIndex = {this.props.changeSelecteIndex}
+            removeSelectedIndex = {this.props.removeSelectedIndex}
+            currentViewData = {this.props.currentViewData}
+            filteredData = {this.props.filteredData}
+            changeFilters = {this.props.changeFilters}
+            filters = {this.props.filters}
             readyForSort = {this.state.readyForSort}
             sort = {this.state.sort}
-            getSelect={this.getSelect}
+            getSelect = {this.getSelect}
             switchDisplayMode = {this.switchDisplayMode}
           />
         )}
         { this.props.goLoveList && !this.state.toggleSimpleDetail && (
           <LoveList
             leftRightWidth = {this.state.leftRightWidth}
-            resultAreaDisplayType={this.state.resultAreaDisplayType}
-            switchDisplayMode={this.switchDisplayMode}
-            goLoveListPage={this.props.goLoveListPage}
-            changeSelecteIndex={this.props.changeSelecteIndex}
-            loveListDetail={this.props.loveListDetail}
-            loveListStatus={this.props.loveListStatus}
-            getloveListStatusIndex={this.props.getloveListStatusIndex}
-            removeFromLoveList={this.props.removeFromLoveList}
-            putIntoLoveList={this.props.putIntoLoveList}
-            openEmailForm={this.props.openEmailForm}
+            resultAreaDisplayType = {this.state.resultAreaDisplayType}
+            switchDisplayMode = {this.switchDisplayMode}
+            goLoveListPage = {this.props.goLoveListPage}
+            changeSelecteIndex = {this.props.changeSelecteIndex}
+            loveListDetail = {this.props.loveListDetail}
+            loveListStatus = {this.props.loveListStatus}
+            getloveListStatusIndex = {this.props.getloveListStatusIndex}
+            removeFromLoveList = {this.props.removeFromLoveList}
+            putIntoLoveList = {this.props.putIntoLoveList}
+            openEmailForm = {this.props.openEmailForm}
           />
         )}
         { this.state.toggleSimpleDetail != false && this.state.currentSimpleDetail && (
           <SimpleDetail
             leftRightWidth = {this.state.leftRightWidth}
-            goSimpleDetail={this.goSimpleDetail}
-            goPropertyPage={this.props.goPropertyPage}
-            currentSimpleDetail={this.state.currentSimpleDetail}
-            loveListStatus={this.props.loveListStatus}
-            getloveListStatusIndex={this.props.getloveListStatusIndex}
-            putIntoLoveList={this.props.putIntoLoveList}
-            removeFromLoveList={this.props.removeFromLoveList}
-            hideList={this.hideList}
-            openEmailForm={this.props.openEmailForm}
-            changeSelecteIndex={this.props.changeSelecteIndex}
-            selectedIndex={this.props.selectedIndex}
-            recordCurrentStatus={this.recordCurrentStatus}
+            goSimpleDetail = {this.goSimpleDetail}
+            goPropertyPage = {this.props.goPropertyPage}
+            currentSimpleDetail = {this.state.currentSimpleDetail}
+            loveListStatus = {this.props.loveListStatus}
+            getloveListStatusIndex = {this.props.getloveListStatusIndex}
+            putIntoLoveList = {this.props.putIntoLoveList}
+            removeFromLoveList = {this.props.removeFromLoveList}
+            hideList = {this.hideList}
+            openEmailForm = {this.props.openEmailForm}
+            changeSelecteIndex = {this.props.changeSelecteIndex}
+            selectedIndex = {this.props.selectedIndex}
+            recordCurrentStatus = {this.recordCurrentStatus}
           />
         )}
         <div className="mapMode" onClick={this.switchToMap}><FontAwesomeIcon className="icon" icon={["fas","map-marked-alt"]} /></div>

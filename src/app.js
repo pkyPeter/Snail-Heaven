@@ -16,9 +16,9 @@ let firebaseDB = firebaseApp.fBase.database();
 const RouterComponent = () => (
   <Router>
     <div>
-      <Route exact path="/" component={App} />
-      <Route path="/apartments" component={Apartments} />
-      <Route path="/property" component={Property} />
+      <Route exact path = "/" component = {App} />
+      <Route path = "/apartments" component = {Apartments} />
+      <Route path = "/property" component = {Property} />
     </div>
   </Router>
 );
@@ -33,10 +33,13 @@ class App extends React.Component {
       location: [],
       district: []
     };
+  }
+  componentDidMount() {
     googleMap.load.then(() => {
       googleMap.initAutocomplete(lib.func.get(".form>input"), "index");
       googleMap.addAutocompleteListener(googleMap.autocomplete.index, (
         place) => {
+        console.log(place);
         this.props.history.push({
           pathname: "/apartments",
           search: `?search=${place.geometry.location.lat()},${place.geometry.location.lng()}`,
@@ -44,10 +47,7 @@ class App extends React.Component {
               .geometry.location.lng() }
         });
       });
-
     });
-  }
-  componentDidMount() {
     let districts = ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區",
       "北投區", "內湖區", "南港區", "文山區"
     ];
