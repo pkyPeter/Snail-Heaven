@@ -16,14 +16,12 @@ let firebaseDB = firebaseApp.fBase.database();
 const RouterComponent = () => (
   <Router>
     <div>
-      <Route exact path = "/" component = {App} />
-      <Route path = "/apartments" component = {Apartments} />
-      <Route path = "/property" component = {Property} />
+      <Route exact path="/" component={App} />
+      <Route path="/apartments" component={Apartments} />
+      <Route path="/property" component={Property} />
     </div>
   </Router>
 );
-
-
 
 class App extends React.Component {
   constructor() {
@@ -37,19 +35,31 @@ class App extends React.Component {
   componentDidMount() {
     googleMap.load.then(() => {
       googleMap.initAutocomplete(lib.func.get(".form>input"), "index");
-      googleMap.addAutocompleteListener(googleMap.autocomplete.index, (
-        place) => {
-        console.log(place);
+      googleMap.addAutocompleteListener(googleMap.autocomplete.index, place => {
+        // console.log(place);
         this.props.history.push({
           pathname: "/apartments",
           search: `?search=${place.geometry.location.lat()},${place.geometry.location.lng()}`,
-          state: { lat: place.geometry.location.lat(), lng: place
-              .geometry.location.lng() }
+          state: {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          }
         });
       });
     });
-    let districts = ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區",
-      "北投區", "內湖區", "南港區", "文山區"
+    let districts = [
+      "中正區",
+      "大同區",
+      "中山區",
+      "松山區",
+      "大安區",
+      "萬華區",
+      "信義區",
+      "士林區",
+      "北投區",
+      "內湖區",
+      "南港區",
+      "文山區"
     ];
     let districtsAmount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let districtLatLng = [
@@ -67,13 +77,11 @@ class App extends React.Component {
       { lat: 24.9929212, lng: 121.57124999999996 }
     ];
     let districtsCombined = [];
-    firebaseDB.ref("districts/").once("value", (snapshot) => {
+    firebaseDB.ref("districts/").once("value", snapshot => {
       let data = snapshot.val();
       for (let i = 0; i < districts.length; i++) {
         let districtsAmout = data[districts[i]];
-        let districtDetail = [districts[i], districtsAmout,
-          districtLatLng[i]
-        ];
+        let districtDetail = [districts[i], districtsAmout, districtLatLng[i]];
         districtsCombined.push(districtDetail);
       }
       this.setState({ district: districtsCombined });
@@ -82,35 +90,43 @@ class App extends React.Component {
   render() {
     return (
       <div className="index">
-        <div className="background"></div>
-            <div className="formContainer">
-              <div className="form">
-                <div className="formItem">
-                  <div className="snail"></div>
-                  <h2>SNAIL HEAVEN</h2>
-                </div>
-                <h2 className="formItem">租房超簡單，大腦零負擔</h2>
-                <input type="text" placeholder="小蝸牛，想找哪裡的房子呢？"
-                onChange={this.searchHandler.bind(this)}/>
-                <div className="districtContainer">
-                  {
-                this.state.district.map((district, index)=>{
-                  return (
-                    <div className="district" key={index} onClick={()=>{this.clickDistrict( district[2] );}}>
-                      <div className="background"></div>
-                      <h2>{district[0]}</h2>
-                      <h4>{district[1]} 間夢想租屋</h4>
-                    </div>
-                  );
-                })
-              }
-                </div>
-                <div className="formItem close"><Link to="/apartments"></Link></div>
-              </div>
+        <div className="background" />
+        <div className="formContainer">
+          <div className="form">
+            <div className="formItem">
+              <div className="snail" />
+              <h2>SNAIL HEAVEN</h2>
             </div>
+            <h2 className="formItem">租房超簡單，大腦零負擔</h2>
+            <input
+              type="text"
+              placeholder="小蝸牛，想找哪裡的房子呢？"
+              onChange={this.searchHandler.bind(this)}
+            />
+            <div className="districtContainer">
+              {this.state.district.map((district, index) => {
+                return (
+                  <div
+                    className="district"
+                    key={index}
+                    onClick={() => {
+                      this.clickDistrict(district[2]);
+                    }}
+                  >
+                    <div className="background" />
+                    <h2>{district[0]}</h2>
+                    <h4>{district[1]} 間夢想租屋</h4>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="formItem close">
+              <Link to="/apartments" />
+            </div>
+          </div>
+        </div>
       </div>
     );
-
   }
 
   searchHandler(e) {
@@ -132,9 +148,7 @@ class App extends React.Component {
       search: `?location=${lat},${lng}`,
       state: { lat: lat, lng: lng }
     });
-
   }
-
 }
 
 ReactDOM.render(<RouterComponent />, document.querySelector("#RAPP"));

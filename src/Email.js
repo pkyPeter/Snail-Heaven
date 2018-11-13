@@ -29,7 +29,7 @@ class Email extends React.Component {
             <div className="form">
               <div
                 className="close"
-                onClick={e => {
+                onClick={() => {
                   this.props.openEmailForm("", "", "close");
                 }}
               >

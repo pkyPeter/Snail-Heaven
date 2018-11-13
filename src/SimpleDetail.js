@@ -106,7 +106,7 @@ class SimpleDetail extends React.Component {
           <div className="sdTitle">
             <div
               className="button return"
-              onClick={e => {
+              onClick={() => {
                 this.props.goSimpleDetail("back", {});
                 this.props.selectedIndex !== -1 &&
                   this.props.changeSelecteIndex(
@@ -133,7 +133,7 @@ class SimpleDetail extends React.Component {
                     <img
                       src={line_share}
                       style={{ width: "22px", marginRight: "5px" }}
-                      onClick={e => {
+                      onClick={() => {
                         window.open(
                           `https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${
                             this.props.currentSimpleDetail.id
@@ -423,8 +423,8 @@ class SimpleDetail extends React.Component {
           />
           <div
             className="moreInfo"
-            onClick={e => {
-              this.props.goPropertyPage(e, this.props.currentSimpleDetail.id);
+            onClick={() => {
+              this.props.goPropertyPage(this.props.currentSimpleDetail.id);
               this.props.recordCurrentStatus();
             }}
           >

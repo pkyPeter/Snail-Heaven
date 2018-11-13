@@ -29,8 +29,11 @@ class List extends React.Component {
       customArea: false,
       showBusiness: false,
       showRoad: false,
-      leftRightWidth: { rightWidth: "600px", leftWidth: "calc(100% - 600px)",
-        resizerRight: "600px" },
+      leftRightWidth: {
+        rightWidth: "600px",
+        leftWidth: "calc(100% - 600px)",
+        resizerRight: "600px"
+      },
       sort: null,
       readyForSort: false,
       isDesktop: true
@@ -68,115 +71,143 @@ class List extends React.Component {
         for (let i = 0; i < this.props.completeList.length; i++) {
           //找到點擊的 index 之後，就開啟細節
           if (this.props.completeList[i].index === this.props.selectedIndex) {
-            this.goSimpleDetail(this.props.completeList[i].id, this.props.completeList[
-              i]);
+            this.goSimpleDetail(
+              this.props.completeList[i].id,
+              this.props.completeList[i]
+            );
           }
         }
         //這邊主要判斷，如果客人直接點擊下一個按鈕，則會將前一次的 marker 還原
         if (prevProps.selectedIndex !== -1) {
           googleMap.markers[prevProps.selectedIndex].setAnimation(null);
-          googleMap.markers[prevProps.selectedIndex].setIcon(googleMap.produceMarkerStyle(
-            false, 30));
+          googleMap.markers[prevProps.selectedIndex].setIcon(
+            googleMap.produceMarkerStyle(false, 30)
+          );
         }
-      } else if (this.props.selectedIndex === -1 && this.state.toggleSimpleDetail ===
-        true) {
+      } else if (
+        this.props.selectedIndex === -1 &&
+        this.state.toggleSimpleDetail === true
+      ) {
         this.goSimpleDetail("back", {});
       }
     }
-    if (prevProps.goLoveList === false && this.props.goLoveList && this.state
-      .toggleSimpleDetail) {
+    if (
+      prevProps.goLoveList === false &&
+      this.props.goLoveList &&
+      this.state.toggleSimpleDetail
+    ) {
       this.goSimpleDetail("back", {});
     }
   }
   render() {
     return (
       <section>
-        <div className="left" style={{width: this.state.leftWidth}}>
-          {   this.state.isDesktop &&
+        <div className="left" style={{ width: this.state.leftWidth }}>
+          {this.state.isDesktop && (
             <div className="paint" onClick={this.drawCustomArea}>
-              {
-                this.state.customArea === false
-                  ? (
-                    <span>
-                      <FontAwesomeIcon className="icon" icon={["fas","pencil-alt"]} />自行繪製區域
-                    </span> )
-                  : ( <span>取消繪製區域</span> )
-              }
+              {this.state.customArea === false ? (
+                <span>
+                  <FontAwesomeIcon
+                    className="icon"
+                    icon={["fas", "pencil-alt"]}
+                  />
+                  自行繪製區域
+                </span>
+              ) : (
+                <span>取消繪製區域</span>
+              )}
             </div>
-          }
-          <div className="business" onClick={()=>{this.openRoadBusinessMarker("business");}}>
-            { !this.state.showBusiness
-              ?( <span>顯示周邊商家</span> )
-              :( <span>隱藏周邊商家</span> )
-            }
+          )}
+          <div
+            className="business"
+            onClick={() => {
+              this.openRoadBusinessMarker("business");
+            }}
+          >
+            {!this.state.showBusiness ? (
+              <span>顯示周邊商家</span>
+            ) : (
+              <span>隱藏周邊商家</span>
+            )}
           </div>
-          <div className="road" onClick={()=>{this.openRoadBusinessMarker("road");}}>
-            { !this.state.showRoad
-              ?( <span>顯示道路名稱</span> )
-              :( <span>隱藏道路名稱</span> )
-            }
+          <div
+            className="road"
+            onClick={() => {
+              this.openRoadBusinessMarker("road");
+            }}
+          >
+            {!this.state.showRoad ? (
+              <span>顯示道路名稱</span>
+            ) : (
+              <span>隱藏道路名稱</span>
+            )}
           </div>
-          <div id="googleMap" style={{height: "100%", width: "100%"}}></div>
+          <div id="googleMap" style={{ height: "100%", width: "100%" }} />
         </div>
-        { !this.props.goLoveList && !this.state.toggleSimpleDetail && (
+        {!this.props.goLoveList &&
+          !this.state.toggleSimpleDetail && (
           <SearchResult
-            changeAreaSize = {this.changeAreaSize}
-            leftRightWidth = {this.state.leftRightWidth}
+            changeAreaSize={this.changeAreaSize}
+            leftRightWidth={this.state.leftRightWidth}
             resultAreaDisplayType={this.state.resultAreaDisplayType}
-            completeList = {this.props.completeList}
-            loveListStatus = {this.props.loveListStatus}
-            getloveListStatusIndex = {this.props.getloveListStatusIndex}
-            hiddenList = {this.state.hiddenList}
-            removeFromLoveList = {this.props.removeFromLoveList}
-            putIntoLoveList = {this.props.putIntoLoveList}
-            openEmailForm = {this.props.openEmailForm}
-            hideList = {this.hideList}
-            changeSelecteIndex = {this.props.changeSelecteIndex}
-            removeSelectedIndex = {this.props.removeSelectedIndex}
-            currentViewData = {this.props.currentViewData}
-            filteredData = {this.props.filteredData}
-            changeFilters = {this.props.changeFilters}
-            filters = {this.props.filters}
-            readyForSort = {this.state.readyForSort}
-            sort = {this.state.sort}
-            getSelect = {this.getSelect}
-            switchDisplayMode = {this.switchDisplayMode}
+            completeList={this.props.completeList}
+            loveListStatus={this.props.loveListStatus}
+            getloveListStatusIndex={this.props.getloveListStatusIndex}
+            hiddenList={this.state.hiddenList}
+            removeFromLoveList={this.props.removeFromLoveList}
+            putIntoLoveList={this.props.putIntoLoveList}
+            openEmailForm={this.props.openEmailForm}
+            hideList={this.hideList}
+            changeSelecteIndex={this.props.changeSelecteIndex}
+            removeSelectedIndex={this.props.removeSelectedIndex}
+            currentViewData={this.props.currentViewData}
+            filteredData={this.props.filteredData}
+            changeFilters={this.props.changeFilters}
+            filters={this.props.filters}
+            readyForSort={this.state.readyForSort}
+            sort={this.state.sort}
+            getSelect={this.getSelect}
+            switchDisplayMode={this.switchDisplayMode}
           />
         )}
-        { this.props.goLoveList && !this.state.toggleSimpleDetail && (
+        {this.props.goLoveList &&
+          !this.state.toggleSimpleDetail && (
           <LoveList
-            leftRightWidth = {this.state.leftRightWidth}
-            resultAreaDisplayType = {this.state.resultAreaDisplayType}
-            switchDisplayMode = {this.switchDisplayMode}
-            goLoveListPage = {this.props.goLoveListPage}
-            changeSelecteIndex = {this.props.changeSelecteIndex}
-            loveListDetail = {this.props.loveListDetail}
-            loveListStatus = {this.props.loveListStatus}
-            getloveListStatusIndex = {this.props.getloveListStatusIndex}
-            removeFromLoveList = {this.props.removeFromLoveList}
-            putIntoLoveList = {this.props.putIntoLoveList}
-            openEmailForm = {this.props.openEmailForm}
+            leftRightWidth={this.state.leftRightWidth}
+            resultAreaDisplayType={this.state.resultAreaDisplayType}
+            switchDisplayMode={this.switchDisplayMode}
+            goLoveListPage={this.props.goLoveListPage}
+            changeSelecteIndex={this.props.changeSelecteIndex}
+            loveListDetail={this.props.loveListDetail}
+            loveListStatus={this.props.loveListStatus}
+            getloveListStatusIndex={this.props.getloveListStatusIndex}
+            removeFromLoveList={this.props.removeFromLoveList}
+            putIntoLoveList={this.props.putIntoLoveList}
+            openEmailForm={this.props.openEmailForm}
           />
         )}
-        { this.state.toggleSimpleDetail != false && this.state.currentSimpleDetail && (
+        {this.state.toggleSimpleDetail != false &&
+          this.state.currentSimpleDetail && (
           <SimpleDetail
-            leftRightWidth = {this.state.leftRightWidth}
-            goSimpleDetail = {this.goSimpleDetail}
-            goPropertyPage = {this.props.goPropertyPage}
-            currentSimpleDetail = {this.state.currentSimpleDetail}
-            loveListStatus = {this.props.loveListStatus}
-            getloveListStatusIndex = {this.props.getloveListStatusIndex}
-            putIntoLoveList = {this.props.putIntoLoveList}
-            removeFromLoveList = {this.props.removeFromLoveList}
-            hideList = {this.hideList}
-            openEmailForm = {this.props.openEmailForm}
-            changeSelecteIndex = {this.props.changeSelecteIndex}
-            selectedIndex = {this.props.selectedIndex}
-            recordCurrentStatus = {this.recordCurrentStatus}
+            leftRightWidth={this.state.leftRightWidth}
+            goSimpleDetail={this.goSimpleDetail}
+            goPropertyPage={this.props.goPropertyPage}
+            currentSimpleDetail={this.state.currentSimpleDetail}
+            loveListStatus={this.props.loveListStatus}
+            getloveListStatusIndex={this.props.getloveListStatusIndex}
+            putIntoLoveList={this.props.putIntoLoveList}
+            removeFromLoveList={this.props.removeFromLoveList}
+            hideList={this.hideList}
+            openEmailForm={this.props.openEmailForm}
+            changeSelecteIndex={this.props.changeSelecteIndex}
+            selectedIndex={this.props.selectedIndex}
+            recordCurrentStatus={this.recordCurrentStatus}
           />
         )}
-        <div className="mapMode" onClick={this.switchToMap}><FontAwesomeIcon className="icon" icon={["fas","map-marked-alt"]} /></div>
-        <div className="listMode"></div>
+        <div className="mapMode" onClick={this.switchToMap}>
+          <FontAwesomeIcon className="icon" icon={["fas", "map-marked-alt"]} />
+        </div>
+        <div className="listMode" />
       </section>
     );
   }
@@ -186,14 +217,17 @@ class List extends React.Component {
     else if (displayMode === "blocks") this.changeToBlocks();
   }
   changeToList() {
-    this.setState({ resultAreaDisplayType: ["resultArea",
-        "results resultsList"
-      ] });
+    this.setState({
+      resultAreaDisplayType: ["resultArea", "results resultsList"]
+    });
   }
   changeToRowBlocks() {
-    this.setState({ resultAreaDisplayType: ["resultArea resultAreaFlex",
+    this.setState({
+      resultAreaDisplayType: [
+        "resultArea resultAreaFlex",
         "results resultsFlex"
-      ] });
+      ]
+    });
   }
   changeToBlocks() {
     this.setState({ resultAreaDisplayType: ["resultArea", "results"] });
@@ -202,10 +236,11 @@ class List extends React.Component {
     let left = document.querySelector(".apartments>section>.left");
     let right = document.querySelector(".apartments>section>.right");
     let resizer = document.querySelector(
-      ".apartments>section>.right>.areaSizer ");
+      ".apartments>section>.right>.areaSizer "
+    );
     let leftRightWidth = this.state.leftRightWidth;
     if (e.type === "dragend") {
-      if ((window.innerWidth - e.clientX) >= 600) {
+      if (window.innerWidth - e.clientX >= 600) {
         left.style.width = e.clientX;
         right.style.width = window.innerWidth - e.clientX;
         resizer.style.right = window.innerWidth - e.clientX;
@@ -228,32 +263,48 @@ class List extends React.Component {
   goSimpleDetail(id, realEstate) {
     if (id && id != "back") {
       if (document.documentElement.clientWidth > 900) {
-        let latLng = new google.maps.LatLng(parseFloat(realEstate.lat),
-          parseFloat(realEstate.lng));
+        let latLng = new google.maps.LatLng(
+          parseFloat(realEstate.lat),
+          parseFloat(realEstate.lng)
+        );
         if (!googleMap.map.getBounds().contains(latLng)) {
           googleMap.map.setCenter(latLng);
           googleMap.map.setZoom(20);
         }
       }
-      firebaseApp.fBaseDB.getData("details", (detail) => {
-        let objectKey = parseInt(Object.keys(detail)[0]);
-        let currentDetail = detail[objectKey];
-        if (currentDetail.monthly_price != "") {
-          let monthly_price = parseInt(currentDetail.monthly_price.split(
-            ".")[0].split("$")[1].replace(/\,/g, ""));
-          currentDetail.monthly_price = monthly_price;
-        } else {
-          let daily_price_to_month = parseInt(currentDetail.price.split(
-            ".")[0].split("$")[1].replace(",", "")) * 30;
-          currentDetail.monthly_price = daily_price_to_month;
-        }
-        this.setState({ currentSimpleDetail: currentDetail });
-        if (this.props.selectedIndex === -1) {
-          this.setState({ toggleSimpleDetail: false, goLoveList: false });
-        } else {
-          this.setState({ toggleSimpleDetail: true, goLoveList: false });
-        }
-      }, "id", id);
+      firebaseApp.fBaseDB.getData(
+        "details",
+        detail => {
+          let objectKey = parseInt(Object.keys(detail)[0]);
+          let currentDetail = detail[objectKey];
+          if (currentDetail.monthly_price != "") {
+            let monthly_price = parseInt(
+              currentDetail.monthly_price
+                .split(".")[0]
+                .split("$")[1]
+                .replace(/\,/g, "")
+            );
+            currentDetail.monthly_price = monthly_price;
+          } else {
+            let daily_price_to_month =
+              parseInt(
+                currentDetail.price
+                  .split(".")[0]
+                  .split("$")[1]
+                  .replace(",", "")
+              ) * 30;
+            currentDetail.monthly_price = daily_price_to_month;
+          }
+          this.setState({ currentSimpleDetail: currentDetail });
+          if (this.props.selectedIndex === -1) {
+            this.setState({ toggleSimpleDetail: false, goLoveList: false });
+          } else {
+            this.setState({ toggleSimpleDetail: true, goLoveList: false });
+          }
+        },
+        "id",
+        id
+      );
     }
     if (id === "back") {
       if (document.documentElement.clientWidth <= 900) {
@@ -261,8 +312,9 @@ class List extends React.Component {
         right.style.display = "none";
       }
       this.setState({ currentSimpleDetail: null });
-      this.setState((currentState, currentProps) => ({ toggleSimpleDetail:
-          !currentState.toggleSimpleDetail }));
+      this.setState((currentState, currentProps) => ({
+        toggleSimpleDetail: !currentState.toggleSimpleDetail
+      }));
     }
   }
 
@@ -282,8 +334,9 @@ class List extends React.Component {
       JSONforRenew.push(id);
       localStorage.setItem("hiddenList", JSON.stringify(JSONforRenew));
       if (this.state.toggleSimpleDetail === true) {
-        this.setState((currentState, currentProps) => ({ toggleSimpleDetail:
-            !currentState.toggleSimpleDetail }));
+        this.setState((currentState, currentProps) => ({
+          toggleSimpleDetail: !currentState.toggleSimpleDetail
+        }));
       }
       googleMap.markers[index].setVisible(false);
     }
@@ -323,14 +376,16 @@ class List extends React.Component {
         this.setState({ showRoad: false });
       }
     }
-
   }
 
   switchToMap() {
     let left = lib.func.get(".apartments>section>.left");
     let right = lib.func.get(".apartments>section>.right");
-    if (left.style.opacity !== "1" || left.style.opacity === undefined || !
-      left.style.opacity) {
+    if (
+      left.style.opacity !== "1" ||
+      left.style.opacity === undefined ||
+      !left.style.opacity
+    ) {
       left.style.opacity = "1";
       right.style.display = "none";
     } else {
@@ -341,23 +396,22 @@ class List extends React.Component {
   getSelect(e, usage) {
     if (usage === "select") {
       switch (e.currentTarget.value) {
-        case "default":
-          this.setState({ sort: "default", readyForSort: true });
-          break;
-        case "latest":
-          this.setState({ sort: "latest", readyForSort: true });
-          break;
-        case "lowest":
-          this.setState({ sort: "lowest", readyForSort: true });
-          break;
-        case "highest":
-          this.setState({ sort: "highest", readyForSort: true });
-          break;
+      case "default":
+        this.setState({ sort: "default", readyForSort: true });
+        break;
+      case "latest":
+        this.setState({ sort: "latest", readyForSort: true });
+        break;
+      case "lowest":
+        this.setState({ sort: "lowest", readyForSort: true });
+        break;
+      case "highest":
+        this.setState({ sort: "highest", readyForSort: true });
+        break;
       }
     } else if (usage === "disable") {
       this.setState({ readyForSort: false });
     }
-
   }
   recordCurrentStatus() {
     let mapZoom = googleMap.map.getZoom();
@@ -370,8 +424,6 @@ class List extends React.Component {
     };
     localStorage.setItem("screenInfo", JSON.stringify(screenInfo));
   }
-
 }
-
 
 export default List;

@@ -31,14 +31,20 @@ class PriceChart extends React.Component {
     this.defineChartRange = this.defineChartRange.bind(this);
   }
   componentDidMount() {
-    if ((this.props.filters.priceCeiling !== this.state.priceCeiling ||
-        this.props.filters.priceFloor !== this.state.priceFloor) && this.state
-      .priceCeiling === 100000) {
+    if (
+      (this.props.filters.priceCeiling !== this.state.priceCeiling ||
+        this.props.filters.priceFloor !== this.state.priceFloor) &&
+      this.state.priceCeiling === 100000
+    ) {
       let width = lib.func.get(".control").offsetWidth;
-      let left = Math.round((this.props.filters.priceFloor / 500) * ((width -
-        16) / 200));
-      let right = lib.func.get(".control").offsetWidth - Math.round((this.props
-        .filters.priceCeiling / 500) * ((width + 16) / 200));
+      let left = Math.round(
+        (this.props.filters.priceFloor / 500) * ((width - 16) / 200)
+      );
+      let right =
+        lib.func.get(".control").offsetWidth -
+        Math.round(
+          (this.props.filters.priceCeiling / 500) * ((width + 16) / 200)
+        );
       let front = lib.func.get(".control>.front");
       front.style.width = width - left - right + "px";
       front.style.left = left + "px";
@@ -52,9 +58,7 @@ class PriceChart extends React.Component {
       });
     }
   }
-  componentDidUpdate(prevProps, prevState) {
-
-  }
+  componentDidUpdate(prevProps, prevState) {}
 
   render() {
     let priceArray = [];
@@ -67,47 +71,71 @@ class PriceChart extends React.Component {
     for (let i = 0; i < 99501; i += 500) {
       let priceContent;
       if (i === 99500) {
-        priceContent = priceArray.filter(price => price >
-          i);
+        priceContent = priceArray.filter(price => price > i);
       } else {
-        priceContent = priceArray.filter(price => price > i &&
-          price <= i + 500);
+        priceContent = priceArray.filter(
+          price => price > i && price <= i + 500
+        );
       }
       let length = priceContent.length;
       rangeAmountOfPrice.push(length);
-      if (length > maxLength) { maxLength = length; }
+      if (length > maxLength) {
+        maxLength = length;
+      }
     }
 
     return (
       <div className="filterDetail priceChart">
         <div className="bars">
-          {	
-            priceArray.length !== 0 && rangeAmountOfPrice.map(( count,index )=>{
-              let heightPerUnit = 61/maxLength;
-              let height = rangeAmountOfPrice[index]*heightPerUnit;
-              let currentPrice = 500 + index*500;
-              if ( currentPrice > this.state.priceFloor && currentPrice <= this.state.priceCeiling ) {
-                return <div className="cashBar" style={{height:`${height}px`}} key={index}></div>;
+          {priceArray.length !== 0 &&
+            rangeAmountOfPrice.map((count, index) => {
+              let heightPerUnit = 61 / maxLength;
+              let height = rangeAmountOfPrice[index] * heightPerUnit;
+              let currentPrice = 500 + index * 500;
+              if (
+                currentPrice > this.state.priceFloor &&
+                currentPrice <= this.state.priceCeiling
+              ) {
+                return (
+                  <div
+                    className="cashBar"
+                    style={{ height: `${height}px` }}
+                    key={index}
+                  />
+                );
               } else {
-                return <div className="cashBar" style={{height:`${height}px`,backgroundColor: "#DEE2E3"}} key={index}></div>;
+                return (
+                  <div
+                    className="cashBar"
+                    style={{
+                      height: `${height}px`,
+                      backgroundColor: "#DEE2E3"
+                    }}
+                    key={index}
+                  />
+                );
               }
-            })
-          }
+            })}
         </div>
         <div className="control">
-				    <div 
-            className="circle left" 
-            style={{left: this.state.left}} 
-            onMouseDown={this.startToMove} 
-            onTouchStart={this.startToMove} 
+          <div
+            className="circle left"
+            style={{ left: this.state.left }}
+            onMouseDown={this.startToMove}
+            onTouchStart={this.startToMove}
           >
-				    	<span className="money">{this.state.leftMoney}</span>
-				    </div>
-				    <div className="bottomLine front"></div>
-				    <div className="bottomLine grey"></div>
-				    <div  className="circle right" style={{right: this.state.right}} onMouseDown={this.startToMove} onTouchStart={this.startToMove}>
-				    	<span className="money">{this.state.rightMoney}</span>
-				    </div>
+            <span className="money">{this.state.leftMoney}</span>
+          </div>
+          <div className="bottomLine front" />
+          <div className="bottomLine grey" />
+          <div
+            className="circle right"
+            style={{ right: this.state.right }}
+            onMouseDown={this.startToMove}
+            onTouchStart={this.startToMove}
+          >
+            <span className="money">{this.state.rightMoney}</span>
+          </div>
         </div>
       </div>
     );
@@ -135,25 +163,28 @@ class PriceChart extends React.Component {
         document.addEventListener("touchmove", this.confirmRight);
       }
     }
-
   }
 
   currentLeft(event) {
     // 首先把位置以及價錢做出
     let width = lib.func.get(".control").offsetWidth;
-    let screenX = event.type === "mouseup" ? event.screenX : event.changedTouches[
-      0].screenX;
+    let screenX =
+      event.type === "mouseup"
+        ? event.screenX
+        : event.changedTouches[0].screenX;
     let finalLeft = this.state.left + (screenX - this.state.originXLeft);
     //這邊的２２是width加上border
-    if (finalLeft < 0) { finalLeft = 0; } else if (finalLeft > width - 16) {
-      finalLeft
-        = (width - 16);
+    if (finalLeft < 0) {
+      finalLeft = 0;
+    } else if (finalLeft > width - 16) {
+      finalLeft = width - 16;
     }
     //顯示區間數字，將區間數字轉換為５００為單位
-    let moveCashTranform = Math.round((finalLeft - 0) / ((width - 16) / 200)) *
-      500;
-    lib.func.get(".priceChart>.control>.left>.money").innerHTML =
-      moveCashTranform;
+    let moveCashTranform =
+      Math.round((finalLeft - 0) / ((width - 16) / 200)) * 500;
+    lib.func.get(
+      ".priceChart>.control>.left>.money"
+    ).innerHTML = moveCashTranform;
     // lib.func.get(".priceChart>.control>.left").style.left = finalLeft + "px";
     document.removeEventListener("mousemove", this.confirmLeft);
     document.removeEventListener("mouseup", this.currentLeft);
@@ -162,14 +193,16 @@ class PriceChart extends React.Component {
     this.setState({ left: finalLeft, leftMoney: moveCashTranform });
     // 接著setState，判斷天花板/地板，也要同時注意是否左右已經換邊
     if (this.state.rightMoney > moveCashTranform) {
-      this.setState({ priceCeiling: this.state.rightMoney, priceFloor: moveCashTranform });
+      this.setState({
+        priceCeiling: this.state.rightMoney,
+        priceFloor: moveCashTranform
+      });
       this.props.changeFilters("priceFloor", moveCashTranform);
       this.props.changeFilters("priceCeiling", this.state.rightMoney);
     } else if (this.state.rightMoney < moveCashTranform) {
       this.setState({
         priceCeiling: moveCashTranform,
-        priceFloor: this.state
-          .rightMoney
+        priceFloor: this.state.rightMoney
       });
       this.props.changeFilters("priceFloor", this.state.rightMoney);
       this.props.changeFilters("priceCeiling", moveCashTranform);
@@ -181,38 +214,46 @@ class PriceChart extends React.Component {
   }
   confirmLeft(event) {
     let width = lib.func.get(".control").offsetWidth;
-    let screenX = event.type === "mousemove" ? event.screenX : event.changedTouches[
-      0].screenX;
+    let screenX =
+      event.type === "mousemove"
+        ? event.screenX
+        : event.changedTouches[0].screenX;
     let finalLeft = this.state.left + (screenX - this.state.originXLeft);
     //這邊的16是width加上border
-    if (finalLeft < 0) { finalLeft = 0; } else if (finalLeft > width - 16) {
-      finalLeft
-        = (width - 16);
+    if (finalLeft < 0) {
+      finalLeft = 0;
+    } else if (finalLeft > width - 16) {
+      finalLeft = width - 16;
     }
     //顯示區間數字，將區間數字轉換為５００為單位
-    let moveCashTranform = Math.round((finalLeft - 0) / ((width - 16) / 200)) *
-      500;
-    lib.func.get(".priceChart>.control>.left>.money").innerHTML =
-      moveCashTranform;
-    lib.func.get(".priceChart>.control>.left").style.left = finalLeft +
-      "px";
+    let moveCashTranform =
+      Math.round((finalLeft - 0) / ((width - 16) / 200)) * 500;
+    lib.func.get(
+      ".priceChart>.control>.left>.money"
+    ).innerHTML = moveCashTranform;
+    lib.func.get(".priceChart>.control>.left").style.left = finalLeft + "px";
     this.mergeMoney();
   }
 
   currentRight(event) {
     let width = lib.func.get(".control").offsetWidth;
-    let screenX = event.type === "mouseup" ? event.screenX : event.changedTouches[
-      0].screenX;
+    let screenX =
+      event.type === "mouseup"
+        ? event.screenX
+        : event.changedTouches[0].screenX;
     let finalRight = this.state.right + (this.state.originXRight - screenX);
-    if (finalRight < 0) { finalRight = 0; } else if (finalRight > width -
-      16) { finalRight = (width - 16); }
+    if (finalRight < 0) {
+      finalRight = 0;
+    } else if (finalRight > width - 16) {
+      finalRight = width - 16;
+    }
     //顯示區間數字，將區間數字轉換為５００為單位
-    let moveCashTranform = 100000 - (Math.round((finalRight - 0) / ((width -
-      16) / 200)) * 500);
-    lib.func.get(".priceChart>.control>.right>.money").innerHTML =
-      moveCashTranform;
-    lib.func.get(".priceChart>.control>.right").style.right = finalRight +
-      "px";
+    let moveCashTranform =
+      100000 - Math.round((finalRight - 0) / ((width - 16) / 200)) * 500;
+    lib.func.get(
+      ".priceChart>.control>.right>.money"
+    ).innerHTML = moveCashTranform;
+    lib.func.get(".priceChart>.control>.right").style.right = finalRight + "px";
     if (event.type === "mouseup") {
       document.removeEventListener("mousemove", this.confirmRight);
       document.removeEventListener("mouseup", this.currentRight);
@@ -224,14 +265,16 @@ class PriceChart extends React.Component {
     this.setState({ right: finalRight, rightMoney: moveCashTranform });
 
     if (this.state.leftMoney > moveCashTranform) {
-      this.setState({ priceCeiling: this.state.leftMoney, priceFloor: moveCashTranform });
+      this.setState({
+        priceCeiling: this.state.leftMoney,
+        priceFloor: moveCashTranform
+      });
       this.props.changeFilters("priceFloor", moveCashTranform);
       this.props.changeFilters("priceCeiling", this.state.leftMoney);
     } else if (this.state.leftMoney < moveCashTranform) {
       this.setState({
         priceCeiling: moveCashTranform,
-        priceFloor: this.state
-          .leftMoney
+        priceFloor: this.state.leftMoney
       });
       this.props.changeFilters("priceFloor", this.state.leftMoney);
       this.props.changeFilters("priceCeiling", moveCashTranform);
@@ -243,17 +286,22 @@ class PriceChart extends React.Component {
 
   confirmRight(event) {
     let width = lib.func.get(".control").offsetWidth;
-    let screenX = event.type === "mousemove" ? event.screenX : event.changedTouches[
-      0].screenX;
+    let screenX =
+      event.type === "mousemove"
+        ? event.screenX
+        : event.changedTouches[0].screenX;
     let finalRight = this.state.right + (this.state.originXRight - screenX);
-    if (finalRight < 0) { finalRight = 0; } else if (finalRight > width -
-      16) { finalRight = (width - 16); }
-    let moveCashTranform = 100000 - (Math.round((finalRight - 0) / ((width -
-      16) / 200)) * 500);
-    lib.func.get(".priceChart>.control>.right>.money").innerHTML =
-      moveCashTranform;
-    lib.func.get(".priceChart>.control>.right").style.right = finalRight +
-      "px";
+    if (finalRight < 0) {
+      finalRight = 0;
+    } else if (finalRight > width - 16) {
+      finalRight = width - 16;
+    }
+    let moveCashTranform =
+      100000 - Math.round((finalRight - 0) / ((width - 16) / 200)) * 500;
+    lib.func.get(
+      ".priceChart>.control>.right>.money"
+    ).innerHTML = moveCashTranform;
+    lib.func.get(".priceChart>.control>.right").style.right = finalRight + "px";
     this.mergeMoney();
   }
 
@@ -267,21 +315,21 @@ class PriceChart extends React.Component {
     let separatePrice = false;
     if (LeftX < RightX) {
       if (LeftX + 90 > RightX) {
-        leftMoney.innerHTML = this.state.priceFloor + "-" + this.state.priceCeiling;
+        leftMoney.innerHTML =
+          this.state.priceFloor + "-" + this.state.priceCeiling;
         rightMoney.style.visibility = "hidden";
         leftMoney.style.left = "-30px";
       } else if (rightMoney.style.visibility === "hidden") {
-        separatePrice =
-          true;
+        separatePrice = true;
       }
     } else if (LeftX > RightX) {
       if (RightX + 90 > LeftX) {
-        leftMoney.innerHTML = this.state.priceFloor + "-" + this.state.priceCeiling;
+        leftMoney.innerHTML =
+          this.state.priceFloor + "-" + this.state.priceCeiling;
         rightMoney.style.visibility = "hidden";
         leftMoney.style.right = "-30px";
       } else if (rightMoney.style.visibility === "hidden") {
-        separatePrice =
-          true;
+        separatePrice = true;
       }
     }
     if (separatePrice === true) {
@@ -290,7 +338,6 @@ class PriceChart extends React.Component {
       leftMoney.style.left = "auto";
       leftMoney.style.right = "auto";
     }
-
   }
 
   defineChartRange() {
@@ -300,12 +347,14 @@ class PriceChart extends React.Component {
     let leftOfLeft = lib.func.get(".priceChart>.control>.left").offsetLeft;
     let rightOfLeft = width - leftOfLeft; //因為Left circle的 position right從來沒有定義過，所以永遠抓不到，幫哭
     let leftOfRight = lib.func.get(".priceChart>.control>.right").offsetLeft;
-    let rightOfRight = parseInt(lib.func.get(".priceChart>.control>.right")
-      .style.right) || 0;
-    let leftX = lib.func.get(".priceChart>.control>.left").getBoundingClientRect()
-      .x;
-    let rightX = lib.func.get(".priceChart>.control>.right").getBoundingClientRect()
-      .x;
+    let rightOfRight =
+      parseInt(lib.func.get(".priceChart>.control>.right").style.right) || 0;
+    let leftX = lib.func
+      .get(".priceChart>.control>.left")
+      .getBoundingClientRect().x;
+    let rightX = lib.func
+      .get(".priceChart>.control>.right")
+      .getBoundingClientRect().x;
     front.style.width = width - leftOfLeft - rightOfRight + "px";
     front.style.left = leftOfLeft + "px";
     if (rightX - leftX <= 0) {
@@ -313,8 +362,6 @@ class PriceChart extends React.Component {
       front.style.left = leftOfRight + "px";
     }
   }
-
-
 }
 
 export default PriceChart;

@@ -13,74 +13,81 @@ import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-library.add(faRegularHeart, faBuilding, faBars, faSolidHeart, faRegularBookmark,faSolidBookmark,faTimes);
+library.add(
+  faRegularHeart,
+  faBuilding,
+  faBars,
+  faSolidHeart,
+  faRegularBookmark,
+  faSolidBookmark,
+  faTimes
+);
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
     this.toggleRight = this.toggleRight.bind(this);
   }
-  render () {
+  render() {
     return (
       <header>
         <div className="left">
           <div className="burger" onClick={this.toggleRight}>
-            <FontAwesomeIcon className="icon" icon={["fas","bars"]}/>
+            <FontAwesomeIcon className="icon" icon={["fas", "bars"]} />
           </div>
           <div className="logo" onClick={this.props.goIndex}>
-            <div className="snail"></div>
+            <div className="snail" />
             <h2>SNAIL HEAVEN</h2>
           </div>
-          <input type="text" placeholder="小蝸牛想住哪？"/>
+          <input type="text" placeholder="小蝸牛想住哪？" />
         </div>
         <div className="right">
           <div className="mobileClose" onClick={this.toggleRight}>
-            <FontAwesomeIcon className="icon" icon={["fas","times"]}/>
+            <FontAwesomeIcon className="icon" icon={["fas", "times"]} />
           </div>
 
           <div className="searchFav" onClick={this.props.goLoveListPage}>
-            { 
-            	this.props.goLoveList === true 
-				  ?<FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }}/>
-				  :<FontAwesomeIcon className="icon" icon={["far","heart"]}/>
-            }
+            {this.props.goLoveList === true ? (
+              <FontAwesomeIcon
+                className="icon"
+                icon={["fas", "heart"]}
+                style={{ color: "red" }}
+              />
+            ) : (
+              <FontAwesomeIcon className="icon" icon={["far", "heart"]} />
+            )}
             <p>我的最愛</p>
           </div>
-
         </div>
       </header>
     );
   }
-  toggleRight(e) {
+  toggleRight() {
     let right = lib.func.get("header>.right");
-    let searchFav = lib.func.getAll("header>.right>.searchFav"); 
+    let searchFav = lib.func.getAll("header>.right>.searchFav");
     // let postHouse = lib.func.get("header>.right>.postHouse");
     if (right.style.display === "flex") {
-      for ( let i = 0 ; i < searchFav.length ; i ++ ) {
+      for (let i = 0; i < searchFav.length; i++) {
         searchFav[i].style.display = "none";
       }
       // postHouse.style.display = "none";
       right.style.width = "0%";
-      setTimeout(()=>{right.style.display = "none";}, 300);
-			
-
+      setTimeout(() => {
+        right.style.display = "none";
+      }, 300);
     } else {
       right.style.display = "flex";
-      setTimeout(()=>{
+      setTimeout(() => {
         right.style.width = "65%";
       }, 10);
-      setTimeout(()=>{
-        for ( let i = 0 ; i < searchFav.length ; i ++ ) {
+      setTimeout(() => {
+        for (let i = 0; i < searchFav.length; i++) {
           searchFav[i].style.display = "flex";
         }
-        postHouse.style.display = "flex";
+        // postHouse.style.display = "flex";
       }, 300);
     }
   }
-
 }
-
-
-
 
 export default Header;

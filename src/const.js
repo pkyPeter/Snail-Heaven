@@ -22,6 +22,6 @@ const filterCriteria = {
     { amenityTC: "付費停車場", amenityEN: "Paid parking off premises" },
     { amenityTC: "路邊停車格", amenityEN: "Free street parking" }
   ]
-}
+};
 
 export default filterCriteria;

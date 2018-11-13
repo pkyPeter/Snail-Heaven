@@ -35,7 +35,7 @@ class Property extends React.Component {
       loveListDetail: lib.func.getLocalStorageJSON("loveList"),
       currentList: {},
       currentAddress: null,
-      toggleEmail: { open: false, currentDetail: null },
+      toggleEmail: { open: false, currentDetail: null }
     };
     this.goIndex = this.goIndex.bind(this);
     this.switchTab = this.switchTab.bind(this);
@@ -44,50 +44,61 @@ class Property extends React.Component {
     this.changePhoto = this.changePhoto.bind(this);
   }
   componentDidMount() {
-    this.getQueryStringID((outputArray) => {
+    this.getQueryStringID(outputArray => {
       let targetID = outputArray[0];
-      firebaseApp.fBaseDB.getDetailByID(targetID, (data) => {
+      firebaseApp.fBaseDB.getDetailByID(targetID, data => {
         let objectKey = parseInt(Object.keys(data)[0]);
         let currentList = data[objectKey];
         if (currentList.monthly_price != "") {
-          let monthly_price = parseInt(currentList.monthly_price.split(
-            ".")[0].split("$")[1].replace(/\,/g, ""));
+          let monthly_price = parseInt(
+            currentList.monthly_price
+              .split(".")[0]
+              .split("$")[1]
+              .replace(/\,/g, "")
+          );
           currentList.monthly_price = monthly_price;
         } else {
-          let daily_price_to_month = parseInt(currentList.price.split(
-            ".")[0].split("$")[1].replace(",", "")) * 30;
+          let daily_price_to_month =
+            parseInt(
+              currentList.price
+                .split(".")[0]
+                .split("$")[1]
+                .replace(",", "")
+            ) * 30;
           currentList.monthly_price = daily_price_to_month;
         }
         this.setState({ currentList: currentList });
         let zoom = 18;
         let lat = parseFloat(currentList.lat);
         let lng = parseFloat(currentList.lng);
-        googleMap.init.initMapPromise(zoom, lat, lng, "googleMap")
-          .then((map) => {
-            let initAutocomplete = googleMap.initAutocomplete(lib
-              .func.get("header>.left>input"), "property");
-            let autocompleteListener = googleMap.addAutocompleteListener(
-              googleMap.autocomplete.property, (place) => {
-                this.props.history.push({
-                  pathname: "/apartments",
-                  search: `?search=${place.geometry.location.lat()},${place.geometry.location.lng()}`,
-                  state: { lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng() }
-                });
+        googleMap.init.initMapPromise(zoom, lat, lng, "googleMap").then(map => {
+          let initAutocomplete = googleMap.initAutocomplete(
+            lib.func.get("header>.left>input"),
+            "property"
+          );
+          let autocompleteListener = googleMap.addAutocompleteListener(
+            googleMap.autocomplete.property,
+            place => {
+              this.props.history.push({
+                pathname: "/apartments",
+                search: `?search=${place.geometry.location.lat()},${place.geometry.location.lng()}`,
+                state: {
+                  lat: place.geometry.location.lat(),
+                  lng: place.geometry.location.lng()
+                }
               });
-            googleMap.style[5].stylers[0].visibility =
-              "simplified";
-            googleMap.style[9].stylers[0].visibility =
-              "simplified";
-            googleMap.map.setOptions({ styles: googleMap.style });
-            let markers = googleMap.makeMarkers([{ lat: lat, lng: lng }],
-              true);
-            markers[0].setMap(googleMap.map);
-            markers[0].setIcon(googleMap.produceMarkerStyle(true,
-              64));
-          });
+            }
+          );
+          googleMap.style[5].stylers[0].visibility = "simplified";
+          googleMap.style[9].stylers[0].visibility = "simplified";
+          googleMap.map.setOptions({ styles: googleMap.style });
+          let markers = googleMap.makeMarkers([{ lat: lat, lng: lng }], true);
+          markers[0].setMap(googleMap.map);
+          markers[0].setIcon(googleMap.produceMarkerStyle(true, 64));
+        });
         let panorama = new google.maps.StreetViewPanorama(
-          lib.func.get("#streetView"), {
+          lib.func.get("#streetView"),
+          {
             position: { lat: lat, lng: lng },
             addressControlOptions: {
               position: google.maps.ControlPosition.BOTTOM_CENTER
@@ -95,8 +106,9 @@ class Property extends React.Component {
             linksControl: false,
             panControl: false,
             enableCloseButton: false
-          });
-        googleMap.reverseGeocode(lat, lng, (results) => {
+          }
+        );
+        googleMap.reverseGeocode(lat, lng, results => {
           this.setState({ currentAddress: results[0].formatted_address });
         });
       });
@@ -105,103 +117,271 @@ class Property extends React.Component {
   render() {
     if (Object.keys(this.state.currentList).length) {
       let monthly_price = this.state.currentList.monthly_price.toLocaleString(
-        "en");
-      let amenities = this.sortOutAmenities(this.state.currentList.amenities,
-        [/Internet/ig, /Hot water/ig, /A\/C/ig, /Refrigerator/ig,
-          /Laptop friendly workspace/ig, /washer/ig, /Pets allowed/ig
-        ]);
-      let otherAmenities = this.sortOutAmenities(this.state.currentList.amenities,
-        [/Kitchen/ig, /Paid parking off premises/ig,
-          /Free street parking/ig, /Elevator/ig, /Gym/ig
-        ]);
-      let TV = this.sortOutAmenities(this.state.currentList.amenities, [
-        /TV/ig
-      ]).length === 2 ? ["TV", "Cable TV"] : ["TV"]; //因為電視無法拆
-      let loveListStatusIndex = this.getloveListStatusIndex(this.state.currentList
-        .id, this.state.loveListDetail);
+        "en"
+      );
+      let amenities = this.sortOutAmenities(this.state.currentList.amenities, [
+        /Internet/gi,
+        /Hot water/gi,
+        /A\/C/gi,
+        /Refrigerator/gi,
+        /Laptop friendly workspace/gi,
+        /washer/gi,
+        /Pets allowed/gi
+      ]);
+      let otherAmenities = this.sortOutAmenities(
+        this.state.currentList.amenities,
+        [
+          /Kitchen/gi,
+          /Paid parking off premises/gi,
+          /Free street parking/gi,
+          /Elevator/gi,
+          /Gym/gi
+        ]
+      );
+      let TV =
+        this.sortOutAmenities(this.state.currentList.amenities, [/TV/gi])
+          .length === 2
+          ? ["TV", "Cable TV"]
+          : ["TV"]; //因為電視無法拆
+      let loveListStatusIndex = this.getloveListStatusIndex(
+        this.state.currentList.id,
+        this.state.loveListDetail
+      );
       return (
         <div className="properties">
-          <Header goLoveListPage={this.goLoveList.bind(this)} goIndex={this.goIndex}/>
-          <Email toggleEmail={this.state.toggleEmail}
+          <Header
+            goLoveListPage={this.goLoveList.bind(this)}
+            goIndex={this.goIndex}
+          />
+          <Email
+            toggleEmail={this.state.toggleEmail}
             openEmailForm={this.openEmailForm}
           />
           <section className="property">
             <div className="propTitle">
-              <div className="button" onClick={this.goBackToSearch.bind(this)}>             
-                <FontAwesomeIcon className="icon" icon={["fas","caret-left"]}/>
+              <div className="button" onClick={this.goBackToSearch.bind(this)}>
+                <FontAwesomeIcon
+                  className="icon"
+                  icon={["fas", "caret-left"]}
+                />
                 <div>回到搜尋結果</div>
               </div>
               <div className="sdRight">
-                <div className="button share" style={{marginRight: "5px", border: "none"}}>
-                  <img src={line_share} style={{width: "28px", marginRight:"5px"}} onClick={(e)=>{ window.open(`https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.state.currentList.id}`); }}>
-                  </img>
-                  <img style={{width: "28px"}}
-                    onClick={()=>{FB.ui({
-                      method: "share",
-                      mobile_iframe: true,
-                      href: `https://snail-heaven-1537271625768.firebaseapp.com/property?id=${this.state.currentList.id}`,
-                    }, function(response){});}}
+                <div
+                  className="button share"
+                  style={{ marginRight: "5px", border: "none" }}
+                >
+                  <img
+                    src={line_share}
+                    style={{ width: "28px", marginRight: "5px" }}
+                    onClick={e => {
+                      window.open(
+                        `https://social-plugins.line.me/lineit/share?url=https://snail-heaven-1537271625768.firebaseapp.com/property?id=${
+                          this.state.currentList.id
+                        }`
+                      );
+                    }}
+                  />
+                  <img
+                    style={{ width: "28px" }}
+                    onClick={() => {
+                      FB.ui(
+                        {
+                          method: "share",
+                          mobile_iframe: true,
+                          href: `https://snail-heaven-1537271625768.firebaseapp.com/property?id=${
+                            this.state.currentList.id
+                          }`
+                        },
+                        function(response) {}
+                      );
+                    }}
                     src={facebook}
+                  />
+                </div>
+                {loveListStatusIndex != undefined &&
+                loveListStatusIndex != null ? (
+                  <div
+                    className="button"
+                    onClick={e => {
+                      this.removeFromLoveList(
+                        e,
+                        this.state.currentList.id,
+                        this.state.currentList
+                      );
+                    }}
                   >
-                  </img>
-              
-                </div>  
-                { 
-                  loveListStatusIndex != undefined && loveListStatusIndex != null 
-                    ? (
-                      <div className="button" onClick={(e)=>{ this.removeFromLoveList(e, this.state.currentList.id, this.state.currentList); }}>
-                        <FontAwesomeIcon className="icon" icon={["fas","heart"]} style={{ color: "red" }} />
-                        <div>收藏</div>
-                      </div>
-                    )
-                    : (
-                      <div className="button" onClick={(e)=>{ this.putIntoLoveList(e, this.state.currentList.id, this.state.currentList); }}>
-                        <FontAwesomeIcon className="icon" icon={["far","heart"]}/>
-                        <div>收藏</div>
-                      </div>
-                    )
-                }
+                    <FontAwesomeIcon
+                      className="icon"
+                      icon={["fas", "heart"]}
+                      style={{ color: "red" }}
+                    />
+                    <div>收藏</div>
+                  </div>
+                ) : (
+                  <div
+                    className="button"
+                    onClick={e => {
+                      this.putIntoLoveList(
+                        e,
+                        this.state.currentList.id,
+                        this.state.currentList
+                      );
+                    }}
+                  >
+                    <FontAwesomeIcon className="icon" icon={["far", "heart"]} />
+                    <div>收藏</div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="propContent">
               <div className="left">
-                <div className="price">{"$" + monthly_price }</div>
+                <div className="price">{"$" + monthly_price}</div>
                 <div className="name">{this.state.currentList.name}</div>
                 <div className="address">{this.state.currentAddress}</div>
-                <div className="checkAvailable" onClick={()=>{this.openEmailForm(this.state.currentList);}}>立即詢問</div>
+                <div
+                  className="checkAvailable"
+                  onClick={() => {
+                    this.openEmailForm(this.state.currentList);
+                  }}
+                >
+                  立即詢問
+                </div>
                 <div className="propGraphicInfo">
                   <div className="tabs">
-                    <div className="tab active" onClick={(e)=>{this.switchTab(e, "photoGallery");}}>照片</div>
-                    <div className="tab" onClick={(e)=>{this.switchTab(e, "map");}}>地圖</div>
-                    <div className="tab" onClick={(e)=>{this.switchTab(e, "streetView");}}>街景</div>
+                    <div
+                      className="tab active"
+                      onClick={e => {
+                        this.switchTab(e, "photoGallery");
+                      }}
+                    >
+                      照片
+                    </div>
+                    <div
+                      className="tab"
+                      onClick={e => {
+                        this.switchTab(e, "map");
+                      }}
+                    >
+                      地圖
+                    </div>
+                    <div
+                      className="tab"
+                      onClick={e => {
+                        this.switchTab(e, "streetView");
+                      }}
+                    >
+                      街景
+                    </div>
                   </div>
                   <div className="graphics">
                     <div className="photoGallery">
                       <div className="gallery">
                         <div className="photos">
-                          <div className="photo" style={{backgroundImage: `url(${this.state.currentList.picture_url})` ,backgroundSize: "cover"}}></div>
-                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
-                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
-                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
-                          <div className="photo" style={{backgroundImage: `url(${image})`}}></div>
+                          <div
+                            className="photo"
+                            style={{
+                              backgroundImage: `url(${
+                                this.state.currentList.picture_url
+                              })`,
+                              backgroundSize: "cover"
+                            }}
+                          />
+                          <div
+                            className="photo"
+                            style={{ backgroundImage: `url(${image})` }}
+                          />
+                          <div
+                            className="photo"
+                            style={{ backgroundImage: `url(${image})` }}
+                          />
+                          <div
+                            className="photo"
+                            style={{ backgroundImage: `url(${image})` }}
+                          />
+                          <div
+                            className="photo"
+                            style={{ backgroundImage: `url(${image})` }}
+                          />
                         </div>
-                        <div className="leftSelector" onClick={(e)=>{this.changePhoto(e, "leftSelector");}}>
-                          <FontAwesomeIcon className="icon" icon={["fas","caret-left"]} onClick={(e)=>{this.changePhoto(e, "leftSelector"); this.stopPropagation(e);}}/>
+                        <div
+                          className="leftSelector"
+                          onClick={e => {
+                            this.changePhoto(e, "leftSelector");
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            className="icon"
+                            icon={["fas", "caret-left"]}
+                            onClick={e => {
+                              this.changePhoto(e, "leftSelector");
+                              this.stopPropagation(e);
+                            }}
+                          />
                         </div>
-                        <div className="rightSelector" onClick={(e)=>{this.changePhoto(e , "rightSelector");}}>
-                          <FontAwesomeIcon className="icon" icon={["fas","caret-right"]} onClick={(e)=>{this.changePhoto(e , "rightSelector"); this.stopPropagation(e);}}/>
+                        <div
+                          className="rightSelector"
+                          onClick={e => {
+                            this.changePhoto(e, "rightSelector");
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            className="icon"
+                            icon={["fas", "caret-right"]}
+                            onClick={e => {
+                              this.changePhoto(e, "rightSelector");
+                              this.stopPropagation(e);
+                            }}
+                          />
                         </div>
                       </div>
                       <div className="photoSelector">
-                        <div className="selector focus" data-order="0" style={{backgroundImage: `url(${this.state.currentList.picture_url})`, backgroundSize: "100%"}} onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
-                        <div className="selector" data-order="1" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
-                        <div className="selector" data-order="2" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
-                        <div className="selector" data-order="3" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
-                        <div className="selector" data-order="4" onClick={(e)=>{this.changePhoto(e, "dot");}}></div>
+                        <div
+                          className="selector focus"
+                          data-order="0"
+                          style={{
+                            backgroundImage: `url(${
+                              this.state.currentList.picture_url
+                            })`,
+                            backgroundSize: "100%"
+                          }}
+                          onClick={e => {
+                            this.changePhoto(e, "dot");
+                          }}
+                        />
+                        <div
+                          className="selector"
+                          data-order="1"
+                          onClick={e => {
+                            this.changePhoto(e, "dot");
+                          }}
+                        />
+                        <div
+                          className="selector"
+                          data-order="2"
+                          onClick={e => {
+                            this.changePhoto(e, "dot");
+                          }}
+                        />
+                        <div
+                          className="selector"
+                          data-order="3"
+                          onClick={e => {
+                            this.changePhoto(e, "dot");
+                          }}
+                        />
+                        <div
+                          className="selector"
+                          data-order="4"
+                          onClick={e => {
+                            this.changePhoto(e, "dot");
+                          }}
+                        />
                       </div>
                     </div>
-                    <div className="map" id="googleMap"></div>
-                    <div className="streetView" id="streetView"></div>
+                    <div className="map" id="googleMap" />
+                    <div className="streetView" id="streetView" />
                   </div>
                 </div>
                 <div className="description">
@@ -210,25 +390,47 @@ class Property extends React.Component {
                 <div className="Amenities">
                   <div className="title">房屋設備</div>
                   <div className="content">
-                    {
-                      TV.map((TV,index)=>{
-                        if ( TV === "TV") { TV = "電視"; }
-                        if ( TV === "Cable TV") { TV = "第四臺"; }
-                        return(<div className="amenity" key={index}>{TV}</div>);
-                      })
-                    }
-                    {
-                      amenities.map((amenity, index)=>{
-                        if ( amenity === "Internet") { amenity = "網路"; }
-                        if ( amenity === "Hot water") { amenity = "熱水器"; }
-                        if ( amenity === "A/C") { amenity = "冷氣"; }
-                        if ( amenity === "Refrigerator") { amenity = "冰箱"; }
-                        if ( amenity === "Laptop friendly workspace") { amenity = "書桌/工作區"; }
-                        if ( amenity === "Washer") { amenity = "洗衣機"; }
-                        if ( amenity === "Pets allowed") { amenity = "可養寵物"; }
-                        return(<div className="amenity" key={index}>{amenity}</div>);
-                      })
-                    }
+                    {TV.map((TV, index) => {
+                      if (TV === "TV") {
+                        TV = "電視";
+                      }
+                      if (TV === "Cable TV") {
+                        TV = "第四臺";
+                      }
+                      return (
+                        <div className="amenity" key={index}>
+                          {TV}
+                        </div>
+                      );
+                    })}
+                    {amenities.map((amenity, index) => {
+                      if (amenity === "Internet") {
+                        amenity = "網路";
+                      }
+                      if (amenity === "Hot water") {
+                        amenity = "熱水器";
+                      }
+                      if (amenity === "A/C") {
+                        amenity = "冷氣";
+                      }
+                      if (amenity === "Refrigerator") {
+                        amenity = "冰箱";
+                      }
+                      if (amenity === "Laptop friendly workspace") {
+                        amenity = "書桌/工作區";
+                      }
+                      if (amenity === "Washer") {
+                        amenity = "洗衣機";
+                      }
+                      if (amenity === "Pets allowed") {
+                        amenity = "可養寵物";
+                      }
+                      return (
+                        <div className="amenity" key={index}>
+                          {amenity}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -237,11 +439,15 @@ class Property extends React.Component {
                   <h1>詳細資訊</h1>
                   <div className="detail">
                     <h3>月租金</h3>
-                    <p>{ "$" + monthly_price }</p>
+                    <p>{"$" + monthly_price}</p>
                   </div>
                   <div className="detail">
                     <h3>押金</h3>
-                    <p>{this.state.currentList.security_deposit ? this.state.currentList.security_deposit : "-"}</p>
+                    <p>
+                      {this.state.currentList.security_deposit
+                        ? this.state.currentList.security_deposit
+                        : "-"}
+                    </p>
                   </div>
                   <div className="detail">
                     <h3>房屋種類</h3>
@@ -249,7 +455,11 @@ class Property extends React.Component {
                   </div>
                   <div className="detail">
                     <h3>坪數</h3>
-                    <p>{this.state.currentList.square_feet ? this.state.currentList.square_feet : "-"}</p>
+                    <p>
+                      {this.state.currentList.square_feet
+                        ? this.state.currentList.square_feet
+                        : "-"}
+                    </p>
                   </div>
                   <div className="detail">
                     <h3>房間數量</h3>
@@ -261,27 +471,42 @@ class Property extends React.Component {
                   </div>
                 </div>
                 <div className="profile">
-                  <div className="avatar" style={{backgroundImage: `url(${this.state.currentList.host_picture_url})`}}></div>
+                  <div
+                    className="avatar"
+                    style={{
+                      backgroundImage: `url(${
+                        this.state.currentList.host_picture_url
+                      })`
+                    }}
+                  />
                   <div className="description">
                     <div className="title">Posted by:</div>
-                    <div className="name">{this.state.currentList.host_name}</div>
+                    <div className="name">
+                      {this.state.currentList.host_name}
+                    </div>
                   </div>
                 </div>
-                <div className="checkAvailable" onClick={()=>{this.openEmailForm(this.state.currentList);}}>立即詢問</div>
+                <div
+                  className="checkAvailable"
+                  onClick={() => {
+                    this.openEmailForm(this.state.currentList);
+                  }}
+                >
+                  立即詢問
+                </div>
               </div>
             </div>
-            <div className="footer">
-            </div>
+            <div className="footer" />
           </section>
         </div>
       );
     } else {
       return (
         <div className="loading">
-          <div className="loadingContainer" >
-            <img className="snail"src={snail_face}  />
-            <img className="car" src={racing}  />
-            <div className="description"  >立刻為您取得房況中......</div>
+          <div className="loadingContainer">
+            <img className="snail" src={snail_face} />
+            <img className="car" src={racing} />
+            <div className="description">立刻為您取得房況中......</div>
           </div>
         </div>
       );
@@ -303,17 +528,21 @@ class Property extends React.Component {
       toggleEmail.open = false;
       toggleEmail.currentDetail = null;
       this.setState({ toggleEmail: toggleEmail });
-
     } else {
       if (id) {
-        firebaseApp.fBaseDB.getData("details", (detail) => {
-          let toggleEmail = this.state.toggleEmail;
-          let objectKey = parseInt(Object.keys(detail)[0]);
-          let currentDetail = detail[objectKey];
-          toggleEmail.open = !toggleEmail.open;
-          toggleEmail.currentDetail = currentDetail;
-          this.setState({ toggleEmail: toggleEmail });
-        }, "id", id);
+        firebaseApp.fBaseDB.getData(
+          "details",
+          detail => {
+            let toggleEmail = this.state.toggleEmail;
+            let objectKey = parseInt(Object.keys(detail)[0]);
+            let currentDetail = detail[objectKey];
+            toggleEmail.open = !toggleEmail.open;
+            toggleEmail.currentDetail = currentDetail;
+            this.setState({ toggleEmail: toggleEmail });
+          },
+          "id",
+          id
+        );
       } else {
         let toggleEmail = this.state.toggleEmail;
         toggleEmail.open = !toggleEmail.open;
@@ -346,13 +575,14 @@ class Property extends React.Component {
     } else {
       return null;
     }
-
   }
   createLoveListStatus(ObjectArray) {
     let loveListStatus = [];
 
-    let JSONforRenew = lib.func.getLocalStorageJSON("loveList") != null ?
-      lib.func.getLocalStorageJSON("loveList") : [];
+    let JSONforRenew =
+      lib.func.getLocalStorageJSON("loveList") != null
+        ? lib.func.getLocalStorageJSON("loveList")
+        : [];
 
     // let JSONforRenew = current != null ? JSON.parse(current) : [];
     for (let j = 0; j < ObjectArray.length; j++) {

@@ -41,7 +41,7 @@ class Apartments extends React.Component {
       latLng: [],
       toggleEmail: { open: false, currentDetail: null },
       selectedIndex: -1,
-      loading: {show:true, opacity: 1}
+      loading: { show: true, opacity: 1 }
     };
     this.transferPriceIntoNumber = this.transferPriceIntoNumber.bind(this);
     this.goIndex = this.goIndex.bind(this);
@@ -79,6 +79,7 @@ class Apartments extends React.Component {
         }
         //製作給marker使用的經緯度資料檔
         let location = firebaseApp.sortLatLng(dataFromFB);
+        //將來源的金額從字串轉變為數字
         this.transferPriceIntoNumber(dataFromFB);
         this.confirmLoveListIndex(this.state.loveListDetail, dataFromFB);
         this.setState({
@@ -120,7 +121,7 @@ class Apartments extends React.Component {
             googleMap.enableCluster(map, []);
             return markers;
           })
-          .then( markers => {
+          .then(markers => {
             //點擊marker，就改變state，這個state會連動影響，把state改成index是因completeList相對應的資料就是在同一個位置
             markers.map((marker, i) => {
               google.maps.event.addListener(marker, "click", () => {
@@ -200,12 +201,12 @@ class Apartments extends React.Component {
           });
       });
   }
-  componentDidUpdate(prevState) {
+  componentDidUpdate() {
     if (
       this.state.loveListStatus &&
       lib.func.getQueryStringAndSearch("loveList") === true
     ) {
-      this.setState((currentState, currentProps) => ({
+      this.setState(currentState => ({
         goLoveList: !currentState.goLoveList
       }));
       this.setState({ toggleSimpleDetail: false });
@@ -220,53 +221,55 @@ class Apartments extends React.Component {
       this.showPreviousView();
     }
     if (
-      this.state.filteredData.length !== 0 && this.state.loading.opacity === 1
-    ) { 
-        this.setState({loading:{ opacity: 0, show: true }})
-        setTimeout(()=>{
-          this.setState({loading:{ opacity: 0, show: false }})
-        },1000)
+      this.state.filteredData.length !== 0 &&
+      this.state.loading.opacity === 1
+    ) {
+      this.setState({ loading: { opacity: 0, show: true } });
+      setTimeout(() => {
+        this.setState({ loading: { opacity: 0, show: false } });
+      }, 1000);
     }
   }
   render() {
     return (
       <div className="apartments">
-        {
-          this.state.loading.show && (
-            <div className="loading" style={{opacity: this.state.loading.opacity}}>
-              <img src={snail_face} />
-              <div className="description">LOADING</div>
-            </div>
-          )
-        }
+        {this.state.loading.show && (
+          <div
+            className="loading"
+            style={{ opacity: this.state.loading.opacity }}
+          >
+            <img src={snail_face} />
+            <div className="description">LOADING</div>
+          </div>
+        )}
         <Header
-          goLoveList = {this.state.goLoveList}
-          goLoveListPage = {this.goLoveList}
-          goIndex = {this.goIndex}
+          goLoveList={this.state.goLoveList}
+          goLoveListPage={this.goLoveList}
+          goIndex={this.goIndex}
         />
         <Email
-          toggleEmail = {this.state.toggleEmail}
-          openEmailForm = {this.openEmailForm}
+          toggleEmail={this.state.toggleEmail}
+          openEmailForm={this.openEmailForm}
         />
         <List
-          goLoveList = {this.state.goLoveList}
-          goLoveListPage = {this.goLoveList}
-          completeList = {this.state.completeList}
-          loveListStatus = {this.state.loveListStatus}
-          loveListDetail = {this.state.loveListDetail}
-          openEmailForm = {this.openEmailForm}
-          selectedIndex = {this.state.selectedIndex}
-          goPropertyPage = {this.goPropertyPage}
-          changeSelecteIndex = {this.changeSelecteIndex}
-          addSelectedIndex = {this.addSelectedIndex}
-          removeSelectedIndex = {this.removeSelectedIndex}
-          putIntoLoveList = {this.putIntoLoveList}
-          removeFromLoveList = {this.removeFromLoveList}
-          getloveListStatusIndex = {this.getloveListStatusIndex}
-          currentViewData = {this.state.currentViewData}
-          filteredData = {this.state.filteredData}
-          changeFilters = {this.changeFilters}
-          filters = {this.state.filters}
+          goLoveList={this.state.goLoveList}
+          goLoveListPage={this.goLoveList}
+          completeList={this.state.completeList}
+          loveListStatus={this.state.loveListStatus}
+          loveListDetail={this.state.loveListDetail}
+          openEmailForm={this.openEmailForm}
+          selectedIndex={this.state.selectedIndex}
+          goPropertyPage={this.goPropertyPage}
+          changeSelecteIndex={this.changeSelecteIndex}
+          addSelectedIndex={this.addSelectedIndex}
+          removeSelectedIndex={this.removeSelectedIndex}
+          putIntoLoveList={this.putIntoLoveList}
+          removeFromLoveList={this.removeFromLoveList}
+          getloveListStatusIndex={this.getloveListStatusIndex}
+          currentViewData={this.state.currentViewData}
+          filteredData={this.state.filteredData}
+          changeFilters={this.changeFilters}
+          filters={this.state.filters}
         />
       </div>
     );
@@ -315,7 +318,7 @@ class Apartments extends React.Component {
     this.props.history.push("/");
   }
 
-  goLoveList(e) {
+  goLoveList() {
     if (googleMap.map) {
       googleMap.setMapOptions(13, {
         lat: this.state.currentLocation[0],
@@ -323,11 +326,11 @@ class Apartments extends React.Component {
       });
       googleMap.markerclusterer.setGridSize(1);
     }
-    this.setState((currentState, currentProps) => ({
+    this.setState(currentState => ({
       goLoveList: !currentState.goLoveList
     }));
   }
-  goPropertyPage(e, id) {
+  goPropertyPage(id) {
     window.open(`/property?id=${id}`);
   }
   showPreviousView() {
